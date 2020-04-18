@@ -863,6 +863,66 @@ public class SysUserExample {
             addCriterion("login_answer not between", value1, value2, "loginAnswer");
             return (Criteria) this;
         }
+
+        public Criteria andIsAdminIsNull() {
+            addCriterion("is_admin is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminIsNotNull() {
+            addCriterion("is_admin is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminEqualTo(Boolean value) {
+            addCriterion("is_admin =", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminNotEqualTo(Boolean value) {
+            addCriterion("is_admin <>", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminGreaterThan(Boolean value) {
+            addCriterion("is_admin >", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("is_admin >=", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminLessThan(Boolean value) {
+            addCriterion("is_admin <", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminLessThanOrEqualTo(Boolean value) {
+            addCriterion("is_admin <=", value, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminIn(List<Boolean> values) {
+            addCriterion("is_admin in", values, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminNotIn(List<Boolean> values) {
+            addCriterion("is_admin not in", values, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_admin between", value1, value2, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAdminNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("is_admin not between", value1, value2, "isAdmin");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

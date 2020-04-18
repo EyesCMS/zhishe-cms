@@ -26,7 +26,7 @@ public class CmsChiefChangeApply implements Serializable {
     private Date handleAt;
 
     @ApiModelProperty(value = "申请状态：0 -> 未审核; 1 -> 审核通过; 2 -> 审核未通过;")
-    private Integer state;
+    private Boolean state;
 
     private static final long serialVersionUID = 1L;
 
@@ -86,11 +86,11 @@ public class CmsChiefChangeApply implements Serializable {
         this.handleAt = handleAt;
     }
 
-    public Integer getState() {
+    public Boolean getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(Boolean state) {
         this.state = state;
     }
 

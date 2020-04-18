@@ -36,6 +36,9 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "密保答案")
     private String loginAnswer;
 
+    @ApiModelProperty(value = "管理状态：0 -> 普通用户；1 -> 管理员；")
+    private Boolean isAdmin;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -126,6 +129,14 @@ public class SysUser implements Serializable {
         this.loginAnswer = loginAnswer;
     }
 
+    public Boolean getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(Boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -143,6 +154,7 @@ public class SysUser implements Serializable {
         sb.append(", slogan=").append(slogan);
         sb.append(", loginQuestion=").append(loginQuestion);
         sb.append(", loginAnswer=").append(loginAnswer);
+        sb.append(", isAdmin=").append(isAdmin);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

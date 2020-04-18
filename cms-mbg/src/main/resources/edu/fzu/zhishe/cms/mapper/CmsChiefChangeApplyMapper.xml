@@ -9,7 +9,7 @@
     <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="handle_at" jdbcType="TIMESTAMP" property="handleAt" />
-    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="state" jdbcType="BIT" property="state" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -111,7 +111,7 @@
       state)
     values (#{clubId,jdbcType=INTEGER}, #{oldChiefId,jdbcType=INTEGER}, #{newChiefId,jdbcType=INTEGER}, 
       #{reason,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{handleAt,jdbcType=TIMESTAMP}, 
-      #{state,jdbcType=INTEGER})
+      #{state,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsChiefChangeApply">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -161,7 +161,7 @@
         #{handleAt,jdbcType=TIMESTAMP},
       </if>
       <if test="state != null">
-        #{state,jdbcType=INTEGER},
+        #{state,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -196,7 +196,7 @@
         handle_at = #{record.handleAt,jdbcType=TIMESTAMP},
       </if>
       <if test="record.state != null">
-        state = #{record.state,jdbcType=INTEGER},
+        state = #{record.state,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null">
@@ -212,7 +212,7 @@
       reason = #{record.reason,jdbcType=VARCHAR},
       create_at = #{record.createAt,jdbcType=TIMESTAMP},
       handle_at = #{record.handleAt,jdbcType=TIMESTAMP},
-      state = #{record.state,jdbcType=INTEGER}
+      state = #{record.state,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -239,7 +239,7 @@
         handle_at = #{handleAt,jdbcType=TIMESTAMP},
       </if>
       <if test="state != null">
-        state = #{state,jdbcType=INTEGER},
+        state = #{state,jdbcType=BIT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -252,7 +252,7 @@
       reason = #{reason,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       handle_at = #{handleAt,jdbcType=TIMESTAMP},
-      state = #{state,jdbcType=INTEGER}
+      state = #{state,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

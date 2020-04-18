@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.cms.mapper;
 
-import edu.fzu.zhishe.cms.model.CmsClubDO;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -12,19 +12,19 @@ public interface CmsClubMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(CmsClubDO record);
+    int insert(CmsClub record);
 
-    int insertSelective(CmsClubDO record);
+    int insertSelective(CmsClub record);
 
-    List<CmsClubDO> selectByExample(CmsClubExample example);
+    List<CmsClub> selectByExample(CmsClubExample example);
 
-    CmsClubDO selectByPrimaryKey(Integer id);
+    CmsClub selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") CmsClubDO record, @Param("example") CmsClubExample example);
+    int updateByExampleSelective(@Param("record") CmsClub record, @Param("example") CmsClubExample example);
 
-    int updateByExample(@Param("record") CmsClubDO record, @Param("example") CmsClubExample example);
+    int updateByExample(@Param("record") CmsClub record, @Param("example") CmsClubExample example);
 
-    int updateByPrimaryKeySelective(CmsClubDO record);
+    int updateByPrimaryKeySelective(CmsClub record);
 
-    int updateByPrimaryKey(CmsClubDO record);
+    int updateByPrimaryKey(CmsClub record);
 }

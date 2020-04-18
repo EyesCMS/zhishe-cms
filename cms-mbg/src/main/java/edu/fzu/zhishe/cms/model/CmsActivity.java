@@ -40,7 +40,7 @@ public class CmsActivity implements Serializable {
     private Date handleAt;
 
     @ApiModelProperty(value = "活动状态: 0 -> “未审核”; 1 -> '审核通过'; 2 -> '已发布'; 3 -> '审核未通过'; 4 -> '已结束'")
-    private Integer state;
+    private Boolean state;
 
     private static final long serialVersionUID = 1L;
 
@@ -140,11 +140,11 @@ public class CmsActivity implements Serializable {
         this.handleAt = handleAt;
     }
 
-    public Integer getState() {
+    public Boolean getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(Boolean state) {
         this.state = state;
     }
 

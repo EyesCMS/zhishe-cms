@@ -13,6 +13,7 @@
     <result column="slogan" jdbcType="VARCHAR" property="slogan" />
     <result column="login_question" jdbcType="VARCHAR" property="loginQuestion" />
     <result column="login_answer" jdbcType="VARCHAR" property="loginAnswer" />
+    <result column="is_admin" jdbcType="BIT" property="isAdmin" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, username, password, nickname, avatar_url, major, email, phone, slogan, login_question, 
-    login_answer
+    login_answer, is_admin
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.SysUserExample" resultMap="BaseResultMap">
     select
@@ -113,11 +114,11 @@
     insert into sys_user (username, password, nickname, 
       avatar_url, major, email, 
       phone, slogan, login_question, 
-      login_answer)
+      login_answer, is_admin)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{avatarUrl,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, #{loginQuestion,jdbcType=VARCHAR}, 
-      #{loginAnswer,jdbcType=VARCHAR})
+      #{loginAnswer,jdbcType=VARCHAR}, #{isAdmin,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.SysUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -155,6 +156,9 @@
       <if test="loginAnswer != null">
         login_answer,
       </if>
+      <if test="isAdmin != null">
+        is_admin,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
@@ -186,6 +190,9 @@
       </if>
       <if test="loginAnswer != null">
         #{loginAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="isAdmin != null">
+        #{isAdmin,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -231,6 +238,9 @@
       <if test="record.loginAnswer != null">
         login_answer = #{record.loginAnswer,jdbcType=VARCHAR},
       </if>
+      <if test="record.isAdmin != null">
+        is_admin = #{record.isAdmin,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +258,8 @@
       phone = #{record.phone,jdbcType=VARCHAR},
       slogan = #{record.slogan,jdbcType=VARCHAR},
       login_question = #{record.loginQuestion,jdbcType=VARCHAR},
-      login_answer = #{record.loginAnswer,jdbcType=VARCHAR}
+      login_answer = #{record.loginAnswer,jdbcType=VARCHAR},
+      is_admin = #{record.isAdmin,jdbcType=BIT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +297,9 @@
       <if test="loginAnswer != null">
         login_answer = #{loginAnswer,jdbcType=VARCHAR},
       </if>
+      <if test="isAdmin != null">
+        is_admin = #{isAdmin,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -300,7 +314,8 @@
       phone = #{phone,jdbcType=VARCHAR},
       slogan = #{slogan,jdbcType=VARCHAR},
       login_question = #{loginQuestion,jdbcType=VARCHAR},
-      login_answer = #{loginAnswer,jdbcType=VARCHAR}
+      login_answer = #{loginAnswer,jdbcType=VARCHAR},
+      is_admin = #{isAdmin,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
