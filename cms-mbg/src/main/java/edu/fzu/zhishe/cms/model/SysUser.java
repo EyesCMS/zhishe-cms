@@ -37,7 +37,7 @@ public class SysUser implements Serializable {
     private String loginAnswer;
 
     @ApiModelProperty(value = "管理状态：0 -> 普通用户；1 -> 管理员；")
-    private Boolean isAdmin;
+    private Integer isAdmin;
 
     private static final long serialVersionUID = 1L;
 
@@ -129,11 +129,11 @@ public class SysUser implements Serializable {
         this.loginAnswer = loginAnswer;
     }
 
-    public Boolean getIsAdmin() {
+    public Integer getIsAdmin() {
         return isAdmin;
     }
 
-    public void setIsAdmin(Boolean isAdmin) {
+    public void setIsAdmin(Integer isAdmin) {
         this.isAdmin = isAdmin;
     }
 

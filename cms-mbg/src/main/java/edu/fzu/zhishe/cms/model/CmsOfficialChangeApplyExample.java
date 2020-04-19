@@ -425,52 +425,52 @@ public class CmsOfficialChangeApplyExample {
             return (Criteria) this;
         }
 
-        public Criteria andStateEqualTo(Boolean value) {
+        public Criteria andStateEqualTo(Integer value) {
             addCriterion("state =", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateNotEqualTo(Boolean value) {
+        public Criteria andStateNotEqualTo(Integer value) {
             addCriterion("state <>", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateGreaterThan(Boolean value) {
+        public Criteria andStateGreaterThan(Integer value) {
             addCriterion("state >", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andStateGreaterThanOrEqualTo(Integer value) {
             addCriterion("state >=", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateLessThan(Boolean value) {
+        public Criteria andStateLessThan(Integer value) {
             addCriterion("state <", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateLessThanOrEqualTo(Boolean value) {
+        public Criteria andStateLessThanOrEqualTo(Integer value) {
             addCriterion("state <=", value, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateIn(List<Boolean> values) {
+        public Criteria andStateIn(List<Integer> values) {
             addCriterion("state in", values, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateNotIn(List<Boolean> values) {
+        public Criteria andStateNotIn(List<Integer> values) {
             addCriterion("state not in", values, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateBetween(Boolean value1, Boolean value2) {
+        public Criteria andStateBetween(Integer value1, Integer value2) {
             addCriterion("state between", value1, value2, "state");
             return (Criteria) this;
         }
 
-        public Criteria andStateNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andStateNotBetween(Integer value1, Integer value2) {
             addCriterion("state not between", value1, value2, "state");
             return (Criteria) this;
         }

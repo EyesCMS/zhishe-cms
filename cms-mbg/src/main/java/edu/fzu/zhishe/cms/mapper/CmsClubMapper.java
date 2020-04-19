@@ -5,7 +5,6 @@ import edu.fzu.zhishe.cms.model.CmsClubExample;
 import java.util.List;
 
 import edu.fzu.zhishe.cms.model.SysUser;
-import edu.fzu.zhishe.cms.model.SysUserExample;
 import org.apache.ibatis.annotations.Param;
 
 public interface CmsClubMapper {
@@ -24,7 +23,7 @@ public interface CmsClubMapper {
     /*
      * 通过社团id获取社团的成员对象列表
      */
-    List<SysUser> selectUserByClubId(SysUserExample example);
+    List<SysUser> selectUserByClubId(Integer id);
 
     CmsClub selectByPrimaryKey(Integer id);
 
