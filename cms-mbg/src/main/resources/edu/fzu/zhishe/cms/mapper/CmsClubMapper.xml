@@ -76,6 +76,13 @@
     id, name, chief_id, member_count, qq_group, slogan, avatar_url, official_state, type, 
     grade, create_at
   </sql>
+  <select id="selectUserByClubId" parameterType="java.lang.Integer" resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
+    select u.id, u.username, u.password, u.nickname, u.avatar_url, u.major,
+        u.email, u.phone, u.slogan, u.login_question,
+        u.login_answer, u.is_admin
+        from cms_user_club_rel r,sys_user u
+        where r.club_id=#{id,jdbcType=INTEGER} and r.user_id=u.id
+  </select>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsClubExample" resultMap="BaseResultMap">
     select
     <if test="distinct">

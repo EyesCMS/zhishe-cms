@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.cms.mapper;
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import java.util.List;
@@ -17,6 +18,11 @@ public interface SysUserMapper {
     int insertSelective(SysUser record);
 
     List<SysUser> selectByExample(SysUserExample example);
+
+    /*
+     * 通过用户id获取用户所在社团对象列表
+     */
+    List<CmsClub> selectClubByUserId(Integer id);
 
     SysUser selectByPrimaryKey(Integer id);
 
