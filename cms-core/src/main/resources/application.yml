@@ -2,6 +2,8 @@ server:
   port: 8888
 
 spring:
+  profiles:
+    active: dev
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -9,6 +11,14 @@ spring:
     url: jdbc:mysql://101.200.193.180:3306/zhishedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: mysql
+
+redis:
+  database: zhishe
+  key:
+    user: 'sys:user'
+    # resourceList: 'ums:resourceList'
+  expire:
+    common: 86400 # 24 小时
 
 mybatis:
   mapper-locations:

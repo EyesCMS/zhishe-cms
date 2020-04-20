@@ -1,10 +1,14 @@
 package edu.fzu.zhishe.core.config;
 
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.security.component.DynamicSecurityService;
 import edu.fzu.zhishe.security.config.SecurityConfig;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,4 +33,16 @@ public class CmsSecurityConfig extends SecurityConfig {
         // 获取登录用户信息
         return username -> userService.loadUserByUsername(username);
     }
+
+//    @Bean
+//    public DynamicSecurityService dynamicSecurityService() {
+//        return () -> {
+//            Map<String, ConfigAttribute> map = new ConcurrentHashMap<>();
+//            List<SysResource> resourceList = resourceService.listAll();
+//            for (SysResource resource : resourceList) {
+//                map.put(resource.getUrl(), new org.springframework.security.access.SecurityConfig(resource.getId() + ":" + resource.getName()));
+//            }
+//            return map;
+//        };
+//    }
 }

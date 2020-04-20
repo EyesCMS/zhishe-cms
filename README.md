@@ -7,7 +7,7 @@ zhishe-cms
 ├── cms-common -- 工具类及通用代码
 ├── cms-mbg -- MyBatisGenerator 生成的数据库操作代码
 ├── cms-security -- SpringSecurity 封装公用模块
-├── cms-portal -- 前台系统接口
+├── cms-core -- 前台系统接口
 └── cms-demo -- 框架搭建时的测试代码
 ```
 

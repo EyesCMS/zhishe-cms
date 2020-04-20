@@ -7,6 +7,7 @@ import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
 import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.SysUser;
@@ -17,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -45,8 +47,8 @@ public class SysUserServiceImpl implements SysUserService {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private SysUserMapper userMapper;
-//    @Autowired
-//    private UmsMemberCacheService memberCacheService;
+    @Autowired
+    private SysUserCacheService userCacheService;
 //    @Value("${redis.key.authCode}")
 //    private String REDIS_KEY_PREFIX_AUTH_CODE;
 //    @Value("${redis.expire.authCode}")
@@ -55,15 +57,18 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser getByUsername(String username) {
-//        SysUser member = memberCacheService.getMember(username);
-        //if (member!=null) return member;
-        SysUser user;
+        SysUser user = userCacheService.getUser(username);
+        if (user != null) {
+            LOGGER.info("from redis get user");
+            return user;
+        }
+        //SysUser user;
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<SysUser> userList = userMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(userList)) {
             user = userList.get(0);
-            //memberCacheService.setMember(member);
+            userCacheService.setUser(user);
             return user;
         }
         return null;
