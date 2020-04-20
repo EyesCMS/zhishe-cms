@@ -20,7 +20,7 @@ import java.io.IOException;
 
 /**
  * JWT登录授权过滤器
- *
+ * 在用户名和密码校验前添加的过滤器，如果有 jwt 的 token，会自行根据 token 信息进行登录
  * @author liang
  * @date 2020/4/13
  */
@@ -41,7 +41,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         String authHeader = request.getHeader(this.tokenHeader);
         if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-            String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
+            // The part after "Bearer "
+            String authToken = authHeader.substring(this.tokenHead.length());
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
             LOGGER.info("checking username:{}", username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

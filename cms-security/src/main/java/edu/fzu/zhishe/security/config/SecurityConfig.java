@@ -31,6 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired(required = false)
     private DynamicSecurityService dynamicSecurityService;
 
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Autowired
+    private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+
+    /**
+     * 配置需要拦截的 url 路径、jwt 过滤器及出异常后的处理器
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity
@@ -56,8 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // 自定义权限拒绝处理类
             .and()
             .exceptionHandling()
-            .accessDeniedHandler(restfulAccessDeniedHandler())
-            .authenticationEntryPoint(restAuthenticationEntryPoint())
+            .accessDeniedHandler(restfulAccessDeniedHandler)
+            .authenticationEntryPoint(restAuthenticationEntryPoint)
             // 自定义权限拦截器 JWT 过滤器
             .and()
             .addFilterBefore(jwtAuthenticationTokenFilter(),
@@ -69,12 +78,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    /**
+     * 配置 UserDetailsService 及 PasswordEncoder
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService())
             .passwordEncoder(passwordEncoder());
     }
 
+    /**
+     * 对密码进行编码及比对的接口
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -91,10 +106,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public RestfulAccessDeniedHandler restfulAccessDeniedHandler() {
-        return new RestfulAccessDeniedHandler();
-    }
+//    @Bean
+//    public RestfulAccessDeniedHandler restfulAccessDeniedHandler() {
+//        return new RestfulAccessDeniedHandler();
+//    }
 
     @Bean
     public RestAuthenticationEntryPoint restAuthenticationEntryPoint() {

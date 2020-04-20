@@ -5,24 +5,19 @@ import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * JwtToken 生成的工具类
- * JWT token的格式: header.payload.signature
- * header的格式（算法、token的类型）：
- * {"alg": "HS512", "typ": "JWT"}
- * payload的格式（用户名、创建时间、生成时间）：
- * {"sub":"wang", "created":1489079981393, "exp":1489684781}
- * signature 的生成算法：
- * HMACSHA512(base64UrlEncode(header) + "." + base64UrlEncode(payload), secret)
+ * JwtToken 生成的工具类 JWT token的格式: header.payload.signature header的格式（算法、token的类型）： {"alg": "HS512",
+ * "typ": "JWT"} payload的格式（用户名、创建时间、生成时间）： {"sub":"wang", "created":1489079981393,
+ * "exp":1489684781} signature 的生成算法： HMACSHA512(base64UrlEncode(header) + "." +
+ * base64UrlEncode(payload), secret)
  *
  * @author liang
  * @date 2020/4/13
@@ -45,10 +40,10 @@ public class JwtTokenUtil {
      */
     private String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(generateExpirationDate())
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
+            .setClaims(claims)
+            .setExpiration(generateExpirationDate())
+            .signWith(SignatureAlgorithm.HS512, secret)
+            .compact();
     }
 
     /**
@@ -58,9 +53,9 @@ public class JwtTokenUtil {
         Claims claims = null;
         try {
             claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
         } catch (Exception e) {
             LOGGER.info("JWT格式验证失败:{}", token);
         }
@@ -140,7 +135,7 @@ public class JwtTokenUtil {
         }
         // token 校验不通过
         Claims claims = getClaimsFromToken(token);
-        if (claims==null) {
+        if (claims == null) {
             return null;
         }
         // 如果 token 已经过期，不支持刷新
@@ -148,7 +143,7 @@ public class JwtTokenUtil {
             return null;
         }
         // 如果 token 在 30 分钟之内刚刷新过，返回原 token
-        if (tokenRefreshJustBefore(token,30 * 60)) {
+        if (tokenRefreshJustBefore(token, 30 * 60)) {
             return token;
         } else {
             claims.put(CLAIM_KEY_CREATED, new Date());
@@ -158,15 +153,17 @@ public class JwtTokenUtil {
 
     /**
      * 判断 token 在指定时间内是否刚刚刷新过
+     *
      * @param token 原token
-     * @param time 指定时间（秒）
+     * @param time  指定时间（秒）
      */
     private boolean tokenRefreshJustBefore(String token, int time) {
         Claims claims = getClaimsFromToken(token);
         Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
         Date refreshDate = new Date();
         // 刷新时间在创建时间的指定时间内
-        if (refreshDate.after(created) && refreshDate.before(DateUtil.offsetSecond(created,time))) {
+        if (refreshDate.after(created) && refreshDate
+            .before(DateUtil.offsetSecond(created, time))) {
             return true;
         }
         return false;

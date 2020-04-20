@@ -1,4 +1,4 @@
-package edu.fzu.zhishe.cms.common.api;
+package edu.fzu.zhishe.common.api;
 
 /**
  * 枚举了一些无效字段错误

@@ -1,9 +1,9 @@
 package edu.fzu.zhishe.demo.web;
 
-import edu.fzu.zhishe.cms.common.api.AjaxResponse;
-import edu.fzu.zhishe.cms.common.api.Error;
-import edu.fzu.zhishe.cms.common.api.Resource;
-import edu.fzu.zhishe.cms.common.api.UnprocessableCode;
+import edu.fzu.zhishe.common.api.AjaxResponse;
+import edu.fzu.zhishe.common.api.Error;
+import edu.fzu.zhishe.common.api.Resource;
+import edu.fzu.zhishe.common.api.UnprocessableCode;
 import edu.fzu.zhishe.cms.model.CmsClubDO;
 import edu.fzu.zhishe.demo.dto.CmsClubDTO;
 import edu.fzu.zhishe.demo.service.DemoService;

@@ -13,4 +13,15 @@
   <artifactId>cms-core</artifactId>
   <description>cms-core project for cms</description>
 
+  <dependencies>
+    <dependency>
+      <groupId>edu.fzu.zhishe</groupId>
+      <artifactId>cms-mbg</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>edu.fzu.zhishe</groupId>
+      <artifactId>cms-security</artifactId>
+    </dependency>
+  </dependencies>
+
 </project>
