@@ -4,7 +4,9 @@ import edu.fzu.zhishe.common.api.IErrorCode;
 
 /**
  * 断言处理类，用于抛出各种 API 异常
- * Created by macro on 2020/2/27.
+ *
+ * @author liang
+ * @date 2020/4/22
  */
 public class Asserts {
     public static void fail(String message) {

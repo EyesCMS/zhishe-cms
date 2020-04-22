@@ -5,6 +5,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
+import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserLoginParam;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
@@ -80,7 +81,9 @@ public class SysUserController {
     @GetMapping("/info")
     public ResponseEntity<Object> info(Principal principal) {
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponseBody.unauthorized());
         }
         //SysUser user = userService.getCurrentMember();
         String username = principal.getName();

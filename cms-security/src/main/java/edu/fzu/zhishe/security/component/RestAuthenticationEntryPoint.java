@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.security.component;
 
 import cn.hutool.json.JSONUtil;
+import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -24,10 +25,8 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        // TODO
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        //response.getWriter().println(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
-        //response.getWriter().println(JSONUtil.parse(CommonResult.unauthorized(authException.getMessage())));
-        //response.getWriter().flush();
+        response.getWriter().println(JSONUtil.parse(ErrorResponseBody.unauthorized(authException.getMessage())));
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().flush();
     }
 }
