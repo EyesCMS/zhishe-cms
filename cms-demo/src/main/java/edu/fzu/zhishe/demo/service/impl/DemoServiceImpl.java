@@ -3,7 +3,7 @@ package edu.fzu.zhishe.demo.service.impl;
 import com.github.dozermapper.core.Mapper;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
-import edu.fzu.zhishe.cms.model.CmsClubDO;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.demo.dto.CmsClubDTO;
 import edu.fzu.zhishe.demo.service.DemoService;
 import java.util.Date;
@@ -31,14 +31,14 @@ public class DemoServiceImpl implements DemoService {
 //        BeanUtils.copyProperties(cmsClubDTO, cmsClub);
 //        cmsClub.setName(cmsClubDTO.getClubName());
 //        cmsClub.setCreateAt(new Date());
-        CmsClubDO cmsClubDO = dozerMapper.map(cmsClubDTO, CmsClubDO.class);
+        CmsClub cmsClubDO = dozerMapper.map(cmsClubDTO, CmsClub.class);
         cmsClubDO.setCreateAt(new Date());
         return clubMapper.insertSelective(cmsClubDO);
     }
 
     @Override
     public int updateClub(Integer id, CmsClubDTO cmsClubDTO) {
-        CmsClubDO cmsClubDO = dozerMapper.map(cmsClubDTO, CmsClubDO.class);
+        CmsClub cmsClubDO = dozerMapper.map(cmsClubDTO, CmsClub.class);
         cmsClubDO.setCreateAt(new Date());
         return clubMapper.updateByPrimaryKeySelective(cmsClubDO);
     }
@@ -49,13 +49,13 @@ public class DemoServiceImpl implements DemoService {
     }
 
     @Override
-    public List<CmsClubDO> listClubs(int pageNum, int pageSize) {
+    public List<CmsClub> listClubs(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         return clubMapper.selectByExample(null);
     }
 
     @Override
-    public CmsClubDO getClub(Integer id) {
+    public CmsClub getClub(Integer id) {
         return clubMapper.selectByPrimaryKey(id);
     }
 }

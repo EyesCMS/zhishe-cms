@@ -1,10 +1,10 @@
 package edu.fzu.zhishe.demo.web;
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.api.Resource;
 import edu.fzu.zhishe.common.api.UnprocessableCode;
-import edu.fzu.zhishe.cms.model.CmsClubDO;
 import edu.fzu.zhishe.demo.dto.CmsClubDTO;
 import edu.fzu.zhishe.demo.service.DemoService;
 import io.swagger.annotations.ApiOperation;
@@ -52,11 +52,11 @@ public class DemoController {
 
     @ApiOperation("分页获取社团列表")
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity<List<CmsClubDO>> listClubs(
+    public ResponseEntity<List<CmsClub>> listClubs(
         @RequestParam(name = "page", defaultValue = "0") Integer pageNum,
         @RequestParam(name = "limit", defaultValue = "3") Integer pageSize) {
         // TODO: what if club is not exists
-        List<CmsClubDO> clubs = demoService.listClubs(pageNum, pageSize);
+        List<CmsClub> clubs = demoService.listClubs(pageNum, pageSize);
         return ResponseEntity.ok(clubs);
     }
 
@@ -77,7 +77,7 @@ public class DemoController {
 
     @ApiOperation("根据编号查找社团")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<CmsClubDO> getClub(@PathVariable Integer id) {
+    public ResponseEntity<CmsClub> getClub(@PathVariable Integer id) {
         return ResponseEntity.ok(demoService.getClub(id));
     }
 
