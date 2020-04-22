@@ -59,7 +59,7 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser getByUsername(String username) {
         SysUser user = userCacheService.getUser(username);
         if (user != null) {
-            LOGGER.info("from redis get user");
+            //LOGGER.info("from redis get user");
             return user;
         }
         //SysUser user;
