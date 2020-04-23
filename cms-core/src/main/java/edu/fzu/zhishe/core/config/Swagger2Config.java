@@ -22,7 +22,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("edu.fzu.zhishe.cms.core"))
+                .apis(RequestHandlerSelectors.basePackage("edu.fzu.zhishe.core"))
                 .paths(PathSelectors.any())
                 .build();
     }
