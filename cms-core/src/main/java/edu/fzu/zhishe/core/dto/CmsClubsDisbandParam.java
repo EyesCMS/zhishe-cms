@@ -1,33 +1,29 @@
 package edu.fzu.zhishe.core.dto;
+
 /**
- *社团创建申请表单数据
+ *社团解散申请表单数据
  *
  * @author yang
  */
-public class CmsClubsCreationsParam {
-
+public class CmsClubsDisbandParam {
     /**
-     * club_name : test
+     * club_id : 10001
      * applicant : 张三
-     * reason : make friends
-     * type : 运动类
-     * official_state : true
+     * reason : 没为什么
      * accessory_url : https://xxx/xxx/xx.doc
      */
 
-    private String club_name;
+    private int club_id;
     private String applicant;
     private String reason;
-    private String type;
-    private boolean official_state;
     private String accessory_url;
 
-    public String getClub_name() {
-        return club_name;
+    public int getClub_id() {
+        return club_id;
     }
 
-    public void setClub_name(String club_name) {
-        this.club_name = club_name;
+    public void setClub_id(int club_id) {
+        this.club_id = club_id;
     }
 
     public String getApplicant() {
@@ -44,22 +40,6 @@ public class CmsClubsCreationsParam {
 
     public void setReason(String reason) {
         this.reason = reason;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public boolean isOfficial_state() {
-        return official_state;
-    }
-
-    public void setOfficial_state(boolean official_state) {
-        this.official_state = official_state;
     }
 
     public String getAccessory_url() {

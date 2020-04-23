@@ -1,10 +1,6 @@
 package edu.fzu.zhishe.core.dto;
-/**
- *社团创建审核申请表单数据
- *
- * @author yang
- */
-public class CmsClubsCreationsAuditParam {
+
+public class CmsClubsDisbandAuditParam {
     /**
      * id : 1
      * state : 1
