@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.web;
 
 
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
+import edu.fzu.zhishe.core.dto.CmsClubsCreationsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
@@ -41,4 +42,10 @@ public class CmsClubController {
         return ResponseEntity.ok().body(clubCreateApplyList);
     }
 
+    @ApiOperation(" 4.3审核创建社团申请 ")
+    @PutMapping("/creations/audit")
+    public ResponseEntity<Object> clubAudit(@RequestBody CmsClubsCreationsAuditParam cmsClubsCreationsAuditParam){
+        clubService.clubAudit(cmsClubsCreationsAuditParam);
+        return ResponseEntity.noContent().build();
+    }
 }

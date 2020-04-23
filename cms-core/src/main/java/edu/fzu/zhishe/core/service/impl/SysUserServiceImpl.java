@@ -120,7 +120,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUser getCurrentMember() {
+    public SysUser getCurrentUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
         SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();

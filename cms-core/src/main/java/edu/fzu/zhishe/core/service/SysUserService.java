@@ -45,7 +45,7 @@ public interface SysUserService {
     /**
      * 获取当前登录
      */
-    SysUser getCurrentMember();
+    SysUser getCurrentUser();
 
     /**
      * 根据用户 id 修改用户积分
