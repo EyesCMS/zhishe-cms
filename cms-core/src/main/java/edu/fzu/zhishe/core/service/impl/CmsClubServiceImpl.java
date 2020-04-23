@@ -43,4 +43,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
         clubCreateApplyMapper.insert(cmsClubCreateApply);
         return cmsClubCreateApply;
     }
+
+    @Override
+    public List<CmsClubCreateApply> getClubCreateList() {
+        return clubCreateApplyMapper.selectByExample(null);
+    }
 }
