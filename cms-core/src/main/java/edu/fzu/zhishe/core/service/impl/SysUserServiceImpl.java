@@ -4,8 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dao.CmsClubDAO;
+import edu.fzu.zhishe.core.dao.SysUserDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
+import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
 import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -28,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -171,5 +175,30 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public List<SysUser> users() {
         return userMapper.selectByExample(null);
+    }
+
+    @Override
+    public String updateUserByParam(SysUserUpdateParam updateParam) {
+        SysUser user = getCurrentUser();
+        if (updateParam.getPassword() != null) {
+            user.setPassword(updateParam.getPassword());
+        }
+        if (updateParam.getEmail() != null) {
+            user.setEmail(updateParam.getEmail());
+        }
+        if (updateParam.getMajor() != null) {
+            user.setMajor(updateParam.getMajor());
+        }
+        if (updateParam.getNickname() != null) {
+            user.setNickname(updateParam.getNickname());
+        }
+        if (updateParam.getPhone() != null) {
+            user.setPhone(updateParam.getPhone());
+        }
+        if (updateParam.getSlogan() != null) {
+            user.setSlogan(updateParam.getSlogan());
+        }
+        userMapper.updateByPrimaryKey(user);
+        return "SUCCESS";
     }
 }

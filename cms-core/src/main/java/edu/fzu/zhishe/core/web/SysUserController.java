@@ -4,6 +4,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import edu.fzu.zhishe.cms.model.CmsClub;
+import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -43,7 +44,7 @@ public class SysUserController {
     }
 
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
-    @PostMapping(value = "/{uid}/answer")
+    @PostMapping(value = "/answer")
     public ResponseEntity<Object> answer(@RequestParam("uid") Integer uid,
                                          @RequestParam("answer") String ans ) {
         SysUser user = userService.getById(uid);
@@ -52,5 +53,12 @@ public class SysUserController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
+
+    @ApiOperation(value = " 用户修改个人信息 ")
+    @PutMapping(value = "/info")
+    public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updataParam) {
+        userService.updateUserByParam(updataParam);
+        return noContent().build();
     }
 }

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubDAO">
+    <select id="selectClubByUserId" parameterType="java.lang.Integer" resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
+    select c.id, c.name, c.chief_id, c.member_count, c.qq_group, c.slogan,
+        c.avatar_url, c.official_state, c.type,
+        c.grade, c.create_at
+        from cms_user_club_rel r,cms_club c
+        where r.user_id=#{id,jdbcType=INTEGER} and r.club_id=c.id
+  </select>
+</mapper>
