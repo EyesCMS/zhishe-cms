@@ -233,8 +233,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> hotClubList(@RequestParam("page") Integer page,
-        @RequestParam("limit") Integer limit) {
+    public List<CmsClub> hotClubList(Integer page, Integer limit) {
         return clubDAO.getHotClubList(page, limit);
     }
 }

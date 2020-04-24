@@ -32,5 +32,5 @@ public interface CmsClubService {
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<CmsClub> hotClubList(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit);
+    List<CmsClub> hotClubList(Integer page, Integer limit);
 }
