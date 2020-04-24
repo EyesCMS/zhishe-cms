@@ -105,6 +105,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
         if(!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())){
             Asserts.fail(" 该申请状态码不正确 ");
         }
+        if(cmsClubCreateApply.getState()!=ApplyStateEnum.PENDING.getValue()){
+            Asserts.fail(" 该申请已经审核完毕 ");
+        }
 
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.PENDING.getValue()){
             return cmsClubCreateApply;
@@ -175,6 +178,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
         }
         if(!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())){
             Asserts.fail(" 该申请状态码不正确 ");
+        }
+        if(cmsClubDisbandApply.getState()!=ApplyStateEnum.PENDING.getValue()) {
+            Asserts.fail(" 该申请已经审核完毕 ");
         }
 
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.PENDING.getValue()){
@@ -265,6 +271,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
         }
         if(!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())){
             Asserts.fail(" 该申请状态码不正确 ");
+        }
+        if(cmsClubJoinApply.getState()!=ApplyStateEnum.PENDING.getValue()){
+            Asserts.fail(" 该申请已经审核完毕 ");
         }
 
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.PENDING.getValue()){
