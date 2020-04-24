@@ -7,27 +7,27 @@ package edu.fzu.zhishe.core.dto;
 public class CmsClubsCreationsParam {
 
     /**
-     * club_name : test
+     * clubName : test
      * applicant : 张三
      * reason : make friends
      * type : 运动类
-     * official_state : true
-     * accessory_url : https://xxx/xxx/xx.doc
+     * officialState : true
+     * accessoryUrl : https://xxx/xxx/xx.doc
      */
 
-    private String club_name;
+    private String clubName;
     private String applicant;
     private String reason;
     private String type;
-    private boolean official_state;
-    private String accessory_url;
+    private boolean officialState;
+    private String accessoryUrl;
 
-    public String getClub_name() {
-        return club_name;
+    public String getClubName() {
+        return clubName;
     }
 
-    public void setClub_name(String club_name) {
-        this.club_name = club_name;
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
     }
 
     public String getApplicant() {
@@ -54,19 +54,19 @@ public class CmsClubsCreationsParam {
         this.type = type;
     }
 
-    public boolean isOfficial_state() {
-        return official_state;
+    public boolean isOfficialState() {
+        return officialState;
     }
 
-    public void setOfficial_state(boolean official_state) {
-        this.official_state = official_state;
+    public void setOfficialState(boolean officialState) {
+        this.officialState = officialState;
     }
 
-    public String getAccessory_url() {
-        return accessory_url;
+    public String getAccessoryUrl() {
+        return accessoryUrl;
     }
 
-    public void setAccessory_url(String accessory_url) {
-        this.accessory_url = accessory_url;
+    public void setAccessoryUrl(String accessoryUrl) {
+        this.accessoryUrl = accessoryUrl;
     }
 }

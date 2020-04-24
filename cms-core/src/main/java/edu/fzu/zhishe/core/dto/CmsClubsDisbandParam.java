@@ -7,23 +7,23 @@ package edu.fzu.zhishe.core.dto;
  */
 public class CmsClubsDisbandParam {
     /**
-     * club_id : 10001
+     * clubId : 10001
      * applicant : 张三
      * reason : 没为什么
-     * accessory_url : https://xxx/xxx/xx.doc
+     * accessoryUrl : https://xxx/xxx/xx.doc
      */
 
-    private int club_id;
+    private int clubId;
     private String applicant;
     private String reason;
-    private String accessory_url;
+    private String accessoryUrl;
 
-    public int getClub_id() {
-        return club_id;
+    public int getClubId() {
+        return clubId;
     }
 
-    public void setClub_id(int club_id) {
-        this.club_id = club_id;
+    public void setClubId(int clubId) {
+        this.clubId = clubId;
     }
 
     public String getApplicant() {
@@ -42,11 +42,11 @@ public class CmsClubsDisbandParam {
         this.reason = reason;
     }
 
-    public String getAccessory_url() {
-        return accessory_url;
+    public String getAccessoryUrl() {
+        return accessoryUrl;
     }
 
-    public void setAccessory_url(String accessory_url) {
-        this.accessory_url = accessory_url;
+    public void setAccessoryUrl(String accessoryUrl) {
+        this.accessoryUrl = accessoryUrl;
     }
 }

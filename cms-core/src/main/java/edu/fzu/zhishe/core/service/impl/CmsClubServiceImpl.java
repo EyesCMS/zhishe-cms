@@ -44,14 +44,14 @@ public class CmsClubServiceImpl  implements CmsClubService {
     public CmsClubCreateApply clubCreate(CmsClubsCreationsParam clubsCreationsParam) {
         // 查询是否已申请创建该社团
         CmsClubCreateApplyExample example1 = new CmsClubCreateApplyExample();
-        example1.createCriteria().andClubNameEqualTo(clubsCreationsParam.getClub_name());
+        example1.createCriteria().andClubNameEqualTo(clubsCreationsParam.getClubName());
         List<CmsClubCreateApply> cmsClubCreateApplies = clubCreateApplyMapper.selectByExample(example1);
         if (!CollectionUtils.isEmpty(cmsClubCreateApplies)) {
             Asserts.fail(" 该社团已经申请创建，请等待审核 ");
         }
         //查询是否已存在该社团
         CmsClubExample example2 = new CmsClubExample();
-        example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClub_name());
+        example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClubName());
         List<CmsClub> cmsClubs = clubMapper.selectByExample(example2);
         if (!CollectionUtils.isEmpty(cmsClubs)) {
             Asserts.fail(" 该社团已经存在 ");
@@ -62,9 +62,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
         CmsClubCreateApply cmsClubCreateApply = new CmsClubCreateApply();
 
         cmsClubCreateApply.setApplicant(clubsCreationsParam.getApplicant());
-        cmsClubCreateApply.setClubName(clubsCreationsParam.getClub_name());
+        cmsClubCreateApply.setClubName(clubsCreationsParam.getClubName());
         cmsClubCreateApply.setType(clubsCreationsParam.getType());
-        cmsClubCreateApply.setOfficialState(clubsCreationsParam.isOfficial_state());
+        cmsClubCreateApply.setOfficialState(clubsCreationsParam.isOfficialState());
         cmsClubCreateApply.setReason(clubsCreationsParam.getReason());
         cmsClubCreateApply.setCreateAt(new Date());
         cmsClubCreateApply.setHandleAt(null);
@@ -126,17 +126,17 @@ public class CmsClubServiceImpl  implements CmsClubService {
     @Override
     public CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam) {
         // 查询是否已申请解散该社团
-        if (!(clubDisbandApplyMapper.selectByPrimaryKey(clubsDisbandParam.getClub_id()) == null)) {
+        if (!(clubDisbandApplyMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()) == null)) {
             Asserts.fail(" 该社团已经申请解散，请等待审核 ");
         }
         //查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(clubsDisbandParam.getClub_id()) == null) {
+        if (clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()) == null) {
             Asserts.fail(" 该社团不存在 ");
         }
 
         CmsClubDisbandApply cmsClubDisbandApply = new CmsClubDisbandApply();
 
-        cmsClubDisbandApply.setClubId(clubsDisbandParam.getClub_id());
+        cmsClubDisbandApply.setClubId(clubsDisbandParam.getClubId());
         cmsClubDisbandApply.setCreateAt(new Date());
         cmsClubDisbandApply.setHandleAt(null);
         cmsClubDisbandApply.setReason(clubsDisbandParam.getReason());
