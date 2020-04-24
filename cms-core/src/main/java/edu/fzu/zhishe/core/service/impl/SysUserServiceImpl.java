@@ -53,6 +53,7 @@ public class SysUserServiceImpl implements SysUserService {
 //    @Value("${redis.expire.authCode}")
 //    private Long AUTH_CODE_EXPIRE_SECONDS;
 
+    public static final String ANON_USER = "anonymousUser";
 
     @Override
     public SysUser getByUsername(String username) {
@@ -122,6 +123,9 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser getCurrentUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
+        if (auth.getPrincipal() == ANON_USER) {
+            return null;
+        }
         SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();
         return userDetails.getSysUser();
     }
