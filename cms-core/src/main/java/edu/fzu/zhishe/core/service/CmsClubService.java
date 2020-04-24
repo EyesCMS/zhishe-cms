@@ -10,6 +10,8 @@ import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
 import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -31,6 +33,8 @@ public interface CmsClubService {
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
+
+    List<Map<String, String>> getClubJoinsList(Integer clubId);
 
     List<CmsClub> hotClubList(Integer page, Integer limit);
 }

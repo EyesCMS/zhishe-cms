@@ -1,9 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import edu.fzu.zhishe.cms.mapper.CmsClubCreateApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubDisbandApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubJoinApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
+import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
@@ -21,8 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -45,6 +43,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
     @Autowired
     CmsClubMapper clubMapper;
+
+    @Autowired
+    SysUserMapper sysUserMapper;
 
     @Autowired
     private CmsClubDAO clubDAO;
@@ -231,6 +232,31 @@ public class CmsClubServiceImpl  implements CmsClubService {
         clubJoinApplyMapper.insert(cmsClubJoinApply);
         return cmsClubJoinApply;
     }
+
+    @Override
+    public List<Map<String, String>> getClubJoinsList(Integer clubId) {
+        // 查询是否已存在该社团
+        if(clubMapper.selectByPrimaryKey(clubId)==null){
+            Asserts.fail(" 该社团不存在 ");
+        }
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+
+        CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
+        List<Map<String, String>> joinMaps = new ArrayList<Map<String, String>>();
+        for(int i = 0;i<cmsClubJoinApplies.size();i++){
+            Map<String, String> myMap = new HashMap<>();
+            myMap.put("applicant",sysUserMapper.selectByPrimaryKey(cmsClubJoinApplies.get(i).getUserId()).getUsername());
+            myMap.put("reason",cmsClubJoinApplies.get(i).getReason());
+            myMap.put("create_at",simpleDateFormat.format(cmsClubJoinApplies.get(i).getCreateAt()));
+            myMap.put("state",ApplyStateEnum.toString(cmsClubJoinApplies.get(i).getState()));
+            joinMaps.add(myMap);
+        }
+        return joinMaps;
+    }
+
 
     @Override
     public List<CmsClub> hotClubList(Integer page, Integer limit) {
