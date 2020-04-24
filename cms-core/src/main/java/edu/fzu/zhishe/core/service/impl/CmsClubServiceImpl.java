@@ -5,6 +5,8 @@ import edu.fzu.zhishe.cms.mapper.CmsClubDisbandApplyMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.constant.ApplyStateEnum;
+import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandAuditParam;
@@ -87,35 +89,36 @@ public class CmsClubServiceImpl  implements CmsClubService {
         if (cmsClubCreateApply == null) {
             Asserts.fail(" 该社团创建申请不存在 ");
         }
-        if(cmsClubsCreationsAuditParam.getState()!=0&&cmsClubsCreationsAuditParam.getState()!=1&&cmsClubsCreationsAuditParam.getState()!=2){
+        if(ApplyStateEnum.isLegal(cmsClubsCreationsAuditParam.getState())){
             Asserts.fail(" 该申请状态码不正确 ");
         }
 
-        if(cmsClubsCreationsAuditParam.getState()==0){
+        if(cmsClubsCreationsAuditParam.getState()==ApplyStateEnum.PENDING.getValue()){
             return cmsClubCreateApply;
         }
 
-        if(cmsClubsCreationsAuditParam.getState()==1){
+        if(cmsClubsCreationsAuditParam.getState()==ApplyStateEnum.ACTIVE.getValue()){
             //创建社团
             CmsClub cmsClub = new CmsClub();
 
             cmsClub.setName(cmsClubCreateApply.getClubName());
             cmsClub.setChiefId(cmsClubCreateApply.getUserId());
             cmsClub.setMemberCount(1);
-            cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState()?1:0);
+            cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState()?
+                    ClubOfficialStateEnum.OFFICIAL.getValue() :ClubOfficialStateEnum.UNOFFICIAL.getValue());
             cmsClub.setCreateAt(new Date());
             clubMapper.insert(cmsClub);
 
             //更新申请记录
             cmsClubCreateApply.setHandleAt(new Date());
-            cmsClubCreateApply.setState(1);
+            cmsClubCreateApply.setState(ApplyStateEnum.ACTIVE.getValue());
             clubCreateApplyMapper.updateByPrimaryKey(cmsClubCreateApply);
             return cmsClubCreateApply;
         }
-        if(cmsClubsCreationsAuditParam.getState()==2){
+        if(cmsClubsCreationsAuditParam.getState()==ApplyStateEnum.REJECTED.getValue()){
             //更新申请记录
             cmsClubCreateApply.setHandleAt(new Date());
-            cmsClubCreateApply.setState(2);
+            cmsClubCreateApply.setState(ApplyStateEnum.REJECTED.getValue());
             clubCreateApplyMapper.updateByPrimaryKey(cmsClubCreateApply);
             return cmsClubCreateApply;
         }
@@ -157,14 +160,14 @@ public class CmsClubServiceImpl  implements CmsClubService {
         if(cmsClubDisbandApply == null){
             Asserts.fail(" 该社团解散申请不存在 ");
         }
-        if(cmsClubsDisbandAuditParam.getState()!=0&&cmsClubsDisbandAuditParam.getState()!=1&&cmsClubsDisbandAuditParam.getState()!=2){
+        if(ApplyStateEnum.isLegal(cmsClubsDisbandAuditParam.getState())){
             Asserts.fail(" 该申请状态码不正确 ");
         }
 
-        if(cmsClubsDisbandAuditParam.getState()==0){
+        if(cmsClubsDisbandAuditParam.getState()==ApplyStateEnum.PENDING.getValue()){
             return cmsClubDisbandApply;
         }
-        if(cmsClubsDisbandAuditParam.getState()==1){
+        if(cmsClubsDisbandAuditParam.getState()==ApplyStateEnum.ACTIVE.getValue()){
             //删除社团
             //System.out.println(cmsClubDisbandApply.toString());
             //System.out.println(cmsClubDisbandApply.getClubId());
@@ -180,10 +183,10 @@ public class CmsClubServiceImpl  implements CmsClubService {
 //            clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
             return cmsClubDisbandApply;
         }
-        if(cmsClubsDisbandAuditParam.getState()==2){
+        if(cmsClubsDisbandAuditParam.getState()==ApplyStateEnum.REJECTED.getValue()){
             //更新申请记录
             cmsClubDisbandApply.setHandleAt(new Date());
-            cmsClubDisbandApply.setState(2);
+            cmsClubDisbandApply.setState(ApplyStateEnum.REJECTED.getValue());
             clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
             return cmsClubDisbandApply;
         }

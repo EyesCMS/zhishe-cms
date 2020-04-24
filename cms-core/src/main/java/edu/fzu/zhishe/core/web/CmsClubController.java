@@ -8,6 +8,7 @@ import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import java.util.List;
  * @author yang
  */
 @RestController
+@Api(tags = "CmsClubController")
 @RequestMapping("/clubs")
 public class CmsClubController {
 
