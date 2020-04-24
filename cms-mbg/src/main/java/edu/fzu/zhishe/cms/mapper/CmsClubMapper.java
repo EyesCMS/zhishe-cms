@@ -20,11 +20,6 @@ public interface CmsClubMapper {
 
     List<CmsClub> selectByExample(CmsClubExample example);
 
-    /*
-     * 通过社团id获取社团的成员对象列表
-     */
-    List<SysUser> selectUserByClubId(Integer id);
-
     CmsClub selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") CmsClub record, @Param("example") CmsClubExample example);

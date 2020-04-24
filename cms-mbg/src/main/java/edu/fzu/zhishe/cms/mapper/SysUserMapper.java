@@ -19,11 +19,6 @@ public interface SysUserMapper {
 
     List<SysUser> selectByExample(SysUserExample example);
 
-    /*
-     * 通过用户id获取用户所在社团对象列表
-     */
-    List<CmsClub> selectClubByUserId(Integer id);
-
     SysUser selectByPrimaryKey(Integer id);
 
     int updateByExampleSelective(@Param("record") SysUser record, @Param("example") SysUserExample example);

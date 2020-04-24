@@ -1,11 +1,13 @@
 package edu.fzu.zhishe.core.service;
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
 import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
 import edu.fzu.zhishe.cms.model.SysUser;
 //import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,4 +74,5 @@ public interface SysUserService {
      * 获取所有用户
      */
     List<SysUser> users();
+
 }
