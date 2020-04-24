@@ -2,9 +2,8 @@ package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsAuditParam;
+import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
 
 import java.util.List;
@@ -18,11 +17,11 @@ public interface CmsClubService {
 
     List<CmsClubCreateApply> getClubCreateList();
 
-    CmsClubCreateApply clubCreationsAudit(CmsClubsCreationsAuditParam cmsClubsCreationsAuditParam);
+    CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
     List<CmsClubDisbandApply> getClubDisbandList();
 
-    CmsClubDisbandApply clubDissolutionsAudit(CmsClubsDisbandAuditParam cmsClubsDisbandAuditParam);
+    CmsClubDisbandApply clubDissolutionsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 }

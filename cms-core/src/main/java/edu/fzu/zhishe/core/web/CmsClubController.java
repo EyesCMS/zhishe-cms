@@ -3,9 +3,8 @@ package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsAuditParam;
+import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.Api;
@@ -50,8 +49,8 @@ public class CmsClubController {
 
     @ApiOperation(" 4.3审核创建社团申请 ")
     @PutMapping("/creations/audit")
-    public ResponseEntity<Object> clubCreateAudit(@RequestBody CmsClubsCreationsAuditParam cmsClubsCreationsAuditParam){
-        clubService.clubCreationsAudit(cmsClubsCreationsAuditParam);
+    public ResponseEntity<Object> clubCreateAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+        clubService.clubCreationsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
@@ -72,8 +71,10 @@ public class CmsClubController {
 
     @ApiOperation(" 4.6审核解散社团申请 ")
     @PutMapping("/dissolutions/audit")
-    public ResponseEntity<Object> clubDisbandAudit(@RequestBody CmsClubsDisbandAuditParam cmsClubsCreationsAuditParam){
-        clubService.clubDissolutionsAudit(cmsClubsCreationsAuditParam);
+    public ResponseEntity<Object> clubDisbandAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+        clubService.clubDissolutionsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
+
+
 }
