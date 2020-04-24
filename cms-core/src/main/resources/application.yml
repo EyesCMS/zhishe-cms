@@ -61,6 +61,8 @@ secure:
       - /auth/info
       - /auth/logout
       - /home/**
+      - /test/**
+      - /clubs/recommended
 
 logging:
   level:

@@ -8,6 +8,7 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
+import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
@@ -15,12 +16,14 @@ import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import org.springframework.beans.BeanUtils;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *社团管理服务层
@@ -42,6 +45,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
     @Autowired
     CmsClubMapper clubMapper;
+
+    @Autowired
+    private CmsClubDAO clubDAO;
 
     @Autowired
     SysUserService sysUserService;
@@ -161,7 +167,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public CmsClubDisbandApply clubDissolutionsAudit(CmsClubsAuditParam cmsClubsAuditParam) {
+    public CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         CmsClubDisbandApply cmsClubDisbandApply = clubDisbandApplyMapper.selectByPrimaryKey(cmsClubsAuditParam.getId());
         if(cmsClubDisbandApply == null){
             Asserts.fail(" 该社团解散申请不存在 ");
@@ -224,5 +230,11 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
         clubJoinApplyMapper.insert(cmsClubJoinApply);
         return cmsClubJoinApply;
+    }
+
+    @Override
+    public List<CmsClub> hotClubList(@RequestParam("page") Integer page,
+        @RequestParam("limit") Integer limit) {
+        return clubDAO.getHotClubList(page, limit);
     }
 }

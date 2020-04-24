@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsClubDAO">
+
+  <sql id="Base_Column_List">
+    id, `name`, chief_id, member_count, qq_group, slogan, avatar_url, official_state, `type`,
+    grade, create_at
+  </sql>
 
   <select id="selectUserByClubId" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
-    select
-        u.id, u.username, u.password, u.nickname, u.avatar_url, u.major,
-        u.email, u.phone, u.slogan, u.login_question,
-        u.login_answer, u.is_admin
-    from
-        cms_user_club_rel r,sys_user u
-    where
-        r.club_id=#{id,jdbcType=INTEGER} and r.user_id=u.id
+    SELECT
+      u.id,
+      u.username,
+      u.PASSWORD,
+      u.nickname,
+      u.avatar_url,
+      u.major,
+      u.email,
+      u.phone,
+      u.slogan,
+      u.login_question,
+      u.login_answer,
+      u.is_admin
+    FROM
+      cms_user_club_rel r,
+      sys_user u
+    WHERE
+      r.club_id = #{id,jdbcType=INTEGER} AND r.user_id=u.id
+  </select>
+
+  <select id="getHotClubList" parameterType="java.lang.Integer"
+    resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
+    SELECT
+      <include refid="Base_Column_List"/>
+    FROM
+      cms_club
+      LIMIT #{offset}, #{limit}
   </select>
 
 </mapper>

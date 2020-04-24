@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.web;
 
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
@@ -28,9 +29,14 @@ public class CmsClubController {
 
     private final CmsClubService clubService;
 
-
     public CmsClubController(CmsClubService clubService) {
         this.clubService = clubService;
+    }
+
+    @ApiOperation(" 推荐社团列表 ")
+    @GetMapping("/recommended")
+    public ResponseEntity<List<CmsClub>> recommendedClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+        return ResponseEntity.ok(clubService.hotClubList(page, limit));
     }
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")
@@ -56,14 +62,14 @@ public class CmsClubController {
     }
 
     @ApiOperation(" 4.4提交解散社团申请表单 ")
-    @PostMapping("/dissolutions")
+    @PostMapping("/dissolution")
     public ResponseEntity<Object> clubDissolve(@RequestBody CmsClubsDisbandParam cmsClubsDisbandParam){
         clubService.clubDisband(cmsClubsDisbandParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(" 4.5社团解散申请列表 ")
-    @GetMapping("/dissolutions")
+    @GetMapping("/dissolution")
     public ResponseEntity<Object> clubDisbandList(){
         List<CmsClubDisbandApply> clubDisbandApplyList = clubService.getClubDisbandList();
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
@@ -71,9 +77,9 @@ public class CmsClubController {
     }
 
     @ApiOperation(" 4.6审核解散社团申请 ")
-    @PutMapping("/dissolutions/audit")
+    @PutMapping("/dissolution/audit")
     public ResponseEntity<Object> clubDisbandAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
-        clubService.clubDissolutionsAudit(cmsClubsAuditParam);
+        clubService.clubDissolutionAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
