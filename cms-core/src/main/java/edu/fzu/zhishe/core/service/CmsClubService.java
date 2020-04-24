@@ -36,5 +36,7 @@ public interface CmsClubService {
 
     List<Map<String, String>> getClubJoinsList(Integer clubId);
 
+    CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
+
     List<CmsClub> hotClubList(Integer page, Integer limit);
 }

@@ -89,11 +89,17 @@ public class CmsClubController {
         clubService.clubJoin(cmsClubsJoinParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    
+
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinList(@PathVariable("clubId") Integer clubId) {
-
+    public ResponseEntity<Object> joinsList(@PathVariable("clubId") Integer clubId) {
         return ResponseEntity.ok().body(clubService.getClubJoinsList(clubId));
+    }
+
+    @ApiOperation(" 4.9审核解散社团申请 ")
+    @PutMapping("/joins/audit")
+    public ResponseEntity<Object> clubJoinsAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+        clubService.clubJoinsAudit(cmsClubsAuditParam);
+        return ResponseEntity.noContent().build();
     }
 }
