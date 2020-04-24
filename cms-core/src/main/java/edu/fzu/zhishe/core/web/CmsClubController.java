@@ -6,6 +6,7 @@ import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
+import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,5 +77,10 @@ public class CmsClubController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @ApiOperation(" 4.7提交加入社团申请表单 ")
+    @PostMapping("/join")
+    public ResponseEntity<Object> clubJoin(@RequestBody CmsClubsJoinParam cmsClubsJoinParam){
+        clubService.clubJoin(cmsClubsJoinParam);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 }

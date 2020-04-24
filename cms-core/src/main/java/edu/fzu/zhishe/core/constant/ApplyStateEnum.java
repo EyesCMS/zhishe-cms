@@ -35,6 +35,7 @@ public enum ApplyStateEnum {
     }
 
     public static boolean isLegal(int value){
+        //System.out.println(value);
         if(value!=PENDING.getValue()&&value!=ACTIVE.getValue()&&value!=REJECTED.getValue()){
             return false;
         }
