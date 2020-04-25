@@ -10,7 +10,7 @@
     <result column="major" jdbcType="VARCHAR" property="major" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="adress" jdbcType="VARCHAR" property="adress" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="slogan" jdbcType="VARCHAR" property="slogan" />
     <result column="login_question" jdbcType="VARCHAR" property="loginQuestion" />
     <result column="login_answer" jdbcType="VARCHAR" property="loginAnswer" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, password, nickname, avatar_url, major, email, phone, adress, slogan, 
+    id, username, password, nickname, avatar_url, major, email, phone, address, slogan, 
     login_question, login_answer, is_admin, current_role
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.SysUserExample" resultMap="BaseResultMap">
@@ -115,12 +115,12 @@
     </selectKey>
     insert into sys_user (username, password, nickname, 
       avatar_url, major, email, 
-      phone, adress, slogan, 
+      phone, address, slogan, 
       login_question, login_answer, is_admin, 
       current_role)
     values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{avatarUrl,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, 
       #{loginQuestion,jdbcType=VARCHAR}, #{loginAnswer,jdbcType=VARCHAR}, #{isAdmin,jdbcType=INTEGER}, 
       #{currentRole,jdbcType=INTEGER})
   </insert>
@@ -151,8 +151,8 @@
       <if test="phone != null">
         phone,
       </if>
-      <if test="adress != null">
-        adress,
+      <if test="address != null">
+        address,
       </if>
       <if test="slogan != null">
         slogan,
@@ -192,8 +192,8 @@
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="adress != null">
-        #{adress,jdbcType=VARCHAR},
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
       </if>
       <if test="slogan != null">
         #{slogan,jdbcType=VARCHAR},
@@ -245,8 +245,8 @@
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
       </if>
-      <if test="record.adress != null">
-        adress = #{record.adress,jdbcType=VARCHAR},
+      <if test="record.address != null">
+        address = #{record.address,jdbcType=VARCHAR},
       </if>
       <if test="record.slogan != null">
         slogan = #{record.slogan,jdbcType=VARCHAR},
@@ -278,7 +278,7 @@
       major = #{record.major,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
-      adress = #{record.adress,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
       slogan = #{record.slogan,jdbcType=VARCHAR},
       login_question = #{record.loginQuestion,jdbcType=VARCHAR},
       login_answer = #{record.loginAnswer,jdbcType=VARCHAR},
@@ -312,8 +312,8 @@
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="adress != null">
-        adress = #{adress,jdbcType=VARCHAR},
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="slogan != null">
         slogan = #{slogan,jdbcType=VARCHAR},
@@ -342,7 +342,7 @@
       major = #{major,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
-      adress = #{adress,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
       slogan = #{slogan,jdbcType=VARCHAR},
       login_question = #{loginQuestion,jdbcType=VARCHAR},
       login_answer = #{loginAnswer,jdbcType=VARCHAR},

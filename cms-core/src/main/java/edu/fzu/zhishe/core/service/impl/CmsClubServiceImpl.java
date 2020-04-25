@@ -1,8 +1,10 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
@@ -92,6 +94,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
     @Override
     public List<CmsClubCreateApply> getClubCreateList() {
+        PageHelper.startPage(0,3);
         return clubCreateApplyMapper.selectByExample(null);
     }
 
@@ -167,6 +170,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
     @Override
     public List<CmsClubDisbandApply> getClubDisbandList() {
+        PageHelper.startPage(0,2);
         return clubDisbandApplyMapper.selectByExample(null);
     }
 
@@ -213,6 +217,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
         return cmsClubDisbandApply;
     }
 
+    //以下三个函数用于加入社团
     @Override
     public CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam) {
         // 查询是否已存在该社团
@@ -260,7 +265,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
             myMap.put("state",ApplyStateEnum.toString(cmsClubJoinApplies.get(i).getState()));
             joinMaps.add(myMap);
         }
-        return joinMaps;
+        return PageUtil.startPage(joinMaps,2,1);
     }
 
     @Override

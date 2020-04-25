@@ -36,6 +36,12 @@ public class SysUserRegisterParam {
     //(message = " 电话格式不合法 ")
     private String phone;
 
+    @ApiModelProperty(value = " 密保问题 ")
+    private String question;
+
+    @ApiModelProperty(value = " 密保问题答案 ")
+    private String answer;
+
     public String getUsername() {
         return username;
     }
@@ -63,4 +69,8 @@ public class SysUserRegisterParam {
     public String getPhone() {
         return phone;
     }
+
+    public String getQuestion() { return question; }
+
+    public String getAnswer() { return answer; }
 }
