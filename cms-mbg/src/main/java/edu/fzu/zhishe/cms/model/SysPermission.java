@@ -1,14 +1,18 @@
 package edu.fzu.zhishe.cms.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SysPermission implements Serializable {
+    @JsonIgnore
     private Integer id;
 
+    @JsonIgnore
     @ApiModelProperty(value = "菜单编码")
     private String menuCode;
 
+    @JsonIgnore
     @ApiModelProperty(value = "菜单名称")
     private String menuName;
 
@@ -18,6 +22,7 @@ public class SysPermission implements Serializable {
     @ApiModelProperty(value = "权限名称")
     private String permissionName;
 
+    @JsonIgnore
     @ApiModelProperty(value = "必要状态: 0 -> 非必须; 1 -> 必须;")
     private Integer requiredPermission;
 

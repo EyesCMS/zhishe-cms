@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.CmsClub;
+import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
 import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
@@ -38,6 +39,8 @@ public interface SysUserService {
      * 生成验证码
      */
     String generateAuthCode(String telephone);
+
+    List<SysPermission> listPermissionByRoleId(Integer roleId);
 
     /**
      * 修改密码
@@ -81,4 +84,9 @@ public interface SysUserService {
      */
     @Transactional
     String updateUserByParam(SysUserUpdateParam updateParam);
+
+    /**
+     * 选择性更新非空字段
+     */
+    int updateUserSelective(SysUser user);
 }

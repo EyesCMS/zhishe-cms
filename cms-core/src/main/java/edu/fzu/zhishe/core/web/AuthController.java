@@ -7,6 +7,7 @@ import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.SysUserLoginParam;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
 import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
@@ -74,6 +75,12 @@ public class AuthController {
     @ApiOperation(value = " 登出功能 ")
     @PostMapping(value = "/logout")
     public ResponseEntity<Object> logout() {
+        SysUser currentUser = userService.getCurrentUser();
+        // 不是管理员时，重置当前角色
+        if (currentUser.getIsAdmin() == 0) {
+            currentUser.setCurrentRole(UserRoleEnum.NORMAL.getValue());
+            userService.updateUserSelective(currentUser);
+        }
         return noContent().build();
     }
 
@@ -88,6 +95,11 @@ public class AuthController {
         //SysUser user = userService.getCurrentMember();
         String username = principal.getName();
         SysUser user = userService.getByUsername(username);
+
+        // MUST: reset current user role
+        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
+        userService.updateUserSelective(user);
+
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());
         data.put("roles", new String[]{"TEST"});

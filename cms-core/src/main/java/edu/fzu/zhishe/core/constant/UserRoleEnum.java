@@ -6,16 +6,27 @@ package edu.fzu.zhishe.core.constant;
  */
 public enum UserRoleEnum {
     /**
-     * 普通用户
+     * 普通学生用户
      */
-    NORMAL(0),
+    NORMAL(1),
+
+    /**
+     * 社团普通成员
+     */
+    MEMBER(2),
+
+    /**
+     * 社长
+     */
+    CHIEF(3),
 
     /**
      * 管理员
      */
-    ADMIN(1);
+    ADMIN(4);
 
     private int value;
+
     UserRoleEnum(int value) {
         this.value = value;
     }

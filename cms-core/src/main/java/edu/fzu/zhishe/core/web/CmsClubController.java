@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,14 +36,16 @@ public class CmsClubController {
 
     @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
+    @PreAuthorize("hasAuthority('cms:club:read')")
     public ResponseEntity<List<CmsClub>> recommendedClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(clubService.hotClubList(page, limit));
     }
 
     @ApiOperation(" 3.2查看社团列表 ")
     @GetMapping("")
-    public ResponseEntity<List<CmsClub>> showClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(clubService.showClubList(page, limit));
+    public ResponseEntity<List<CmsClub>> showClub(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit) {
+        return ResponseEntity.ok(clubService.getClubList(page, limit));
     }
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")
@@ -50,6 +53,13 @@ public class CmsClubController {
     public ResponseEntity<Object> clubCreate(@RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
         clubService.clubCreate(cmsClubsCreationsParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation(" 测试更新权限 ")
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('cms:club:update')")
+    public ResponseEntity<Object> deleteClub(@PathVariable Integer id){
+        return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.2社团创建申请列表 ")

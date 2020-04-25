@@ -1,10 +1,12 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
+import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.dao.SysUserDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
@@ -16,6 +18,7 @@ import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import edu.fzu.zhishe.security.util.JwtTokenUtil;
+import io.swagger.models.auth.In;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +53,8 @@ public class SysUserServiceImpl implements SysUserService {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private SysUserMapper userMapper;
+    @Autowired
+    private SysRolePermissionDAO rolePermissionDAO;
     @Autowired
     private SysUserCacheService userCacheService;
 //    @Value("${redis.key.authCode}")
@@ -106,6 +111,11 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public List<SysPermission> listPermissionByRoleId(Integer roleId) {
+        return rolePermissionDAO.listPermissionByRoleId(roleId);
+    }
+
+    @Override
     public UpdatePasswordResultEnum updatePassword(UpdateUserPasswordParam param) {
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(param.getUsername());
@@ -143,7 +153,8 @@ public class SysUserServiceImpl implements SysUserService {
     public UserDetails loadUserByUsername(String username) {
         SysUser sysUser = getByUsername(username);
         if (sysUser != null) {
-            return new SysUserDetails(sysUser);
+            List<SysPermission> permissionList = this.listPermissionByRoleId(sysUser.getCurrentRole());
+            return new SysUserDetails(sysUser, permissionList);
         }
         throw new UsernameNotFoundException(" 用户名或密码错误 ");
     }
@@ -202,6 +213,14 @@ public class SysUserServiceImpl implements SysUserService {
             user.setSlogan(updateParam.getSlogan());
         }
         userMapper.updateByPrimaryKey(user);
+        userCacheService.delUser(user.getId());
         return "SUCCESS";
+    }
+
+    @Override
+    public int updateUserSelective(SysUser user) {
+        int result = userMapper.updateByPrimaryKeySelective(user);
+        userCacheService.delUser(user.getId());
+        return result;
     }
 }

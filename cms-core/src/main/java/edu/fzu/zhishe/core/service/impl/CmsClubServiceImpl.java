@@ -313,6 +313,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
 
     @Override
     public List<CmsClub> getClubList(Integer page, Integer limit) {
-        return clubDAO.getClubList(page, limit);
+        PageHelper.startPage(page, limit);
+        return clubMapper.selectByExample(null);
     }
 }
