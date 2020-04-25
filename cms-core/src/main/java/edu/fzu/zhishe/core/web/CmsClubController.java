@@ -4,6 +4,7 @@ package edu.fzu.zhishe.core.web;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
+import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
@@ -69,7 +70,7 @@ public class CmsClubController {
                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
                                                  @RequestParam(value = "keyword") String keyword){
-        List<CmsClubCreateApply> clubCreateApplyList = clubService.getClubCreateList(page,limit,sort,order);
+        CommonList clubCreateApplyList = clubService.getClubCreateList(page,limit,sort,order);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubCreateApplyList);
     }
@@ -95,7 +96,7 @@ public class CmsClubController {
                                                   @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                   @RequestParam(value = "order", defaultValue = "asc") String order,
                                                   @RequestParam(value = "keyword") String keyword){
-        List<CmsClubDisbandApply> clubDisbandApplyList = clubService.getClubDisbandList(page,limit,sort,order);
+        CommonList clubDisbandApplyList = clubService.getClubDisbandList(page,limit,sort,order);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubDisbandApplyList);
     }

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
@@ -93,9 +94,10 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubCreateApply> getClubCreateList(Integer page,Integer limit,String sort,String order) {
+    public CommonList getClubCreateList(Integer page,Integer limit,String sort,String order) {
+        int  totalCount = clubCreateApplyMapper.selectByExample(null).size();
         PageHelper.startPage(page,limit);
-        return clubCreateApplyMapper.selectByExample(null);
+        return CommonList.getCommonList(clubCreateApplyMapper.selectByExample(null),totalCount);
     }
 
     @Override
@@ -169,9 +171,10 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubDisbandApply> getClubDisbandList(Integer page,Integer limit,String sort,String order) {
+    public CommonList getClubDisbandList(Integer page,Integer limit,String sort,String order) {
+        int totalCount = clubDisbandApplyMapper.selectByExample(null).size();
         PageHelper.startPage(page,limit);
-        return clubDisbandApplyMapper.selectByExample(null);
+        return CommonList.getCommonList(clubDisbandApplyMapper.selectByExample(null),totalCount);
     }
 
     @Override
@@ -245,7 +248,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<Map<String, String>> getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order) {
+    public CommonList getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order) {
         // 查询是否已存在该社团
         if(clubMapper.selectByPrimaryKey(clubId)==null){
             Asserts.fail(" 该社团不存在 ");
@@ -265,7 +268,8 @@ public class CmsClubServiceImpl  implements CmsClubService {
             myMap.put("state",ApplyStateEnum.toString(cmsClubJoinApplies.get(i).getState()));
             joinMaps.add(myMap);
         }
-        return PageUtil.startPage(joinMaps,page,limit);
+        int totalCount = joinMaps.size();
+        return CommonList.getCommonList(PageUtil.startPage(joinMaps,page,limit),totalCount);
     }
 
     @Override

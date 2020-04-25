@@ -4,6 +4,7 @@ import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.cms.model.CmsClubJoinApply;
+import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
@@ -22,19 +23,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface CmsClubService {
     CmsClubCreateApply clubCreate(CmsClubsCreationsParam clubsCreationsParam);
 
-    List<CmsClubCreateApply> getClubCreateList(Integer page,Integer limit,String sort,String order);
+    CommonList getClubCreateList(Integer page,Integer limit,String sort,String order);
 
     CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubDisbandApply> getClubDisbandList(Integer page,Integer limit,String sort,String order);
+    CommonList getClubDisbandList(Integer page, Integer limit, String sort, String order);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<Map<String, String>> getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order);
+    CommonList getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
