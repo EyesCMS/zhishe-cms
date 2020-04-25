@@ -64,8 +64,12 @@ public class CmsClubController {
 
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
-    public ResponseEntity<Object> clubCreateList(){
-        List<CmsClubCreateApply> clubCreateApplyList = clubService.getClubCreateList();
+    public ResponseEntity<Object> clubCreateList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                 @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                 @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                 @RequestParam(value = "keyword") String keyword){
+        List<CmsClubCreateApply> clubCreateApplyList = clubService.getClubCreateList(page,limit,sort,order);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubCreateApplyList);
     }
@@ -86,8 +90,12 @@ public class CmsClubController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<Object> clubDisbandList(){
-        List<CmsClubDisbandApply> clubDisbandApplyList = clubService.getClubDisbandList();
+    public ResponseEntity<Object> clubDisbandList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                  @RequestParam(value = "keyword") String keyword){
+        List<CmsClubDisbandApply> clubDisbandApplyList = clubService.getClubDisbandList(page,limit,sort,order);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubDisbandApplyList);
     }
@@ -108,8 +116,13 @@ public class CmsClubController {
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(@PathVariable("clubId") Integer clubId) {
-        return ResponseEntity.ok().body(clubService.getClubJoinsList(clubId));
+    public ResponseEntity<Object> joinsList(@PathVariable("clubId") Integer clubId,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                            @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                            @RequestParam(value = "order", defaultValue = "asc") String order,
+                                            @RequestParam(value = "keyword") String keyword) {
+        return ResponseEntity.ok().body(clubService.getClubJoinsList(clubId,page,limit,sort,order));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")

@@ -22,19 +22,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface CmsClubService {
     CmsClubCreateApply clubCreate(CmsClubsCreationsParam clubsCreationsParam);
 
-    List<CmsClubCreateApply> getClubCreateList();
+    List<CmsClubCreateApply> getClubCreateList(Integer page,Integer limit,String sort,String order);
 
     CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubDisbandApply> getClubDisbandList();
+    List<CmsClubDisbandApply> getClubDisbandList(Integer page,Integer limit,String sort,String order);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<Map<String, String>> getClubJoinsList(Integer clubId);
+    List<Map<String, String>> getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

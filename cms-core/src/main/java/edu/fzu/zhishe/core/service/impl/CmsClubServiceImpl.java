@@ -93,8 +93,8 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubCreateApply> getClubCreateList() {
-        PageHelper.startPage(0,3);
+    public List<CmsClubCreateApply> getClubCreateList(Integer page,Integer limit,String sort,String order) {
+        PageHelper.startPage(page,limit);
         return clubCreateApplyMapper.selectByExample(null);
     }
 
@@ -169,8 +169,8 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubDisbandApply> getClubDisbandList() {
-        PageHelper.startPage(0,2);
+    public List<CmsClubDisbandApply> getClubDisbandList(Integer page,Integer limit,String sort,String order) {
+        PageHelper.startPage(page,limit);
         return clubDisbandApplyMapper.selectByExample(null);
     }
 
@@ -245,7 +245,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
     }
 
     @Override
-    public List<Map<String, String>> getClubJoinsList(Integer clubId) {
+    public List<Map<String, String>> getClubJoinsList(Integer clubId,Integer page,Integer limit,String sort,String order) {
         // 查询是否已存在该社团
         if(clubMapper.selectByPrimaryKey(clubId)==null){
             Asserts.fail(" 该社团不存在 ");
@@ -265,7 +265,7 @@ public class CmsClubServiceImpl  implements CmsClubService {
             myMap.put("state",ApplyStateEnum.toString(cmsClubJoinApplies.get(i).getState()));
             joinMaps.add(myMap);
         }
-        return PageUtil.startPage(joinMaps,2,1);
+        return PageUtil.startPage(joinMaps,page,limit);
     }
 
     @Override
