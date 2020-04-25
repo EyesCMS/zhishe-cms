@@ -9,9 +9,7 @@ import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.dao.SysUserDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
-import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
-import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
-import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.mapper.SysUserMapper;
@@ -222,5 +220,18 @@ public class SysUserServiceImpl implements SysUserService {
         int result = userMapper.updateByPrimaryKeySelective(user);
         userCacheService.delUser(user.getId());
         return result;
+    }
+
+    @Override
+    public UpdatePasswordResultEnum updateUserPasswordAfterAnswer(SysUserUpdatePwdByAnswer param) {
+        SysUser user = getByUsername(param.getUsername());
+        if (user.getLoginAnswer().equals(param.getAnswer())) {
+            user.setPassword(passwordEncoder.encode(param.getPassword()));
+
+            userMapper.updateByPrimaryKey(user);
+            return UpdatePasswordResultEnum.SUCCESS;
+        } else {
+            return UpdatePasswordResultEnum.ANSWER_ERROR;
+        }
     }
 }

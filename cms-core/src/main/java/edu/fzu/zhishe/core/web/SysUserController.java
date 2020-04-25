@@ -4,7 +4,12 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import edu.fzu.zhishe.cms.model.CmsClub;
+import edu.fzu.zhishe.common.api.AjaxResponse;
+import edu.fzu.zhishe.common.api.Error;
+import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
+import edu.fzu.zhishe.core.dto.SysUserLoginParam;
 import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
+import edu.fzu.zhishe.core.dto.SysUserUpdatePwdByAnswer;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -27,17 +32,19 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Api(tags = "UserController")
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class SysUserController {
 
     @Autowired
     private SysUserService userService;
 
-    @ApiOperation(value = " 根据用户 ID 获取密保问题 ")
+    @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
-    public ResponseEntity<Object> question(@RequestParam("uid") Integer uid) {
-        SysUser user = userService.getById(uid);
-
+    public ResponseEntity<Object> question(@RequestParam("username") String name) {
+        SysUser user = userService.getByUsername(name);
+        if (user == null || user.getLoginQuestion() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         Map<String, String> myMap = new HashMap<>();
         myMap.put("login_problem", user.getLoginQuestion());
         return ok(myMap);
@@ -45,10 +52,9 @@ public class SysUserController {
 
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
     @PostMapping(value = "/answer")
-    public ResponseEntity<Object> answer(@RequestParam("uid") Integer uid,
-                                         @RequestParam("answer") String ans ) {
-        SysUser user = userService.getById(uid);
-        if (user.getLoginAnswer() != null && user.getLoginAnswer().equals(ans)) {
+    public ResponseEntity<Object> answer(@RequestBody SysUserUpdatePwdByAnswer param) {
+        SysUser user = userService.getByUsername(param.getUsername());
+        if (user != null && user.getLoginAnswer() != null && user.getLoginAnswer().equals(param.getAnswer())) {
             return noContent().build();
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -59,6 +65,19 @@ public class SysUserController {
     @PutMapping(value = "/info")
     public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updataParam) {
         userService.updateUserByParam(updataParam);
+        return noContent().build();
+    }
+
+    @ApiOperation(value = " 忘记密码时通过回答保密问题修改密码 ")
+    @PutMapping(value = "/password")
+    public ResponseEntity<Object> password(@RequestBody SysUserUpdatePwdByAnswer param) {
+        UpdatePasswordResultEnum result = userService.updateUserPasswordAfterAnswer(param);
+
+        if (result != UpdatePasswordResultEnum.SUCCESS) {
+            AjaxResponse response = new AjaxResponse();
+            response.setMessage(result.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
         return noContent().build();
     }
 }

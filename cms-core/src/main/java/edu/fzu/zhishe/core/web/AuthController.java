@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
+import edu.fzu.zhishe.common.exception.ApiException;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.SysUserLoginParam;
@@ -54,8 +55,13 @@ public class AuthController {
     @ApiOperation(" 用户注册 ")
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody SysUserRegisterParam userRegisterParam) {
-        userService.register(userRegisterParam);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        try {
+            userService.register(userRegisterParam);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
+        catch (ApiException a) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     @ApiOperation("  登录以后返回 token ")

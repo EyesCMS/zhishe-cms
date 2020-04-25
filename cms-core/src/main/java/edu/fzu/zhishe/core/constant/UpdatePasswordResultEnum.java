@@ -8,7 +8,8 @@ public enum UpdatePasswordResultEnum {
 
     SUCCESS(0, "修改成功"),
     USER_NOT_FOUND(-1, "找不到该用户"),
-    ERROR_OLD_PASSWORD(-2, "旧密码错误");
+    ERROR_OLD_PASSWORD(-2, "旧密码错误"),
+    ANSWER_ERROR(-3, "密保答案错误");
 
     private int state;
     private String message;

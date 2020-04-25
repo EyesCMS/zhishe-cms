@@ -3,9 +3,7 @@ package edu.fzu.zhishe.core.service;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
-import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
-import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.cms.model.SysUser;
 //import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
@@ -89,4 +87,10 @@ public interface SysUserService {
      * 选择性更新非空字段
      */
     int updateUserSelective(SysUser user);
+
+    /**
+     * 验证密保通过后修改密码
+     */
+    @Transactional
+    UpdatePasswordResultEnum updateUserPasswordAfterAnswer(SysUserUpdatePwdByAnswer param);
 }
