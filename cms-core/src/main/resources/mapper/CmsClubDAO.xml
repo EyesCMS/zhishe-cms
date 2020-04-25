@@ -39,4 +39,15 @@
       LIMIT #{offset}, #{limit}
   </select>
 
+  <select id="getClubList" parameterType="java.lang.Integer"
+          resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM
+    cms_club
+    LIMIT #{offset}, #{limit}
+  </select>
+
+
+
 </mapper>

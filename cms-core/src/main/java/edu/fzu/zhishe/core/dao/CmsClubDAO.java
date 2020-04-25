@@ -20,4 +20,9 @@ public interface CmsClubDAO {
      * 获取人气推荐社团
      */
     List<CmsClub> getHotClubList(@Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    /**
+     * 获取社团列表
+     */
+    List<CmsClub> getClubList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 }

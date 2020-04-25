@@ -33,10 +33,16 @@ public class CmsClubController {
         this.clubService = clubService;
     }
 
-    @ApiOperation(" 推荐社团列表 ")
+    @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
     public ResponseEntity<List<CmsClub>> recommendedClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(clubService.hotClubList(page, limit));
+    }
+
+    @ApiOperation(" 3.2查看社团列表 ")
+    @GetMapping("")
+    public ResponseEntity<List<CmsClub>> showClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
+        return ResponseEntity.ok(clubService.showClubList(page, limit));
     }
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")

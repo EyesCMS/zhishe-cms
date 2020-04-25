@@ -305,4 +305,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
     public List<CmsClub> hotClubList(Integer page, Integer limit) {
         return clubDAO.getHotClubList(page, limit);
     }
+
+    @Override
+    public List<CmsClub> getClubList(Integer page, Integer limit) {
+        return clubDAO.getClubList(page, limit);
+    }
 }

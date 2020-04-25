@@ -39,4 +39,6 @@ public interface CmsClubService {
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     List<CmsClub> hotClubList(Integer page, Integer limit);
+
+    List<CmsClub> getClubList(Integer page, Integer limit);
 }
