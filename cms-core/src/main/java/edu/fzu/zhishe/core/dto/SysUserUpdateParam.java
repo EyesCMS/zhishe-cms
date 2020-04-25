@@ -20,6 +20,9 @@ public class SysUserUpdateParam {
     @ApiModelProperty(value = " 专业 ")
     private String major;
 
+    @ApiModelProperty(value = " 宿舍地址 ")
+    private String address;
+
     @ApiModelProperty(value = " 联系方式 ")
     private String phone;
 
@@ -41,6 +44,8 @@ public class SysUserUpdateParam {
     public String getMajor() {
         return major;
     }
+
+    public String getAddress() { return address;}
 
     public String getPhone() {
         return phone;

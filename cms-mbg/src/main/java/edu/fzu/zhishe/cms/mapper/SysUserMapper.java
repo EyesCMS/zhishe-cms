@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.cms.mapper;
 
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import java.util.List;

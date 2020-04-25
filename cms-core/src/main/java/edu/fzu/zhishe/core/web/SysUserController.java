@@ -34,8 +34,8 @@ public class SysUserController {
     private SysUserService userService;
 
     @ApiOperation(value = " 根据用户 ID 获取密保问题 ")
-    @GetMapping(value = "/{uid}/question")
-    public ResponseEntity<Object> question(@PathVariable("uid") Integer uid) {
+    @GetMapping(value = "/question")
+    public ResponseEntity<Object> question(@RequestParam("uid") Integer uid) {
         SysUser user = userService.getById(uid);
 
         Map<String, String> myMap = new HashMap<>();
