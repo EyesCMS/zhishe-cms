@@ -28,7 +28,7 @@ public class SysUser implements Serializable {
     private String phone;
 
     @ApiModelProperty(value = "宿舍地址")
-    private String adress;
+    private String address;
 
     @ApiModelProperty(value = "标语")
     private String slogan;
@@ -111,12 +111,12 @@ public class SysUser implements Serializable {
         this.phone = phone;
     }
 
-    public String getAdress() {
-        return adress;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAdress(String adress) {
-        this.adress = adress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getSlogan() {
@@ -173,7 +173,7 @@ public class SysUser implements Serializable {
         sb.append(", major=").append(major);
         sb.append(", email=").append(email);
         sb.append(", phone=").append(phone);
-        sb.append(", adress=").append(adress);
+        sb.append(", address=").append(address);
         sb.append(", slogan=").append(slogan);
         sb.append(", loginQuestion=").append(loginQuestion);
         sb.append(", loginAnswer=").append(loginAnswer);

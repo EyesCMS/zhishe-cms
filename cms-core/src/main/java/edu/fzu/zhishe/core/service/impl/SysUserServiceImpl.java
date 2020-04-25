@@ -190,7 +190,7 @@ public class SysUserServiceImpl implements SysUserService {
             user.setMajor(updateParam.getMajor());
         }
         if (updateParam.getAddress() != null) {
-            user.setAdress(updateParam.getAddress());
+            user.setAddress(updateParam.getAddress());
         }
         if (updateParam.getNickname() != null) {
             user.setNickname(updateParam.getNickname());
