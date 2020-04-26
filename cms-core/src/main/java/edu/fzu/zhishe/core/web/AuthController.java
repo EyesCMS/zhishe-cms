@@ -9,6 +9,7 @@ import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.common.exception.ApiException;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dto.SysUserInfoDTO;
 import edu.fzu.zhishe.core.dto.SysUserLoginParam;
 import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
 import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
@@ -17,10 +18,13 @@ import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -104,15 +108,22 @@ public class AuthController {
         user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
         userService.updateUserSelective(user);
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("avatar", user.getAvatarUrl());
+//        Map<String, Object> data = new HashMap<>();
+//        data.put("username", user.getUsername());
+//        data.put("avatar", user.getAvatarUrl());
+//        data.put("roles", new String[]{"admin"});
+//        data.put("roles", new String[]{"normal"});
+
+        SysUserInfoDTO userInfoDTO = new SysUserInfoDTO();
+        BeanUtils.copyProperties(user, userInfoDTO);
+        userInfoDTO.setAvatar(user.getAvatarUrl());
+        userInfoDTO.setUserid(user.getId());
         if (user.getIsAdmin() == 1) {
-            data.put("roles", new String[]{"admin"});
+            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("admin")));
         } else {
-            data.put("roles", new String[]{"normal"});
+            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("normal")));
         }
-        return ok().body(data);
+        return ok().body(userInfoDTO);
     }
 
     @PreAuthorize("hasAuthority('sys:user:read')")
