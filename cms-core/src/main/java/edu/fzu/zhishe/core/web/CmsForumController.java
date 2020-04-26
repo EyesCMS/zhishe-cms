@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.core.web;
 
-import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDetails;

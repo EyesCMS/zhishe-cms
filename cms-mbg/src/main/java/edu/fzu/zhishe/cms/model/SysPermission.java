@@ -1,30 +1,16 @@
 package edu.fzu.zhishe.cms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SysPermission implements Serializable {
-    @JsonIgnore
     private Integer id;
 
-    @JsonIgnore
-    @ApiModelProperty(value = "菜单编码")
-    private String menuCode;
-
-    @JsonIgnore
-    @ApiModelProperty(value = "菜单名称")
-    private String menuName;
-
     @ApiModelProperty(value = "权限编码")
-    private String permissionCode;
+    private String code;
 
     @ApiModelProperty(value = "权限名称")
-    private String permissionName;
-
-    @JsonIgnore
-    @ApiModelProperty(value = "必要状态: 0 -> 非必须; 1 -> 必须;")
-    private Integer requiredPermission;
+    private String name;
 
     private static final long serialVersionUID = 1L;
 
@@ -36,44 +22,20 @@ public class SysPermission implements Serializable {
         this.id = id;
     }
 
-    public String getMenuCode() {
-        return menuCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setMenuCode(String menuCode) {
-        this.menuCode = menuCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getMenuName() {
-        return menuName;
+    public String getName() {
+        return name;
     }
 
-    public void setMenuName(String menuName) {
-        this.menuName = menuName;
-    }
-
-    public String getPermissionCode() {
-        return permissionCode;
-    }
-
-    public void setPermissionCode(String permissionCode) {
-        this.permissionCode = permissionCode;
-    }
-
-    public String getPermissionName() {
-        return permissionName;
-    }
-
-    public void setPermissionName(String permissionName) {
-        this.permissionName = permissionName;
-    }
-
-    public Integer getRequiredPermission() {
-        return requiredPermission;
-    }
-
-    public void setRequiredPermission(Integer requiredPermission) {
-        this.requiredPermission = requiredPermission;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -83,11 +45,8 @@ public class SysPermission implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", menuCode=").append(menuCode);
-        sb.append(", menuName=").append(menuName);
-        sb.append(", permissionCode=").append(permissionCode);
-        sb.append(", permissionName=").append(permissionName);
-        sb.append(", requiredPermission=").append(requiredPermission);
+        sb.append(", code=").append(code);
+        sb.append(", name=").append(name);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -13,6 +13,7 @@
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -74,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, name, chief_id, member_count, qq_group, slogan, avatar_url, official_state, type, 
-    grade, create_at
+    grade, create_at, delete_status
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsClubExample" resultMap="BaseResultMap">
     select
@@ -113,11 +114,11 @@
     insert into cms_club (name, chief_id, member_count, 
       qq_group, slogan, avatar_url, 
       official_state, type, grade, 
-      create_at)
+      create_at, delete_status)
     values (#{name,jdbcType=VARCHAR}, #{chiefId,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER}, 
       #{qqGroup,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
       #{officialState,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, 
-      #{createAt,jdbcType=TIMESTAMP})
+      #{createAt,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsClub">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -155,6 +156,9 @@
       <if test="createAt != null">
         create_at,
       </if>
+      <if test="deleteStatus != null">
+        delete_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
@@ -186,6 +190,9 @@
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="deleteStatus != null">
+        #{deleteStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -231,6 +238,9 @@
       <if test="record.createAt != null">
         create_at = #{record.createAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.deleteStatus != null">
+        delete_status = #{record.deleteStatus,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -248,7 +258,8 @@
       official_state = #{record.officialState,jdbcType=INTEGER},
       type = #{record.type,jdbcType=VARCHAR},
       grade = #{record.grade,jdbcType=INTEGER},
-      create_at = #{record.createAt,jdbcType=TIMESTAMP}
+      create_at = #{record.createAt,jdbcType=TIMESTAMP},
+      delete_status = #{record.deleteStatus,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -286,6 +297,9 @@
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
       </if>
+      <if test="deleteStatus != null">
+        delete_status = #{deleteStatus,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -300,7 +314,8 @@
       official_state = #{officialState,jdbcType=INTEGER},
       type = #{type,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=INTEGER},
-      create_at = #{createAt,jdbcType=TIMESTAMP}
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      delete_status = #{deleteStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

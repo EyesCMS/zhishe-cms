@@ -42,7 +42,7 @@ public class SysUserDetails implements UserDetails {
         // 返回当前用户的权限
         return permissionList
             .stream()
-            .map(perm -> new SimpleGrantedAuthority(perm.getPermissionCode()))
+            .map(perm -> new SimpleGrantedAuthority(perm.getCode()))
             .collect(Collectors.toList());
     }
 

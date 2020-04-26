@@ -3,11 +3,8 @@
 <mapper namespace="edu.fzu.zhishe.cms.mapper.SysPermissionMapper">
   <resultMap id="BaseResultMap" type="edu.fzu.zhishe.cms.model.SysPermission">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="menu_code" jdbcType="VARCHAR" property="menuCode" />
-    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
-    <result column="permission_code" jdbcType="VARCHAR" property="permissionCode" />
-    <result column="permission_name" jdbcType="VARCHAR" property="permissionName" />
-    <result column="required_permission" jdbcType="INTEGER" property="requiredPermission" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +65,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, menu_code, menu_name, permission_code, permission_name, required_permission
+    id, code, name
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.SysPermissionExample" resultMap="BaseResultMap">
     select
@@ -104,10 +101,8 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into sys_permission (menu_code, menu_name, permission_code, 
-      permission_name, required_permission)
-    values (#{menuCode,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{permissionCode,jdbcType=VARCHAR}, 
-      #{permissionName,jdbcType=VARCHAR}, #{requiredPermission,jdbcType=INTEGER})
+    insert into sys_permission (code, name)
+    values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.SysPermission">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -115,37 +110,19 @@
     </selectKey>
     insert into sys_permission
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="menuCode != null">
-        menu_code,
+      <if test="code != null">
+        code,
       </if>
-      <if test="menuName != null">
-        menu_name,
-      </if>
-      <if test="permissionCode != null">
-        permission_code,
-      </if>
-      <if test="permissionName != null">
-        permission_name,
-      </if>
-      <if test="requiredPermission != null">
-        required_permission,
+      <if test="name != null">
+        name,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="menuCode != null">
-        #{menuCode,jdbcType=VARCHAR},
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
       </if>
-      <if test="menuName != null">
-        #{menuName,jdbcType=VARCHAR},
-      </if>
-      <if test="permissionCode != null">
-        #{permissionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="permissionName != null">
-        #{permissionName,jdbcType=VARCHAR},
-      </if>
-      <if test="requiredPermission != null">
-        #{requiredPermission,jdbcType=INTEGER},
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -161,20 +138,11 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.menuCode != null">
-        menu_code = #{record.menuCode,jdbcType=VARCHAR},
+      <if test="record.code != null">
+        code = #{record.code,jdbcType=VARCHAR},
       </if>
-      <if test="record.menuName != null">
-        menu_name = #{record.menuName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.permissionCode != null">
-        permission_code = #{record.permissionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="record.permissionName != null">
-        permission_name = #{record.permissionName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.requiredPermission != null">
-        required_permission = #{record.requiredPermission,jdbcType=INTEGER},
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -184,11 +152,8 @@
   <update id="updateByExample" parameterType="map">
     update sys_permission
     set id = #{record.id,jdbcType=INTEGER},
-      menu_code = #{record.menuCode,jdbcType=VARCHAR},
-      menu_name = #{record.menuName,jdbcType=VARCHAR},
-      permission_code = #{record.permissionCode,jdbcType=VARCHAR},
-      permission_name = #{record.permissionName,jdbcType=VARCHAR},
-      required_permission = #{record.requiredPermission,jdbcType=INTEGER}
+      code = #{record.code,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -196,31 +161,19 @@
   <update id="updateByPrimaryKeySelective" parameterType="edu.fzu.zhishe.cms.model.SysPermission">
     update sys_permission
     <set>
-      <if test="menuCode != null">
-        menu_code = #{menuCode,jdbcType=VARCHAR},
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="menuName != null">
-        menu_name = #{menuName,jdbcType=VARCHAR},
-      </if>
-      <if test="permissionCode != null">
-        permission_code = #{permissionCode,jdbcType=VARCHAR},
-      </if>
-      <if test="permissionName != null">
-        permission_name = #{permissionName,jdbcType=VARCHAR},
-      </if>
-      <if test="requiredPermission != null">
-        required_permission = #{requiredPermission,jdbcType=INTEGER},
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="edu.fzu.zhishe.cms.model.SysPermission">
     update sys_permission
-    set menu_code = #{menuCode,jdbcType=VARCHAR},
-      menu_name = #{menuName,jdbcType=VARCHAR},
-      permission_code = #{permissionCode,jdbcType=VARCHAR},
-      permission_name = #{permissionName,jdbcType=VARCHAR},
-      required_permission = #{requiredPermission,jdbcType=INTEGER}
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

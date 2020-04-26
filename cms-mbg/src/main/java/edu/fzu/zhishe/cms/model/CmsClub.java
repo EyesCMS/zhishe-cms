@@ -36,6 +36,9 @@ public class CmsClub implements Serializable {
     @ApiModelProperty(value = "创建时间")
     private Date createAt;
 
+    @ApiModelProperty(value = "删除状态：0->未删除；1->已删除")
+    private Integer deleteStatus;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -126,6 +129,14 @@ public class CmsClub implements Serializable {
         this.createAt = createAt;
     }
 
+    public Integer getDeleteStatus() {
+        return deleteStatus;
+    }
+
+    public void setDeleteStatus(Integer deleteStatus) {
+        this.deleteStatus = deleteStatus;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -143,6 +154,7 @@ public class CmsClub implements Serializable {
         sb.append(", type=").append(type);
         sb.append(", grade=").append(grade);
         sb.append(", createAt=").append(createAt);
+        sb.append(", deleteStatus=").append(deleteStatus);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

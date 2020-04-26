@@ -5,8 +5,8 @@
   <select id="listPermissionByRoleId" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.SysPermissionMapper.BaseResultMap">
     SELECT
-      p.permission_code,
-      p.permission_name
+      p.code,
+      p.`name`
     FROM
       sys_role r,
       sys_role_permission_rel rp,
