@@ -5,30 +5,60 @@
   <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDetails">
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="body" jdbcType="VARCHAR" property="content" />
-    <result column="act_create_at" jdbcType="TIMESTAMP" property="createAt" />
-    <collection property="remarks" ofType="edu.fzu.zhishe.core.dto.RemarkDTO">
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <collection property="remarks" columnPrefix="ar_" ofType="edu.fzu.zhishe.core.dto.RemarkDTO">
       <result property="content" column="content" />
-      <result property="createAt" column="remark_create_at" />
+      <result property="createAt" column="create_at" />
       <result property="username" column="username" />
     </collection>
   </resultMap>
+
+  <resultMap id="BaseActivityResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="body" jdbcType="VARCHAR" property="content" />
+    <result column="c_name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="c_avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
+
+  <select id="listActivity" parameterType="java.lang.Integer" resultMap="BaseActivityResultMap">
+    SELECT
+     a.id,
+     a.title,
+     a.body,
+     c.`name` c_name,
+     a.create_at,
+     a.img_url,
+     c.avatar_url c_avatar_url
+    FROM
+     cms_activity a
+     LEFT JOIN cms_club c ON a.club_id = c.id
+    WHERE
+     1
+    <if test="queryParam.keyword != null and queryParam.keyword != ''">
+      AND title LIKE concat("%",#{queryParam.keyword},"%")
+    </if>
+    ORDER BY
+     #{queryParam.sort} DESC
+    LIMIT #{queryParam.page}, #{queryParam.limit}
+  </select>
 
   <select id="getActivityDetailsById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
      a.title,
      a.body,
-     a.create_at as act_create_at,
-     ar.content,
-     ar.create_at as remark_create_at,
-     u.username
+     a.create_at,
+     ar.content ar_content,
+     ar.create_at ar_create_at,
+     u.username ar_username
     FROM
-     cms_activity a,
-     cms_user_activity_remark ar,
-     sys_user u
+     cms_activity a
+     LEFT JOIN cms_user_activity_remark ar ON a.id = ar.activity_id
+     LEFT JOIN sys_user u ON ar.user_id = u.id
     WHERE
      a.id = #{id}
-     AND a.id = ar.activity_id
-     AND ar.user_id = u.id
   </select>
 
 </mapper>

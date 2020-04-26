@@ -8,6 +8,7 @@ import edu.fzu.zhishe.cms.model.CmsActivityExample;
 import edu.fzu.zhishe.cms.model.CmsUserActivityRemark;
 import edu.fzu.zhishe.cms.model.CmsUserActivityRemarkExample;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
+import edu.fzu.zhishe.core.dto.CmsActivityDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
@@ -33,30 +34,12 @@ public class CmsForumServiceImpl implements CmsForumService {
     private CmsUserActivityRemarkMapper remarkMapper;
 
     @Override
-    public List<CmsActivity> listPosts(Integer clubId, QueryParam queryParam) {
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-
-        CmsActivityExample activityExample = new CmsActivityExample();
-        activityExample.setOrderByClause(queryParam.getSort() + " " + queryParam.getOrder());
-        if (clubId != null) {
-            activityExample.createCriteria().andClubIdEqualTo(clubId);
-        }
-        if (!StringUtils.isEmpty(queryParam.getKeyword())) {
-            activityExample.createCriteria().andTitleLike("%" + queryParam.getKeyword() + "%");
-        }
-
-        return activityMapper.selectByExample(activityExample);
+    public List<CmsActivityDTO> listPosts(Integer clubId, QueryParam queryParam) {
+        return activityDAO.listActivity(clubId, queryParam);
     }
 
     @Override
     public CmsActivityDetails getActivityDetailById(Integer id) {
-//        CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-//
-//        CmsUserActivityRemarkExample remarkExample = new CmsUserActivityRemarkExample();
-//        remarkExample.createCriteria().andActivityIdEqualTo(id);
-//        List<CmsUserActivityRemark> remarks = remarkMapper.selectByExample(remarkExample);
-//
-//        CmsActivityDetails activityDetails = new CmsActivityDetails();
         CmsActivityDetails activityDetails = activityDAO.getActivityDetailsById(id);
         return activityDetails;
     }

@@ -2,12 +2,12 @@ package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.common.util.CommonList;
+import edu.fzu.zhishe.core.dto.CmsActivityDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
-import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/forum")
-@ApiModel("CmsForumController")
+@Api(tags = "CmsForumController")
 public class CmsForumController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class CmsForumController {
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
                                             @RequestParam(value = "keyword", required = false) String title) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, title);
-        List<CmsActivity> activities = forumService.listPosts(null, queryParam);
+        List<CmsActivityDTO> activities = forumService.listPosts(null, queryParam);
         return ResponseEntity.ok().body(CommonList.getCommonList(activities, activities.size()));
     }
 
@@ -50,7 +50,7 @@ public class CmsForumController {
                                                 @RequestParam(value = "order", defaultValue = "asc") String order,
                                                 @RequestParam(value = "keyword", required = false) String title) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, title);
-        List<CmsActivity> activities = forumService.listPosts(clubId, queryParam);
+        List<CmsActivityDTO> activities = forumService.listPosts(clubId, queryParam);
         return ResponseEntity.ok().body(CommonList.getCommonList(activities, activities.size()));
     }
 
