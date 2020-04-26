@@ -23,6 +23,7 @@ import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
+import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
@@ -147,6 +148,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                 ClubOfficialStateEnum.OFFICIAL.getValue()
                 : ClubOfficialStateEnum.UNOFFICIAL.getValue());
             cmsClub.setCreateAt(new Date());
+            cmsClub.setDeleteStatus(DeleteStateEnum.Existence.getValue());
             clubMapper.insert(cmsClub);
 
             //更新申请记录
@@ -245,10 +247,15 @@ public class CmsClubServiceImpl implements CmsClubService {
             example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
             clubJoinApplyMapper.deleteByExample(example1);
 
-            //删除相关disbandApply表记录
-            clubDisbandApplyMapper.deleteByPrimaryKey(cmsClubsAuditParam.getId());
+            //更新相关disbandApply表记录
 
-            //删除功能有很多问题，先暂时不删除社团，只删除其他记录
+            cmsClubDisbandApply.setState(ApplyStateEnum.REJECTED.getValue());
+            clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
+
+            //删除社团（逻辑删除）
+            CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId());
+            cmsClub.setDeleteStatus(DeleteStateEnum.Deleted.getValue());
+            clubMapper.updateByPrimaryKeySelective(cmsClub);
             //clubMapper.deleteByPrimaryKey(cmsClubDisbandApply.getClubId());
 
             return cmsClubDisbandApply;
