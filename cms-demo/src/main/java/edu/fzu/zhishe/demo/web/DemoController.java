@@ -55,7 +55,6 @@ public class DemoController {
     public ResponseEntity<List<CmsClub>> listClubs(
         @RequestParam(name = "page", defaultValue = "0") Integer pageNum,
         @RequestParam(name = "limit", defaultValue = "3") Integer pageSize) {
-        // TODO: what if club is not exists
         List<CmsClub> clubs = demoService.listClubs(pageNum, pageSize);
         return ResponseEntity.ok(clubs);
     }
@@ -89,7 +88,6 @@ public class DemoController {
             return ResponseEntity.badRequest().body(result.getFieldError().getDefaultMessage());
         }
 
-        // TODO: what if club is not exists
         int count = demoService.updateClub(id, cmsClubDTO);
         if (count == 1) {
             LOGGER.debug("updateClub success :{}", cmsClubDTO);
@@ -103,7 +101,6 @@ public class DemoController {
     @ApiOperation("删除社团")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deleteClub(@PathVariable Integer id) {
-        // TODO: what if club is not exists
         int count = demoService.deleteClub(id);
         if (count == 1) {
             LOGGER.debug("deleteClub success :id={}", id);

@@ -94,9 +94,7 @@ public class AuthController {
     @GetMapping("/info")
     public ResponseEntity<Object> info(Principal principal) {
         if (principal == null) {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body(ErrorResponseBody.unauthorized());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponseBody.unauthorized());
         }
         //SysUser user = userService.getCurrentMember();
         String username = principal.getName();
@@ -108,11 +106,12 @@ public class AuthController {
 
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUsername());
-        data.put("roles", new String[]{"TEST"});
-        data.put("permissions", new String[]{"user:list"});
-        // TODO
-        //data.put("menus", roleService.getMenuList(user.getId()));
         data.put("avatar", user.getAvatarUrl());
+        if (user.getIsAdmin() == 1) {
+            data.put("roles", new String[]{"admin"});
+        } else {
+            data.put("roles", new String[]{"normal"});
+        }
         return ok().body(data);
     }
 

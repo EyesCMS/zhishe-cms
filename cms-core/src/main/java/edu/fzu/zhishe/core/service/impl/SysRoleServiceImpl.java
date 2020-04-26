@@ -55,7 +55,6 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public void switchCurrentRole(Integer clubId) {
         SysUser currentUser = userService.getCurrentUser();
-        // TODO: check before set role
         // 4. is admin
         // 3. is chief
         // 2. is member
@@ -91,7 +90,6 @@ public class SysRoleServiceImpl implements SysRoleService {
             return ;
         }
 
-        // TODO： 用户点击某个社团后，传递当前社团 ID 后端，后端根据社团 ID 设置当前用户角色
         userService.updateUserSelective(currentUser);
         userCacheService.delUser(currentUser.getId());
     }

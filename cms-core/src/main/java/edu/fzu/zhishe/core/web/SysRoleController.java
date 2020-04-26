@@ -35,7 +35,6 @@ public class SysRoleController {
         return ResponseEntity.ok().body(roleService.listPermission(id));
     }
 
-    // TODO: api operation
     @ApiOperation(" 根据所在社团切换角色 ")
     @PostMapping("/switch")
     // @PreAuthorize("hasAuthority('sys:perm:read')")
