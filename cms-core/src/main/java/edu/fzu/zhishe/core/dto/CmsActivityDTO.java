@@ -78,4 +78,17 @@ public class CmsActivityDTO {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
+
+    @Override
+    public String toString() {
+        return "CmsActivityDTO{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", content='" + content + '\'' +
+            ", clubName='" + clubName + '\'' +
+            ", createAt='" + createAt + '\'' +
+            ", imgUrl='" + imgUrl + '\'' +
+            ", avatarUrl='" + avatarUrl + '\'' +
+            '}';
+    }
 }

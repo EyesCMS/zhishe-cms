@@ -31,8 +31,9 @@ public enum ClubOfficialStateEnum {
         if(value!=OFFICIAL.getValue()&&value!=UNOFFICIAL.getValue()){
             return false;
         }
-        else
+        else {
             return true;
+        }
     }
 
 }

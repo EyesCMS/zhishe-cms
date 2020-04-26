@@ -2,8 +2,6 @@ package edu.fzu.zhishe.core.web;
 
 
 import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
@@ -40,7 +38,7 @@ public class CmsClubController {
     @GetMapping("/recommended")
     @PreAuthorize("hasAuthority('cms:club:read')")
     public ResponseEntity<List<CmsClub>> recommendedClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
-        return ResponseEntity.ok(clubService.hotClubList(page, limit));
+        return ResponseEntity.ok(clubService.getHotClubList(page, limit));
     }
 
     @ApiOperation(" 3.2查看社团列表 ")

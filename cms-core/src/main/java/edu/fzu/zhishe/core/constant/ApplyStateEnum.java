@@ -39,8 +39,9 @@ public enum ApplyStateEnum {
         if(value!=PENDING.getValue()&&value!=ACTIVE.getValue()&&value!=REJECTED.getValue()){
             return false;
         }
-        else
+        else {
             return true;
+        }
     }
 
 
@@ -52,8 +53,9 @@ public enum ApplyStateEnum {
         }else if(value==REJECTED.getValue()){
             return "REJECTED";
         }
-        else
+        else {
             return null;
+        }
 
     }
 }
