@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsActivityDAO">
+
+  <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDetails">
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="body" jdbcType="VARCHAR" property="content" />
+    <result column="act_create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <collection property="remarks" ofType="edu.fzu.zhishe.core.dto.RemarkDTO">
+      <result property="content" column="content" />
+      <result property="createAt" column="remark_create_at" />
+      <result property="username" column="username" />
+    </collection>
+  </resultMap>
+
+  <select id="getActivityDetailsById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+     a.title,
+     a.body,
+     a.create_at as act_create_at,
+     ar.content,
+     ar.create_at as remark_create_at,
+     u.username
+    FROM
+     cms_activity a,
+     cms_user_activity_remark ar,
+     sys_user u
+    WHERE
+     a.id = #{id}
+     AND a.id = ar.activity_id
+     AND ar.user_id = u.id
+  </select>
+
+</mapper>
