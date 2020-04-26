@@ -51,6 +51,9 @@ public class CmsClubServiceImpl  implements CmsClubService {
     SysUserMapper sysUserMapper;
 
     @Autowired
+    CmsUserClubRelMapper userClubRelMapper;
+
+    @Autowired
     private CmsClubDAO clubDAO;
 
     @Autowired
@@ -68,7 +71,8 @@ public class CmsClubServiceImpl  implements CmsClubService {
         }
         // 查询是否已申请创建该社团
         CmsClubCreateApplyExample example1 = new CmsClubCreateApplyExample();
-        example1.createCriteria().andClubNameEqualTo(clubsCreationsParam.getClubName());
+        example1.createCriteria().andClubNameEqualTo(clubsCreationsParam.getClubName())
+                .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
         List<CmsClubCreateApply> cmsClubCreateApplies = clubCreateApplyMapper.selectByExample(example1);
         if (!CollectionUtils.isEmpty(cmsClubCreateApplies)) {
             Asserts.fail(" 该社团已经申请创建，请等待审核 ");
@@ -131,9 +135,21 @@ public class CmsClubServiceImpl  implements CmsClubService {
             clubMapper.insert(cmsClub);
 
             //更新申请记录
-            cmsClubCreateApply.setHandleAt(new Date());
+            Date handleAt = new Date();
+            cmsClubCreateApply.setHandleAt(handleAt);
             cmsClubCreateApply.setState(ApplyStateEnum.ACTIVE.getValue());
             clubCreateApplyMapper.updateByPrimaryKeySelective(cmsClubCreateApply);
+
+            //更新club_user表
+            CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
+            CmsClubExample example = new CmsClubExample();//查询刚刚插入的社团id
+            example.createCriteria().andNameEqualTo(cmsClubCreateApply.getClubName());
+            List<CmsClub> cmsClubs = clubMapper.selectByExample(example);
+            cmsUserClubRel.setClubId(cmsClubs.get(0).getId());
+            cmsUserClubRel.setUserId(cmsClubCreateApply.getUserId());
+            cmsUserClubRel.setJoinDate(handleAt);
+            userClubRelMapper.insert(cmsUserClubRel);
+
             return cmsClubCreateApply;
         }
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.REJECTED.getValue()){
@@ -154,7 +170,11 @@ public class CmsClubServiceImpl  implements CmsClubService {
             Asserts.fail(" 该社团不存在 ");
         }
         // 查询是否已申请解散该社团
-        if (!(clubDisbandApplyMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()) == null)) {
+        CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
+        example.createCriteria().andClubIdEqualTo(clubsDisbandParam.getClubId())
+                .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
+        List<CmsClubDisbandApply> cmsClubDisbandApplies = clubDisbandApplyMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(cmsClubDisbandApplies)) {
             Asserts.fail(" 该社团已经申请解散，请等待审核 ");
         }
 
@@ -195,18 +215,24 @@ public class CmsClubServiceImpl  implements CmsClubService {
         }
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.ACTIVE.getValue()){
             //删除社团
-            //System.out.println(cmsClubDisbandApply.toString());
-            //System.out.println(cmsClubDisbandApply.getClubId());
+            //删除功能有很多问题，先暂时不删除社团，只删除其他记录
 
-            //4.25白天在讨论
+            //删除相关user_club表记录
+            CmsUserClubRelExample example = new CmsUserClubRelExample();
+            example.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            userClubRelMapper.deleteByExample(example);
+
+            //删除相关joinApply表记录
+            CmsClubJoinApplyExample example1 = new CmsClubJoinApplyExample();
+            example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            clubJoinApplyMapper.deleteByExample(example1);
+
+            //删除相关disbandApply表记录
             clubDisbandApplyMapper.deleteByPrimaryKey(cmsClubsAuditParam.getId());
-            clubMapper.deleteByPrimaryKey(cmsClubDisbandApply.getClubId());
 
+            //删除功能有很多问题，先暂时不删除社团，只删除其他记录
+            //clubMapper.deleteByPrimaryKey(cmsClubDisbandApply.getClubId());
 
-//            //更新申请记录
-//            cmsClubDisbandApply.setHandleAt(new Date());
-//            cmsClubDisbandApply.setState(1);
-//            clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
             return cmsClubDisbandApply;
         }
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.REJECTED.getValue()){
@@ -227,14 +253,24 @@ public class CmsClubServiceImpl  implements CmsClubService {
         if(clubMapper.selectByPrimaryKey(cmsClubsJoinParam.getClubId())==null){
             Asserts.fail(" 该社团不存在 ");
         }
+        // 查询是否已经是社团成员
+        CmsUserClubRelExample example1 = new CmsUserClubRelExample();
+        example1.createCriteria().andClubIdEqualTo(cmsClubsJoinParam.getClubId())
+                .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
+        List<CmsUserClubRel> cmsUserClubRels = userClubRelMapper.selectByExample(example1);
+        if (!CollectionUtils.isEmpty(cmsUserClubRels)) {
+            Asserts.fail(" 您已加入该社团 ");
+        }
         // 查询是否已申请加入
         CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
         example.createCriteria().andClubIdEqualTo(cmsClubsJoinParam.getClubId())
-                                 .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
+                .andUserIdEqualTo(sysUserService.getCurrentUser().getId())
+                .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
         List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
         if (!CollectionUtils.isEmpty(cmsClubJoinApplies)) {
             Asserts.fail(" 您已申请加入该社团，请等待审核 ");
         }
+
 
         CmsClubJoinApply cmsClubJoinApply = new CmsClubJoinApply();
         BeanUtils.copyProperties(cmsClubsJoinParam, cmsClubJoinApply);
@@ -295,8 +331,16 @@ public class CmsClubServiceImpl  implements CmsClubService {
             clubMapper.updateByPrimaryKeySelective(cmsClub);
             //更新加入申请
             cmsClubJoinApply.setState(ApplyStateEnum.ACTIVE.getValue());
-            cmsClubJoinApply.setHandleAt(new Date());
+            Date handleAt = new Date();
+            cmsClubJoinApply.setHandleAt(handleAt);
             clubJoinApplyMapper.updateByPrimaryKeySelective(cmsClubJoinApply);
+            //更新club_user表
+            CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
+            cmsUserClubRel.setUserId(cmsClubJoinApply.getUserId());
+            cmsUserClubRel.setClubId(cmsClubJoinApply.getClubId());
+            cmsUserClubRel.setJoinDate(handleAt);
+            userClubRelMapper.insert(cmsUserClubRel);
+
             return cmsClubJoinApply;
         }
         if(cmsClubsAuditParam.getState()==ApplyStateEnum.REJECTED.getValue()){
