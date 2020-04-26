@@ -1,5 +1,9 @@
 package edu.fzu.zhishe.core.dto;
 
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotEmpty;
+
 /**
  *社团解散申请表单数据
  *
@@ -14,7 +18,11 @@ public class CmsClubsDisbandParam {
      */
 
     private int clubId;
+    @ApiModelProperty(value = " 申请人 ", required = true)
+    @NotEmpty(message = " 申请人不能为空 ")
     private String applicant;
+    @ApiModelProperty(value = " 理由 ", required = true)
+    @NotEmpty(message = " 理由不能为空 ")
     private String reason;
     private String accessoryUrl;
 

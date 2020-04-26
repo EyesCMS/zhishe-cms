@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class CmsClubController {
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
-    public ResponseEntity<Object> clubCreate(@RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
+    public ResponseEntity<Object> clubCreate(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
         clubService.clubCreate(cmsClubsCreationsParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -77,14 +78,14 @@ public class CmsClubController {
 
     @ApiOperation(" 4.3审核创建社团申请 ")
     @PutMapping("/creations/audit")
-    public ResponseEntity<Object> clubCreateAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubCreateAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         clubService.clubCreationsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.4提交解散社团申请表单 ")
     @PostMapping("/dissolution")
-    public ResponseEntity<Object> clubDissolve(@RequestBody CmsClubsDisbandParam cmsClubsDisbandParam){
+    public ResponseEntity<Object> clubDissolve(@Validated @RequestBody CmsClubsDisbandParam cmsClubsDisbandParam){
         clubService.clubDisband(cmsClubsDisbandParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -103,14 +104,14 @@ public class CmsClubController {
 
     @ApiOperation(" 4.6审核解散社团申请 ")
     @PutMapping("/dissolution/audit")
-    public ResponseEntity<Object> clubDisbandAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubDisbandAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         clubService.clubDissolutionAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.7提交加入社团申请表单 ")
     @PostMapping("/join")
-    public ResponseEntity<Object> clubJoin(@RequestBody CmsClubsJoinParam cmsClubsJoinParam){
+    public ResponseEntity<Object> clubJoin(@Validated @RequestBody CmsClubsJoinParam cmsClubsJoinParam){
         clubService.clubJoin(cmsClubsJoinParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -128,7 +129,7 @@ public class CmsClubController {
 
     @ApiOperation(" 4.9审核解散社团申请 ")
     @PutMapping("/joins/audit")
-    public ResponseEntity<Object> clubJoinsAudit(@RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubJoinsAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         clubService.clubJoinsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
