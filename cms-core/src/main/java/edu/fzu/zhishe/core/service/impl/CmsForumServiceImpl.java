@@ -1,12 +1,9 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsUserActivityRemarkMapper;
 import edu.fzu.zhishe.cms.model.CmsActivity;
-import edu.fzu.zhishe.cms.model.CmsActivityExample;
-import edu.fzu.zhishe.cms.model.CmsUserActivityRemark;
-import edu.fzu.zhishe.cms.model.CmsUserActivityRemarkExample;
+import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDetails;
@@ -15,7 +12,6 @@ import edu.fzu.zhishe.core.service.CmsForumService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * @author liang on 4/25/2020.
@@ -42,5 +38,12 @@ public class CmsForumServiceImpl implements CmsForumService {
     public CmsActivityDetails getActivityDetailById(Integer id) {
         CmsActivityDetails activityDetails = activityDAO.getActivityDetailsById(id);
         return activityDetails;
+    }
+
+    @Override
+    public void deleteActivity(Integer id) {
+        CmsActivity cmsActivity = activityMapper.selectByPrimaryKey(id);
+        cmsActivity.setState(ActivityStateEnum.FINISHED.getValue());
+        activityMapper.updateByPrimaryKey(cmsActivity);
     }
 }

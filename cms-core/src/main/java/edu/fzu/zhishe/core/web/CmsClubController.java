@@ -36,7 +36,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
-    @PreAuthorize("hasAuthority('cms:club:read')")
+    // @PreAuthorize("hasAuthority('cms:club:read')")
     public ResponseEntity<List<CmsClub>> recommendedClub(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit) {
         return ResponseEntity.ok(clubService.getHotClubList(page, limit));
     }

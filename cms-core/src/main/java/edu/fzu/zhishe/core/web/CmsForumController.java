@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,5 +58,12 @@ public class CmsForumController {
     @GetMapping("/posts/{id}")
     public ResponseEntity<CmsActivityDetails> getPostDetail(@PathVariable Integer id) {
         return ResponseEntity.ok().body(forumService.getActivityDetailById(id));
+    }
+
+    @ApiOperation(" 删除一条帖子(活动) ")
+    @DeleteMapping("posts/{id}")
+    public ResponseEntity<Object> deletePost(@PathVariable Integer id) {
+        forumService.deleteActivity(id);
+        return ResponseEntity.noContent().build();
     }
 }

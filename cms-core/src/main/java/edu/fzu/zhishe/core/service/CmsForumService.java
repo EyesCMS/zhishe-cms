@@ -15,4 +15,6 @@ public interface CmsForumService {
     List<CmsActivityDTO> listPosts(Integer clubId, QueryParam queryParam);
 
     CmsActivityDetails getActivityDetailById(Integer id);
+
+    void deleteActivity(Integer id);
 }
