@@ -37,6 +37,10 @@ public interface CmsClubService {
 
     CommonList getClubQuitList(Integer clubId,QueryParam queryParam);
 
+    CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
+
+
+
     List<CmsClub> getHotClubList(Integer page, Integer limit);
 
     List<CmsClub> getClubList(Integer page, Integer limit);

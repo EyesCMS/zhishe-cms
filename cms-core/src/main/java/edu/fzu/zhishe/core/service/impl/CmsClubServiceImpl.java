@@ -57,6 +57,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     CmsQuitNoticeMapper quitNoticeMapper;
 
     @Autowired
+    CmsChiefChangeApplyMapper chiefChangeApplyMapper;
+
+    @Autowired
     SysUserService sysUserService;
 
     @Autowired
@@ -373,6 +376,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return cmsClubJoinApply;
     }
 
+    //以下两个函数用于退出社团
     @Override
     public CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam) {
         //由于不用审核，就不需要重复申请判断
@@ -430,6 +434,42 @@ public class CmsClubServiceImpl implements CmsClubService {
         int totalCount = quitMaps.size();
         return CommonList.getCommonList(PageUtil.startPage(quitMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
     }
+
+    //以下三个函数用于社长换届
+    @Override
+    public CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam) {
+        //虽然感觉多余但是还是验证一下社团是否存在
+        if (clubMapper.selectByPrimaryKey(cmsClubsChiefChangeParam.getClubId()) == null) {
+            Asserts.fail(" 该社团不存在 ");
+        }
+        //验证是否存在PENDING状态的申请
+        CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
+        example.createCriteria().andClubIdEqualTo(cmsClubsChiefChangeParam.getClubId())
+                .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
+        List<CmsChiefChangeApply> cmsChiefChangeApplies = chiefChangeApplyMapper
+                .selectByExample(example);
+        if (!CollectionUtils.isEmpty(cmsChiefChangeApplies)) {
+            Asserts.fail(" 该社团已经申请换届，请等待审核 ");
+        }
+        //是不是要多验证一部有无新社长这个人？
+
+
+        //形成申请
+        SysUserExample example1 = new SysUserExample();
+        example1.createCriteria().andUsernameEqualTo(cmsClubsChiefChangeParam.getNewChiefName());
+        SysUser newChief = sysUserMapper.selectByExample(example1).get(0);
+        CmsChiefChangeApply cmsChiefChangeApply = new CmsChiefChangeApply();
+        cmsChiefChangeApply.setClubId(cmsClubsChiefChangeParam.getClubId());
+        cmsChiefChangeApply.setOldChiefId(cmsClubsChiefChangeParam.getOldChiefId());
+        cmsChiefChangeApply.setNewChiefId(newChief.getId());
+        cmsChiefChangeApply.setReason(cmsChiefChangeApply.getReason());
+        cmsChiefChangeApply.setCreateAt(new Date());
+        cmsChiefChangeApply.setHandleAt(null);
+        cmsChiefChangeApply.setState(ApplyStateEnum.PENDING.getValue());
+        chiefChangeApplyMapper.insert(cmsChiefChangeApply);
+        return cmsChiefChangeApply;
+    }
+
 
 
     @Override

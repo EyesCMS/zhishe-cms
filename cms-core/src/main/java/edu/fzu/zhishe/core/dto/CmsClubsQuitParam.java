@@ -4,6 +4,10 @@ import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * @author yang on 4/27/2020.
+ * @version 1.0
+ */
 public class CmsClubsQuitParam {
     /**
 
