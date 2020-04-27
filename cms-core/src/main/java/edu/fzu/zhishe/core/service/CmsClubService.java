@@ -40,5 +40,10 @@ public interface CmsClubService {
 
     List<CmsClub> getClubList(Integer page, Integer limit);
 
+    /**
+     * @author PSF
+     */
     void AtivityApply(CmsClubActivityParam param);
+
+    void ActivityStateChange(Integer applyId, Integer stateId, String role);
 }

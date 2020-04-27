@@ -130,7 +130,9 @@ public class CmsClubController {
         return ResponseEntity.noContent().build();
     }
 
-
+    /*
+     * @author PSF
+     */
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
@@ -141,5 +143,31 @@ public class CmsClubController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation(" 6.2 活动申请审核 ")
+    @PutMapping("/activities/audit")
+    public ResponseEntity<Object> activityAudit(@RequestParam(value = "id") Integer applyId,
+                                                @RequestParam(value = "state_id") Integer stateId){
+        try {
+            clubService.ActivityStateChange(applyId, stateId, "sys");
+        }
+        catch (ApiException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(" 6.3 修改社团活动状态 ")
+    @PutMapping("/activities/state")
+    public ResponseEntity<Object> activityStateChange(@RequestParam(value = "id") Integer applyId,
+                                                @RequestParam(value = "state_id") Integer stateId){
+        try {
+            clubService.ActivityStateChange(applyId, stateId, "chief");
+        }
+        catch (ApiException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.noContent().build();
     }
 }

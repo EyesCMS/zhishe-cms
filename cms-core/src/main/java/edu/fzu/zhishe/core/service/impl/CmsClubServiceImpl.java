@@ -384,7 +384,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     /*
-     * PSF 2020/04/27
+     * @author PSF 2020/04/27
      */
     @Override
     public void AtivityApply(CmsClubActivityParam param) {
@@ -403,5 +403,25 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (activityMapper.insert(activity) == 0) {
             Asserts.fail("创建申请活动失败");
         }
+    }
+
+    @Override
+    public void ActivityStateChange(Integer applyId, Integer stateId, String role) {
+        CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
+        if (role.equals("sys") && activity.getState() == 0) {
+            if (stateId == 1 || stateId == 3) {
+                activity.setState(stateId);
+                activityMapper.updateByPrimaryKey(activity);
+                return;
+            }
+        }
+        else if (role.equals("chief") && activity.getState() == 1) {
+            if (stateId == 2 || stateId == 4) {
+                activity.setState(stateId);
+                activityMapper.updateByPrimaryKey(activity);
+                return;
+            }
+        }
+        Asserts.fail("状态未改变或权限不足");
     }
 }
