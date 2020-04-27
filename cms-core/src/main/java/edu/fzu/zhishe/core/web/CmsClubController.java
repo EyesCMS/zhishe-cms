@@ -2,11 +2,9 @@ package edu.fzu.zhishe.core.web;
 
 
 import edu.fzu.zhishe.cms.model.CmsClub;
+import edu.fzu.zhishe.common.exception.ApiException;
 import edu.fzu.zhishe.common.util.CommonList;
-import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -130,5 +128,18 @@ public class CmsClubController {
     public ResponseEntity<Object> clubJoinsAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         clubService.clubJoinsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @ApiOperation(" 6.1 申请活动 ")
+    @PostMapping("/activities")
+    public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
+        try {
+            clubService.AtivityApply(param);
+        }
+        catch (ApiException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

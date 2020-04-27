@@ -6,7 +6,7 @@ import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.core.dto.CmsBulletinParam;
-import edu.fzu.zhishe.core.web.CmsBulletinService;
+import edu.fzu.zhishe.core.service.CmsBulletinService;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

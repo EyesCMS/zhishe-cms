@@ -5,10 +5,7 @@ import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.cms.model.CmsClubJoinApply;
 import edu.fzu.zhishe.common.util.CommonList;
-import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
+import edu.fzu.zhishe.core.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -42,4 +39,6 @@ public interface CmsClubService {
     List<CmsClub> getHotClubList(Integer page, Integer limit);
 
     List<CmsClub> getClubList(Integer page, Integer limit);
+
+    void AtivityApply(CmsClubActivityParam param);
 }

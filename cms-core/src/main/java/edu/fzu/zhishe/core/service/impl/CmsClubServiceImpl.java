@@ -1,23 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import edu.fzu.zhishe.cms.mapper.CmsClubCreateApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubDisbandApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubJoinApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
-import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
-import edu.fzu.zhishe.cms.mapper.SysUserMapper;
-import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
-import edu.fzu.zhishe.cms.model.CmsClubCreateApplyExample;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApplyExample;
-import edu.fzu.zhishe.cms.model.CmsClubExample;
-import edu.fzu.zhishe.cms.model.CmsClubJoinApply;
-import edu.fzu.zhishe.cms.model.CmsClubJoinApplyExample;
-import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
-import edu.fzu.zhishe.cms.model.SysUser;
+import edu.fzu.zhishe.cms.mapper.*;
+import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.common.util.PageUtil;
@@ -25,12 +10,11 @@ import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
-import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,6 +56,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     SysUserService sysUserService;
     @Autowired
     private CmsClubDAO clubDAO;
+
+    @Autowired
+    private CmsActivityMapper activityMapper;
 
     //一下三个函数用于社团创建
     @Override
@@ -394,5 +381,27 @@ public class CmsClubServiceImpl implements CmsClubService {
         clubExample.createCriteria().andDeleteStatusEqualTo(0);
         PageHelper.startPage(page, limit);
         return clubMapper.selectByExample(clubExample);
+    }
+
+    /*
+     * PSF 2020/04/27
+     */
+    @Override
+    public void AtivityApply(CmsClubActivityParam param) {
+        CmsActivity activity = new CmsActivity();
+        BeanUtils.copyProperties(param, activity);
+        SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            activity.setStarDate(sDF.parse(param.getStartDate()));
+            activity.setEndData(sDF.parse(param.getEndDate()));
+            activity.setCreateAt(new Date());
+        }
+        catch (ParseException e) {
+            Asserts.fail("申请时间格式不正确");
+        }
+        activity.setState(0);
+        if (activityMapper.insert(activity) == 0) {
+            Asserts.fail("创建申请活动失败");
+        }
     }
 }

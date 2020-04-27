@@ -1,4 +1,4 @@
-package edu.fzu.zhishe.core.web;
+package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.core.dto.CmsBulletinParam;

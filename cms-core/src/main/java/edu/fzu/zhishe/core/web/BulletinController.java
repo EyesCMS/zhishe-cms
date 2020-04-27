@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.core.dto.CmsBulletinParam;
+import edu.fzu.zhishe.core.service.CmsBulletinService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
