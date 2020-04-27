@@ -1,8 +1,8 @@
 package edu.fzu.zhishe.cms.model;
-
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;
+import io.swagger.annotations.ApiModelProperty;
+
 
 public class CmsClub implements Serializable {
     private Integer id;

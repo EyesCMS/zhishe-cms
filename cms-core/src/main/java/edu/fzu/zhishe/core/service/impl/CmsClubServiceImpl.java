@@ -593,11 +593,20 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> getClubList(Integer page, Integer limit) {
-        CmsClubExample clubExample = new CmsClubExample();
-        clubExample.createCriteria().andDeleteStatusEqualTo(0);
+    public List<CmsClub> getClubList(Integer page, Integer limit,String sort, String order) {
         PageHelper.startPage(page, limit);
-        return clubMapper.selectByExample(clubExample);
+        return clubDAO.getClubList(page,limit,sort,order);
+    }
+
+    @Override
+    public List<CmsClub> searchClubByKeyword(Integer page, Integer limit, String sort, String order, String keyword) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.searchClubByKeyword(page,limit,sort,order, keyword);
+    }
+
+    @Override
+    public List<CmsClub> searchClubById (Integer id) {
+        return clubDAO.searchClubById(id);
     }
 
     /*

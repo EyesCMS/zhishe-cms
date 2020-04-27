@@ -32,6 +32,7 @@ public class CmsClubController {
         this.clubService = clubService;
     }
 
+    //暂未完善
     @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
     // @PreAuthorize("hasAuthority('cms:club:read')")
@@ -42,8 +43,26 @@ public class CmsClubController {
     @ApiOperation(" 3.2查看社团列表 ")
     @GetMapping("")
     public ResponseEntity<List<CmsClub>> showClub(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit) {
-        return ResponseEntity.ok(clubService.getClubList(page, limit));
+                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                  @RequestParam(value = "order", defaultValue = "asc") String order) {
+        return ResponseEntity.ok(clubService.getClubList(page, limit, sort, order));
+    }
+
+    @ApiOperation(" 3.3按名称关键字查找社团 ")
+    @GetMapping("/")
+    public ResponseEntity<List<CmsClub>> searchClubByKeyword(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                    @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                    @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                    @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                    @RequestParam(value = "keyword", required = false) String keyword) {
+        return ResponseEntity.ok(clubService.searchClubByKeyword(page, limit, sort, order, keyword));
+    }
+
+    @ApiOperation(" 3.4查看某个社团详情 ")
+    @GetMapping("/{id}")
+    public ResponseEntity<CmsClub> searchClubById(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(clubService.searchClubById(id).get(0));
     }
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")

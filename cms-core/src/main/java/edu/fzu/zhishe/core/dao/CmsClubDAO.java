@@ -20,4 +20,23 @@ public interface CmsClubDAO {
      * 获取人气推荐社团
      */
     List<CmsClub> getHotClubList(@Param("offset") Integer offset, @Param("limit") Integer limit);
+
+    /**
+     * 获取社团列表
+     */
+    List<CmsClub> getClubList(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                              @Param("sort") String sort,@Param("order") String order);
+
+    /**
+     * 模糊搜索社团
+     */
+    List<CmsClub> searchClubByKeyword(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                  @Param("sort") String sort, @Param("order") String order,
+                                  @Param("keyword") String keyword);
+
+    /**
+     * 按ID搜索社团
+     */
+    List<CmsClub> searchClubById(@Param("id") Integer id);
+
 }

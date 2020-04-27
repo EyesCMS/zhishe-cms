@@ -52,7 +52,11 @@ public interface CmsClubService {
 
     List<CmsClub> getHotClubList(Integer page, Integer limit);
 
-    List<CmsClub> getClubList(Integer page, Integer limit);
+    List<CmsClub> getClubList(Integer page, Integer limit, String sort, String order);
+
+    List<CmsClub> searchClubByKeyword(Integer page, Integer limit, String sort, String order, String keyword);
+
+    List<CmsClub> searchClubById(Integer id);
 
     /**
      * @author PSF

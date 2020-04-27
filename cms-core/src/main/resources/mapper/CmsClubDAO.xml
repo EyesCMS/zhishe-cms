@@ -41,4 +41,71 @@
       LIMIT #{offset}, #{limit}
   </select>
 
+  <select id="getClubList" parameterType="java.lang.Integer"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id
+  </select>
+
+  <select id="searchClubByKeyword" parameterType="java.lang.String"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
+  </select>
+
+  <select id="searchClubById" parameterType="java.lang.Integer"
+          resultMap="ClubMap2">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url,
+      club.slogan,
+      club.member_count,
+      club.qq_group
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="chief_id" jdbcType="INTEGER" property="chiefId" />
+    <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
+
+  <resultMap id="ClubMap2" type="edu.fzu.zhishe.core.dto.CmsClubReturnData2">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="chief_id" jdbcType="INTEGER" property="chiefId" />
+    <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+    <result column="qq_group" jdbcType="VARCHAR" property="qqGroup" />
+  </resultMap>
+
 </mapper>
