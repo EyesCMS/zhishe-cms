@@ -52,8 +52,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Autowired
     CmsUserClubRelMapper userClubRelMapper;
+
+    @Autowired
+    CmsQuitNoticeMapper quitNoticeMapper;
+
     @Autowired
     SysUserService sysUserService;
+
     @Autowired
     private CmsClubDAO clubDAO;
 
@@ -99,9 +104,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubCreateList(Integer page, Integer limit, String sort, String order) {
+    public CommonList getClubCreateList(QueryParam queryParam) {
         int totalCount = clubCreateApplyMapper.selectByExample(null).size();
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         return CommonList.getCommonList(clubCreateApplyMapper.selectByExample(null), totalCount);
     }
 
@@ -197,9 +202,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubDisbandList(Integer page, Integer limit, String sort, String order) {
+    public CommonList getClubDisbandList(QueryParam queryParam) {
         int totalCount = clubDisbandApplyMapper.selectByExample(null).size();
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         return CommonList.getCommonList(clubDisbandApplyMapper.selectByExample(null), totalCount);
     }
 
@@ -297,8 +302,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubJoinsList(Integer clubId, Integer page, Integer limit, String sort,
-        String order) {
+    public CommonList getClubJoinsList(Integer clubId, QueryParam queryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
@@ -320,7 +324,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             joinMaps.add(myMap);
         }
         int totalCount = joinMaps.size();
-        return CommonList.getCommonList(PageUtil.startPage(joinMaps, page, limit), totalCount);
+        return CommonList.getCommonList(PageUtil.startPage(joinMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
     }
 
     @Override
@@ -369,6 +373,64 @@ public class CmsClubServiceImpl implements CmsClubService {
         return cmsClubJoinApply;
     }
 
+    @Override
+    public CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam) {
+        //由于不用审核，就不需要重复申请判断
+        // 查询是否已存在该社团
+        if (clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId()) == null) {
+            Asserts.fail(" 该社团不存在 ");
+        }
+        //前端页面社长没有退社按钮就不需要验证了
+        //虽然感觉没必要但还是验证一下该用户是否是该社团成员
+        CmsUserClubRelExample example = new CmsUserClubRelExample();
+        example.createCriteria()
+                .andClubIdEqualTo(cmsClubsQuitParam.getClubId())
+                .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
+        List<CmsUserClubRel> cmsUserClubRels = userClubRelMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(cmsUserClubRels)) {
+            Asserts.fail(" 您不是该社团成员 ");
+        }
+        //添加退出记录
+        CmsQuitNotice cmsQuitNotice = new CmsQuitNotice();
+        cmsQuitNotice.setClubId(cmsClubsQuitParam.getClubId());
+        cmsQuitNotice.setUserId(sysUserService.getCurrentUser().getId());
+        cmsQuitNotice.setQiutDate(new Date());
+        cmsQuitNotice.setReadon(cmsClubsQuitParam.getReason());
+        quitNoticeMapper.insert(cmsQuitNotice);
+        //删除user_club表相关记录
+        userClubRelMapper.deleteByExample(example);
+        //更新club表相关记录人数
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId());
+        cmsClub.setMemberCount(cmsClub.getMemberCount()-1);
+        clubMapper.updateByPrimaryKeySelective(cmsClub);
+        return cmsQuitNotice;
+    }
+
+    @Override
+    public CommonList getClubQuitList(Integer clubId,QueryParam queryParam) {
+        // 查询是否已存在该社团
+        if (clubMapper.selectByPrimaryKey(clubId) == null) {
+            Asserts.fail(" 该社团不存在 ");
+        }
+
+        //设置日期格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        CmsQuitNoticeExample example = new CmsQuitNoticeExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
+        List<Map<String, String>> quitMaps = new ArrayList<Map<String, String>>();
+        for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
+            Map<String, String> myMap = new HashMap<>();
+            myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
+            myMap.put("reason", cmsQuitNotice.getReadon());
+            myMap.put("create_at", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
+            quitMaps.add(myMap);
+        }
+        int totalCount = quitMaps.size();
+        return CommonList.getCommonList(PageUtil.startPage(quitMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
+    }
+
 
     @Override
     public List<CmsClub> getHotClubList(Integer page, Integer limit) {
@@ -386,6 +448,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     /*
      * @author PSF 2020/04/27
      */
+
     @Override
     public void AtivityApply(CmsClubActivityParam param) {
         CmsActivity activity = new CmsActivity();

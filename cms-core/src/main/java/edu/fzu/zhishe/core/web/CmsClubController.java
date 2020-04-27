@@ -67,7 +67,8 @@ public class CmsClubController {
                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
                                                  @RequestParam(value = "keyword") String keyword){
-        CommonList clubCreateApplyList = clubService.getClubCreateList(page,limit,sort,order);
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        CommonList clubCreateApplyList = clubService.getClubCreateList(queryParam);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubCreateApplyList);
     }
@@ -93,7 +94,8 @@ public class CmsClubController {
                                                   @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                   @RequestParam(value = "order", defaultValue = "asc") String order,
                                                   @RequestParam(value = "keyword") String keyword){
-        CommonList clubDisbandApplyList = clubService.getClubDisbandList(page,limit,sort,order);
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        CommonList clubDisbandApplyList = clubService.getClubDisbandList(queryParam);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(clubDisbandApplyList);
     }
@@ -120,7 +122,8 @@ public class CmsClubController {
                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
                                             @RequestParam(value = "keyword") String keyword) {
-        return ResponseEntity.ok().body(clubService.getClubJoinsList(clubId,page,limit,sort,order));
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        return ResponseEntity.ok().body(clubService.getClubJoinsList(clubId,queryParam));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")
@@ -130,9 +133,29 @@ public class CmsClubController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(" 4.10提交退出社团申请表单 ")
+    @PostMapping("/quit")
+    public ResponseEntity<Object> clubQuit(@Validated @RequestBody CmsClubsQuitParam cmsClubsQuitParam){
+        clubService.clubQuit(cmsClubsQuitParam);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation(value = " 4.10根据社团 ID 获取申请列表 ")
+    @GetMapping("/{clubId}/quit")
+    public ResponseEntity<Object> quitList(@PathVariable("clubId") Integer clubId,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                            @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                            @RequestParam(value = "order", defaultValue = "asc") String order,
+                                            @RequestParam(value = "keyword") String keyword) {
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        return ResponseEntity.ok().body(clubService.getClubQuitList(clubId,queryParam));
+    }
+
     /*
      * @author PSF
      */
+
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
