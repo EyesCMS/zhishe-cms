@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -19,7 +20,7 @@ public class CmsClubsQuitParam {
     @NotNull(message = " 社团id不能为空 ")
     private Integer clubId;
     @ApiModelProperty(value = " 理由 ", required = true)
-    @NotEmpty(message = " 理由不能为空 ")
+    @NotBlank(message = " 理由不能为空 ")
     private String reason;
 
 

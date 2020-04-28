@@ -258,14 +258,16 @@ public class CmsClubController {
                                                       @RequestParam(value = "order", defaultValue = "asc") String order,
                                                       @RequestParam(value = "keyword") String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
-        return ResponseEntity.ok().body(clubChiefChangeList);
+        // TODO: 等待api修改
+       // CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
+        return ResponseEntity.ok().body(null);
     }
 
     @ApiOperation(" 4.17审核社团认证申请 ")
     @PutMapping("/certifications")
     public ResponseEntity<Object> clubOfficialChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
-        clubService.clubChiefChangeAudit(cmsClubsAuditParam);
+        // TODO: 等待api修改
+        //clubService.clubChiefChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 

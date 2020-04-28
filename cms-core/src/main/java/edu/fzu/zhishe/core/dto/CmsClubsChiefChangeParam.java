@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -19,10 +20,10 @@ public class CmsClubsChiefChangeParam {
     @NotNull(message = " 老社长id不能为空 ")
     private Integer oldChiefId;
     @ApiModelProperty(value = " 新社长用户名 ", required = true)
-    @NotEmpty(message = " 新社长用户名不能为空 ")
+    @NotBlank(message = " 新社长用户名不能为空 ")
     private String newChiefName;
     @ApiModelProperty(value = " 理由 ", required = true)
-    @NotEmpty(message = " 理由不能为空 ")
+    @NotBlank(message = " 理由不能为空 ")
     private String reason;
 
     public int getClubId() {

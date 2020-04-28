@@ -112,6 +112,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CommonList getClubCreateList(QueryParam queryParam) {
+        // TODO: 对照api添加jsonignore
         int totalCount = clubCreateApplyMapper.selectByExample(null).size();
         PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         return CommonList.getCommonList(clubCreateApplyMapper.selectByExample(null), totalCount);
@@ -211,6 +212,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CommonList getClubDisbandList(QueryParam queryParam) {
+        // TODO: 对照api添加jsonignore
         int totalCount = clubDisbandApplyMapper.selectByExample(null).size();
         PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         return CommonList.getCommonList(clubDisbandApplyMapper.selectByExample(null), totalCount);
@@ -564,6 +566,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CommonList getClubOfficialChangeList(QueryParam queryParam) {
+        // TODO: 等待api修改
 //        //设置日期格式
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        List<CmsOfficialChangeApply> cmsOfficialChangeApplies = officialChangeApplyMapper.selectByExample(null);
@@ -583,6 +586,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
+        // TODO: 等待api修改
         return null;
     }
 
