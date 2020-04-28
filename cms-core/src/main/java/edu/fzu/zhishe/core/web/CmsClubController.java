@@ -159,9 +159,7 @@ public class CmsClubController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    /**
-     * 以下两个控制器是复制的还未实现
-     */
+
     @ApiOperation(" 4.13社团换届申请列表 ")
     @GetMapping("/leader/changes")
     public ResponseEntity<Object> clubChiefChangeList(@RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -170,14 +168,16 @@ public class CmsClubController {
                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
                                                  @RequestParam(value = "keyword") String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        CommonList clubCreateApplyList = clubService.getClubCreateList(queryParam);
-        return ResponseEntity.ok().body(clubCreateApplyList);
+        CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
+        return ResponseEntity.ok().body(clubChiefChangeList);
     }
-
+    /**
+     * 以下控制器是复制的还未实现
+     */
     @ApiOperation(" 4.14审核社团换届申请 ")
     @PutMapping("/leader/changes")
     public ResponseEntity<Object> clubChiefChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
-        clubService.clubCreationsAudit(cmsClubsAuditParam);
+        clubService.clubChiefChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 

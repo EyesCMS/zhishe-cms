@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
@@ -16,11 +17,8 @@ import edu.fzu.zhishe.core.service.SysUserService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -319,7 +317,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
         List<Map<String, String>> joinMaps = new ArrayList<Map<String, String>>();
         for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-            Map<String, String> myMap = new HashMap<>();
+            Map<String, String> myMap = new LinkedHashMap<>();
             myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
             myMap.put("reason", cmsClubJoinApply.getReason());
             myMap.put("create_at", simpleDateFormat.format(cmsClubJoinApply.getCreateAt()));
@@ -425,7 +423,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
         List<Map<String, String>> quitMaps = new ArrayList<Map<String, String>>();
         for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
-            Map<String, String> myMap = new HashMap<>();
+            Map<String, String> myMap = new LinkedHashMap<>();
             myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
             myMap.put("reason", cmsQuitNotice.getReadon());
             myMap.put("create_at", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
@@ -451,7 +449,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (!CollectionUtils.isEmpty(cmsChiefChangeApplies)) {
             Asserts.fail(" 该社团已经申请换届，请等待审核 ");
         }
-        //是不是要多验证一部有无新社长这个人？
+        //是不是要多验证一部有无新社长这个人？以及验证新社长是否是该社团成员？
+        //验证旧社长是否是这个社团的社长？这些验证如果前端在新社长选择用的是下拉框可能就不需要了
 
 
         //形成申请
@@ -462,7 +461,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         cmsChiefChangeApply.setClubId(cmsClubsChiefChangeParam.getClubId());
         cmsChiefChangeApply.setOldChiefId(cmsClubsChiefChangeParam.getOldChiefId());
         cmsChiefChangeApply.setNewChiefId(newChief.getId());
-        cmsChiefChangeApply.setReason(cmsChiefChangeApply.getReason());
+        cmsChiefChangeApply.setReason(cmsClubsChiefChangeParam.getReason());
         cmsChiefChangeApply.setCreateAt(new Date());
         cmsChiefChangeApply.setHandleAt(null);
         cmsChiefChangeApply.setState(ApplyStateEnum.PENDING.getValue());
@@ -470,6 +469,30 @@ public class CmsClubServiceImpl implements CmsClubService {
         return cmsChiefChangeApply;
     }
 
+    @Override
+    public CommonList getClubChiefChangeList(QueryParam queryParam) {
+        //设置日期格式
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        List<CmsChiefChangeApply> cmsChiefChangeApplies = chiefChangeApplyMapper.selectByExample(null);
+        List<Map<String, Object>> chiefChangeMaps = new ArrayList<Map<String, Object>>();
+        for (CmsChiefChangeApply cmsChiefChangeApply : cmsChiefChangeApplies) {
+            Map<String, Object> myMap = new LinkedHashMap<>();
+            myMap.put("id",cmsChiefChangeApply.getId());
+            myMap.put("clubName",clubMapper.selectByPrimaryKey(cmsChiefChangeApply.getClubId()).getName());
+            myMap.put("odlChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getOldChiefId()).getUsername());
+            myMap.put("newChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getNewChiefId()).getUsername());
+            myMap.put("create_at", simpleDateFormat.format(cmsChiefChangeApply.getCreateAt()));
+            myMap.put("state", ApplyStateEnum.toString(cmsChiefChangeApply.getState()));
+            chiefChangeMaps.add(myMap);
+        }
+        int totalCount = chiefChangeMaps.size();
+        return CommonList.getCommonList(PageUtil.startPage(chiefChangeMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
+    }
+
+    @Override
+    public CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
+        return null;
+    }
 
 
     @Override

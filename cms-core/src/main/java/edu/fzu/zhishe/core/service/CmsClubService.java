@@ -39,7 +39,9 @@ public interface CmsClubService {
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
+    CommonList getClubChiefChangeList(QueryParam queryParam);
 
+    CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     List<CmsClub> getHotClubList(Integer page, Integer limit);
 
