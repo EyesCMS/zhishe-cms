@@ -621,6 +621,18 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.searchManagedClub(page,limit,sort,order, userId);
     }
 
+    @Override
+    public List<CmsClub> searchJoinedApplyList(Integer page, Integer limit, String sort, String order, Integer userId) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.searchJoinedApplyList(page,limit,sort,order, userId);
+    }
+
+    @Override
+    public List<CmsClub> searchCreateApplyList(Integer page, Integer limit, String sort, String order, Integer userId) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.searchCreateApplyList(page,limit,sort,order, userId);
+    }
+
     /*
      * @author PSF 2020/04/27
      */

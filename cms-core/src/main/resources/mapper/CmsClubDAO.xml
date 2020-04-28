@@ -113,7 +113,7 @@
   </select>
 
   <select id="searchManagedClub" parameterType="java.lang.Integer"
-          resultMap="ClubMap1">
+                   resultMap="ClubMap1">
     SELECT
       club.id,
       club.name,
@@ -135,6 +135,35 @@
       )
   </select>
 
+  <select id="searchJoinedApplyList" parameterType="java.lang.Integer"
+          resultMap="ClubMap3">
+    SELECT
+      a.user_id,
+      a.club_id,
+      club.name,
+      a.reason,
+      a.state
+    FROM
+      cms_club club,
+      cms_club_join_apply a
+    WHERE
+    a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id
+  </select>
+
+  <select id="searchCreateApplyList" parameterType="java.lang.Integer"
+          resultMap="ClubMap4">
+    SELECT
+      club_name,
+      create_at,
+      applicant,
+      reason,
+      state
+    FROM
+      cms_club_create_apply
+    WHERE
+    user_id = #{userId,jdbcType=INTEGER}
+  </select>
+
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -153,5 +182,23 @@
     <result column="member_count" jdbcType="INTEGER" property="memberCount" />
     <result column="qq_group" jdbcType="VARCHAR" property="qqGroup" />
   </resultMap>
+
+  <resultMap id="ClubMap3" type="edu.fzu.zhishe.core.dto.CmsClubReturnData3">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="club_id" jdbcType="INTEGER" property="clubId" />
+    <result column="name" jdbcType="VARCHAR" property="clubName" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+
+  <resultMap id="ClubMap4" type="edu.fzu.zhishe.core.dto.CmsClubReturnData4">
+    <id column="club_name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+
+
 
 </mapper>

@@ -62,6 +62,10 @@ public interface CmsClubService {
 
     List<CmsClub> searchManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
+    List<CmsClub> searchJoinedApplyList(Integer page, Integer limit, String sort, String order, Integer userId);
+
+    List<CmsClub> searchCreateApplyList(Integer page, Integer limit, String sort, String order, Integer userId);
+
     /**
      * @author PSF
      */

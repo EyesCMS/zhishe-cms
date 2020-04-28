@@ -85,6 +85,26 @@ public class CmsClubController {
         return ResponseEntity.ok(clubService.searchManagedClub(page, limit, sort, order, userId));
     }
 
+    @ApiOperation(" 3.4查看学生加入社团申请列表 ")
+    @GetMapping("/join/{userId}")
+    public ResponseEntity<List<CmsClub>> searchJoinedApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                              @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                              @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                              @PathVariable(value = "userId", required = false) Integer userId) {
+        return ResponseEntity.ok(clubService.searchJoinedApplyList(page, limit, sort, order, userId));
+    }
+
+    @ApiOperation(" 3.4查看学生创建社团申请列表 ")
+    @GetMapping("/creations/{userId}")
+    public ResponseEntity<List<CmsClub>> searchCreateApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                               @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                               @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                               @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                               @PathVariable(value = "userId", required = false) Integer userId) {
+        return ResponseEntity.ok(clubService.searchCreateApplyList(page, limit, sort, order, userId));
+    }
+
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
     public ResponseEntity<Object> clubCreate(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
