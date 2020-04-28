@@ -1,10 +1,12 @@
 package edu.fzu.zhishe.core.web;
 
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.util.CommonList;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.Api;
@@ -282,17 +284,17 @@ public class CmsClubController {
 
     @ApiOperation(" 6.3 活动申请审核 ")
     @PutMapping("/activities/audit")
-    public ResponseEntity<Object> activityAudit(@RequestParam(value = "id") Integer applyId,
-                                                @RequestParam(value = "state_id") Integer stateId){
-        clubService.activityStateChange(applyId, stateId, "sys");
+    public ResponseEntity<Object> activityAudit(@RequestBody JSONObject object){
+        clubService.activityStateChange((Integer) object.get("id"),
+            (Integer) object.get("state_id"), UserRoleEnum.ADMIN);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 6.4 修改社团活动状态 ")
     @PutMapping("/activities/state")
-    public ResponseEntity<Object> activityStateChange(@RequestParam(value = "id") Integer applyId,
-                                                @RequestParam(value = "state_id") Integer stateId){
-        clubService.activityStateChange(applyId, stateId, "chief");
+    public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object){
+        clubService.activityStateChange((Integer) object.get("id"),
+            (Integer) object.get("state_id"), UserRoleEnum.CHIEF);
         return ResponseEntity.noContent().build();
     }
 

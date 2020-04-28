@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.util.CommonList;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public interface CmsClubService {
      */
     void ativityApply(CmsClubActivityParam param);
 
-    void activityStateChange(Integer applyId, Integer stateId, String role);
+    void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role);
 
     void delActivity(Integer id);
 }

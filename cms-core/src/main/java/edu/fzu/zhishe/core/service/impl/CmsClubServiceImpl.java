@@ -9,6 +9,7 @@ import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
@@ -671,16 +672,16 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public void activityStateChange(Integer applyId, Integer stateId, String role) {
+    public void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
-        if (role.equals("sys") && activity.getState() == 0) {
+        if (role.equals(UserRoleEnum.ADMIN) && activity.getState() == 0) {
             if (stateId == 1 || stateId == 3) {
                 activity.setState(stateId);
                 activityMapper.updateByPrimaryKey(activity);
                 return;
             }
         }
-        else if (role.equals("chief") && activity.getState() == 1) {
+        else if (role.equals(UserRoleEnum.CHIEF) && activity.getState() == 1) {
             if (stateId == 2 || stateId == 4) {
                 activity.setState(stateId);
                 activityMapper.updateByPrimaryKey(activity);

@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.web;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
@@ -40,8 +41,8 @@ public class SysUserController {
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
-    public ResponseEntity<Object> question(@RequestParam("username") String name) {
-        SysUser user = userService.getByUsername(name);
+    public ResponseEntity<Object> question(@RequestBody JSONObject object) {
+        SysUser user = userService.getByUsername((String)object.get("username"));
         if (user == null || user.getLoginQuestion() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
