@@ -25,7 +25,7 @@ public class WebLogAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebLogAspect.class);
 
-    @Pointcut("execution(public * edu.fzu.zhishe.cms.core.web.*.*(..))")
+    @Pointcut("execution(public * edu.fzu.zhishe.core.web.*.*(..))")
     public void webLog() {
     }
 
