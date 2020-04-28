@@ -23,7 +23,7 @@ import org.springframework.validation.FieldError;
 @Order(2)
 public class BindingResultAspect {
 
-    @Pointcut("execution(public * edu.fzu.zhishe.cms.core.web.*.*(..))")
+    @Pointcut("execution(public * edu.fzu.zhishe.core.web.*.*(..))")
     public void bindingResult() {
     }
 
