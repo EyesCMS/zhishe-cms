@@ -9,6 +9,7 @@ import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
+import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
@@ -38,6 +39,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Autowired
     CmsClubCreateApplyMapper clubCreateApplyMapper;
+
+    @Autowired
+    private CmsClubCreationDAO cmsClubCreationDAO;
 
     @Autowired
     CmsClubDisbandApplyMapper clubDisbandApplyMapper;
@@ -74,7 +78,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     //一下三个函数用于社团创建
     @Override
-    public CmsClubCreateApply clubCreate(CmsClubsCreationsParam clubsCreationsParam) {
+    public CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam) {
         //查询是否已存在该社团
         CmsClubExample example2 = new CmsClubExample();
         example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClubName());
@@ -111,6 +115,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
+    public List<CmsClubCreateApply> listClubCreationApply(CmsClubCreationQueryParam queryParam, Integer page, Integer limit) {
+        PageHelper.startPage(page, limit);
+        return cmsClubCreationDAO.listClubCreationApply(queryParam);
+    }
+
+    // @Override
     public CommonList getClubCreateList(QueryParam queryParam) {
         // TODO: 对照api添加jsonignore
         int totalCount = clubCreateApplyMapper.selectByExample(null).size();

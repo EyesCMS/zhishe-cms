@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author yang
  */
 public interface CmsClubService {
-    CmsClubCreateApply clubCreate(CmsClubsCreationsParam clubsCreationsParam);
+    CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
 
-    CommonList getClubCreateList(QueryParam queryParam);
+    List<CmsClubCreateApply> listClubCreationApply(CmsClubCreationQueryParam queryParam, Integer page, Integer limit);
 
     CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

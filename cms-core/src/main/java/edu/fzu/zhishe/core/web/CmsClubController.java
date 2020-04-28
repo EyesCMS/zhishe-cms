@@ -2,7 +2,8 @@ package edu.fzu.zhishe.core.web;
 
 
 import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.common.exception.ApiException;
+import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
+import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -108,7 +109,7 @@ public class CmsClubController {
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
     public ResponseEntity<Object> clubCreate(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
-        clubService.clubCreate(cmsClubsCreationsParam);
+        clubService.createClub(cmsClubsCreationsParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -121,15 +122,12 @@ public class CmsClubController {
 
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
-    public ResponseEntity<Object> clubCreateList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                 @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                 @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                 @RequestParam(value = "keyword") String keyword){
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        CommonList clubCreateApplyList = clubService.getClubCreateList(queryParam);
+    public ResponseEntity<CommonPage<CmsClubCreateApply>> clubCreateList(CmsClubCreationQueryParam queryParam,
+                                                 @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit) {
+        List<CmsClubCreateApply> clubCreateApplyList = clubService.listClubCreationApply(queryParam, page, limit);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
-        return ResponseEntity.ok().body(clubCreateApplyList);
+        return ResponseEntity.ok().body(CommonPage.restPage(clubCreateApplyList));
     }
 
     @ApiOperation(" 4.3审核创建社团申请 ")
