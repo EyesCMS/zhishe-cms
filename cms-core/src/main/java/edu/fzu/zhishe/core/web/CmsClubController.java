@@ -140,7 +140,7 @@ public class CmsClubController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ApiOperation(value = " 4.11根据社团 ID 获取申请列表 ")
+    @ApiOperation(value = " 4.11根据社团 ID 获取退社申请列表 ")
     @GetMapping("/{clubId}/quit")
     public ResponseEntity<Object> quitList(@PathVariable("clubId") Integer clubId,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -171,12 +171,41 @@ public class CmsClubController {
         CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
         return ResponseEntity.ok().body(clubChiefChangeList);
     }
-    /**
-     * 以下控制器是复制的还未实现
-     */
+
     @ApiOperation(" 4.14审核社团换届申请 ")
     @PutMapping("/leader/changes")
     public ResponseEntity<Object> clubChiefChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+        clubService.clubChiefChangeAudit(cmsClubsAuditParam);
+        return ResponseEntity.noContent().build();
+    }
+    /**
+     *
+     * 以下三个控制器是复制的暂未实现
+     *
+     */
+    @ApiOperation(" 4.15提交社团认证申请表单 ")
+    @PostMapping("/certifications")
+    public ResponseEntity<Object> clubOfficialChange(@Validated @RequestBody CmsCertificationsParam cmsCertificationsParam){
+        clubService.clubOfficialChange(cmsCertificationsParam);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+    @ApiOperation(" 4.16社团认证申请列表 ")
+    @GetMapping("/certifications")
+    public ResponseEntity<Object> clubOfficialChangeList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                      @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                      @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                      @RequestParam(value = "keyword") String keyword){
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
+        return ResponseEntity.ok().body(clubChiefChangeList);
+    }
+
+    @ApiOperation(" 4.17审核社团认证申请 ")
+    @PutMapping("/certifications")
+    public ResponseEntity<Object> clubOfficialChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         clubService.clubChiefChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }

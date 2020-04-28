@@ -43,6 +43,13 @@ public interface CmsClubService {
 
     CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
+    CmsOfficialChangeApply clubOfficialChange(CmsCertificationsParam certificationsParam);
+
+    CommonList getClubOfficialChangeList(QueryParam queryParam);
+
+    CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
+
+
     List<CmsClub> getHotClubList(Integer page, Integer limit);
 
     List<CmsClub> getClubList(Integer page, Integer limit);

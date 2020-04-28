@@ -58,6 +58,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     CmsChiefChangeApplyMapper chiefChangeApplyMapper;
 
     @Autowired
+    CmsOfficialChangeApplyMapper officialChangeApplyMapper;
+
+    @Autowired
     SysUserService sysUserService;
 
     @Autowired
@@ -522,6 +525,47 @@ public class CmsClubServiceImpl implements CmsClubService {
             return cmsChiefChangeApply;
         }
         return cmsChiefChangeApply;
+    }
+
+    @Override
+    public CmsOfficialChangeApply clubOfficialChange(CmsCertificationsParam certificationsParam) {
+        //查询是否已存在该社团
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(certificationsParam.getClubId());
+        if(cmsClub == null){
+            Asserts.fail(" 该社团不存在 ");
+        }
+        //查询该社团是否是非认证社团
+        if(cmsClub.getOfficialState() == ClubOfficialStateEnum.OFFICIAL.getValue()){
+            Asserts.fail(" 该社团已经是认证社团 ");
+        }
+        // 查询是否已申请认证该社团
+        CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
+        example.createCriteria().andClubIdEqualTo(certificationsParam.getClubId())
+                .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
+        List<CmsOfficialChangeApply> cmsOfficialChangeApplies = officialChangeApplyMapper
+                .selectByExample(example);
+        if (!CollectionUtils.isEmpty(cmsOfficialChangeApplies)) {
+            Asserts.fail(" 该社团已经申请认证，请等待审核 ");
+        }
+
+        CmsOfficialChangeApply cmsOfficialChangeApply = new CmsOfficialChangeApply();
+        cmsOfficialChangeApply.setClubId(certificationsParam.getClubId());
+        cmsOfficialChangeApply.setReason(certificationsParam.getReason());
+        cmsOfficialChangeApply.setCreateAt(new Date());
+        cmsOfficialChangeApply.setHandleAt(null);
+        cmsOfficialChangeApply.setState(ApplyStateEnum.PENDING.getValue());
+        officialChangeApplyMapper.insert(cmsOfficialChangeApply);
+        return cmsOfficialChangeApply;
+    }
+
+    @Override
+    public CommonList getClubOfficialChangeList(QueryParam queryParam) {
+        return null;
+    }
+
+    @Override
+    public CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
+        return null;
     }
 
 
