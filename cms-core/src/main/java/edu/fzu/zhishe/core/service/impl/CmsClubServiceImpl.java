@@ -491,7 +491,37 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
-        return null;
+        CmsChiefChangeApply cmsChiefChangeApply = chiefChangeApplyMapper
+                .selectByPrimaryKey(cmsClubsAuditParam.getId());
+        if (cmsChiefChangeApply == null) {
+            Asserts.fail(" 该社团解散申请不存在 ");
+        }
+        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
+            Asserts.fail(" 该申请状态码不正确 ");
+        }
+        if (cmsChiefChangeApply.getState() != ApplyStateEnum.PENDING.getValue()) {
+            Asserts.fail(" 该申请已经审核完毕 ");
+        }
+
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
+            return cmsChiefChangeApply;
+        }
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.ACTIVE.getValue()) {
+            //更新社团社长
+            CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsChiefChangeApply.getClubId());
+            cmsClub.setChiefId(cmsChiefChangeApply.getNewChiefId());
+            clubMapper.updateByPrimaryKeySelective(cmsClub);
+            //老社长要不要退社有待讨论
+
+            return cmsChiefChangeApply;
+        }
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
+            cmsChiefChangeApply.setState(ApplyStateEnum.REJECTED.getValue());
+            cmsChiefChangeApply.setHandleAt(new Date());
+            chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply);
+            return cmsChiefChangeApply;
+        }
+        return cmsChiefChangeApply;
     }
 
 
