@@ -1,17 +1,24 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
+import edu.fzu.zhishe.core.dto.CmsRemarkParam;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,13 +63,25 @@ public class CmsForumController {
     @ApiOperation(" 根据活动 id 查看某一帖子 ")
     @GetMapping("/posts/{id}")
     public ResponseEntity<CmsActivityDTO> getPost(@PathVariable Integer id) {
-        return ResponseEntity.ok().body(forumService.getActivityById(id));
+        Optional<CmsActivityDTO> activityDTO = Optional.ofNullable(forumService.getActivityById(id));
+        return ResponseEntity.ok().body(activityDTO.orElseThrow(() -> new EntityNotFoundException("id 为 " + id + " 的活动不存在")));
     }
 
     @ApiOperation(" 删除一条帖子(活动) ")
-    @DeleteMapping("posts/{id}")
+    @DeleteMapping("/posts/{id}")
     public ResponseEntity<Object> deletePost(@PathVariable Integer id) {
-        forumService.deleteActivity(id);
-        return ResponseEntity.noContent().build();
+        if (forumService.deleteActivity(id) == 0) {
+            Asserts.fail(" 操作失败 ");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation(" 对某一活动帖子发表评论 ")
+    @PostMapping("/posts/{id}/remarks")
+    public ResponseEntity<Object> createRemark(@PathVariable("id") Integer postId, @RequestBody CmsRemarkParam remarkParam) {
+        if (forumService.postRemark(remarkParam) == 0) {
+            Asserts.fail(" 操作失败 ");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

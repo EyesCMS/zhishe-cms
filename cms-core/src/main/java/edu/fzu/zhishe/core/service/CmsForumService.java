@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
+import edu.fzu.zhishe.core.dto.CmsRemarkParam;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface CmsForumService {
 
     CmsActivityDTO getActivityById(Integer id);
 
-    void deleteActivity(Integer id);
+    int deleteActivity(Integer id);
+
+    int postRemark(CmsRemarkParam remarkParam);
 }
