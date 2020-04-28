@@ -18,7 +18,7 @@ public class CmsActivityDetails {
     private String title;
     private String content;
     private String createAt;
-    private List<RemarkDTO> remarks;
+    private List<CmsRemarkDTO> remarks;
 
     public String getTitle() {
         return title;
@@ -44,11 +44,11 @@ public class CmsActivityDetails {
         this.createAt = createAt;
     }
 
-    public List<RemarkDTO> getRemarks() {
+    public List<CmsRemarkDTO> getRemarks() {
         return remarks;
     }
 
-    public void setRemarks(List<RemarkDTO> remarks) {
+    public void setRemarks(List<CmsRemarkDTO> remarks) {
         this.remarks = remarks;
     }
 }

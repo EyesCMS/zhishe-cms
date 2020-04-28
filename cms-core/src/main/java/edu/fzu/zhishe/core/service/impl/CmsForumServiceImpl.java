@@ -4,9 +4,12 @@ import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsUserActivityRemarkMapper;
 import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.cms.model.CmsUserActivityRemark;
+import edu.fzu.zhishe.cms.model.CmsUserActivityRemarkExample;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
+import edu.fzu.zhishe.core.dao.CmsRemarkDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
+import edu.fzu.zhishe.core.dto.CmsRemarkDTO;
 import edu.fzu.zhishe.core.dto.CmsRemarkParam;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
@@ -30,6 +33,9 @@ public class CmsForumServiceImpl implements CmsForumService {
 
     @Autowired
     private CmsUserActivityRemarkMapper remarkMapper;
+
+    @Autowired
+    private CmsRemarkDAO remarkDAO;
 
     @Override
     public List<CmsActivityDTO> listPosts(Integer clubId, QueryParam queryParam) {
@@ -61,5 +67,17 @@ public class CmsForumServiceImpl implements CmsForumService {
             setUpdateAt(null);
         }};
         return remarkMapper.insert(userActivityRemark);
+    }
+
+    @Override
+    public List<CmsRemarkDTO> listRemarkByPostId(Integer postId, QueryParam queryParam) {
+        return remarkDAO.listRemarkByPostId(postId,queryParam);
+    }
+
+    @Override
+    public long countRemarkByPostId(Integer postId) {
+        CmsUserActivityRemarkExample remarkExample = new CmsUserActivityRemarkExample();
+        remarkExample.createCriteria().andActivityIdEqualTo(postId);
+        return remarkMapper.countByExample(remarkExample);
     }
 }

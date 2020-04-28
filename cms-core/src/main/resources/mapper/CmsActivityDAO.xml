@@ -6,7 +6,7 @@
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="body" jdbcType="VARCHAR" property="content" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
-    <collection property="remarks" columnPrefix="ar_" ofType="edu.fzu.zhishe.core.dto.RemarkDTO">
+    <collection property="remarks" columnPrefix="ar_" ofType="edu.fzu.zhishe.core.dto.CmsRemarkDTO">
       <result property="content" column="content" />
       <result property="createAt" column="create_at" />
       <result property="username" column="username" />
