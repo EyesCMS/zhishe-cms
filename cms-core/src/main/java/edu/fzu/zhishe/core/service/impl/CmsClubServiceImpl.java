@@ -146,6 +146,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState() ?
                 ClubOfficialStateEnum.OFFICIAL.getValue()
                 : ClubOfficialStateEnum.UNOFFICIAL.getValue());
+            cmsClub.setType(cmsClubCreateApply.getType());
             cmsClub.setCreateAt(new Date());
             cmsClub.setDeleteStatus(DeleteStateEnum.Existence.getValue());
             clubMapper.insert(cmsClub);
