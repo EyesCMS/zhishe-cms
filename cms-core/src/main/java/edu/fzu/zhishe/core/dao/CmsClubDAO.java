@@ -39,4 +39,17 @@ public interface CmsClubDAO {
      */
     List<CmsClub> searchClubById(@Param("id") Integer id);
 
+    /**
+     * 加入社团列表
+     */
+    List<CmsClub> searchJoinedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                      @Param("sort") String sort, @Param("order") String order,
+                                      @Param("userId") Integer userId);
+
+    /**
+     * 管理社团列表
+     */
+    List<CmsClub> searchManagedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                   @Param("sort") String sort, @Param("order") String order,
+                                   @Param("userId") Integer userId);
 }

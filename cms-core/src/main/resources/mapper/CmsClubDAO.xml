@@ -89,6 +89,52 @@
       club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
   </select>
 
+  <select id="searchJoinedClub" parameterType="java.lang.Integer"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.id IN
+      (
+      SELECT
+      club_id
+      FROM
+      sys_user_role_rel
+      WHERE
+      role_id = 2 AND user_id = #{userId,jdbcType=INTEGER}
+      )
+  </select>
+
+  <select id="searchManagedClub" parameterType="java.lang.Integer"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.id IN
+      (
+      SELECT
+      club_id
+      FROM
+      sys_user_role_rel
+      WHERE
+      role_id = 3 AND user_id = #{userId,jdbcType=INTEGER}
+      )
+  </select>
+
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />

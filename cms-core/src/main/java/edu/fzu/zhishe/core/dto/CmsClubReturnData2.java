@@ -3,14 +3,15 @@ package edu.fzu.zhishe.core.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 public class CmsClubReturnData2 extends CmsClubReturnData1{
+
+    @ApiModelProperty(value = "标语")
+    private String slogan;
+
     @ApiModelProperty(value = "成员数量")
     private Integer memberCount;
 
     @ApiModelProperty(value = "QQ 群号码")
     private String qqGroup;
-
-    @ApiModelProperty(value = "标语")
-    private String slogan;
 
     public Integer getMemberCount() {
         return memberCount;

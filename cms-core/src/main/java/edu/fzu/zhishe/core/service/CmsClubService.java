@@ -58,6 +58,10 @@ public interface CmsClubService {
 
     List<CmsClub> searchClubById(Integer id);
 
+    List<CmsClub> searchJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+
+    List<CmsClub> searchManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+
     /**
      * @author PSF
      */

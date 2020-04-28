@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 public class CmsClubReturnData1 {
+
     private Integer id;
 
     private String name;

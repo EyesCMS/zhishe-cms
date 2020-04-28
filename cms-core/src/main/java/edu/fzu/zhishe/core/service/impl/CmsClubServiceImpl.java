@@ -609,6 +609,18 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.searchClubById(id);
     }
 
+    @Override
+    public List<CmsClub> searchJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.searchJoinedClub(page,limit,sort,order, userId);
+    }
+
+    @Override
+    public List<CmsClub> searchManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.searchManagedClub(page,limit,sort,order, userId);
+    }
+
     /*
      * @author PSF 2020/04/27
      */
