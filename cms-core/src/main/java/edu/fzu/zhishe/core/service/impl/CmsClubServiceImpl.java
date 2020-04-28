@@ -321,13 +321,13 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
-        List<Map<String, String>> joinMaps = new ArrayList<Map<String, String>>();
+        List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
         for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-            Map<String, String> myMap = new LinkedHashMap<>();
+            Map<String, Object> myMap = new LinkedHashMap<>();
             myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
             myMap.put("reason", cmsClubJoinApply.getReason());
             myMap.put("create_at", simpleDateFormat.format(cmsClubJoinApply.getCreateAt()));
-            myMap.put("state", ApplyStateEnum.toString(cmsClubJoinApply.getState()));
+            myMap.put("state", cmsClubJoinApply.getState());
             joinMaps.add(myMap);
         }
         int totalCount = joinMaps.size();
@@ -427,9 +427,9 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsQuitNoticeExample example = new CmsQuitNoticeExample();
         example.createCriteria().andClubIdEqualTo(clubId);
         List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
-        List<Map<String, String>> quitMaps = new ArrayList<Map<String, String>>();
+        List<Map<String, Object>> quitMaps = new ArrayList<Map<String, Object>>();
         for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
-            Map<String, String> myMap = new LinkedHashMap<>();
+            Map<String, Object> myMap = new LinkedHashMap<>();
             myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
             myMap.put("reason", cmsQuitNotice.getReadon());
             myMap.put("create_at", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
@@ -488,7 +488,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             myMap.put("odlChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getOldChiefId()).getUsername());
             myMap.put("newChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getNewChiefId()).getUsername());
             myMap.put("create_at", simpleDateFormat.format(cmsChiefChangeApply.getCreateAt()));
-            myMap.put("state", ApplyStateEnum.toString(cmsChiefChangeApply.getState()));
+            myMap.put("state", cmsChiefChangeApply.getState());
             chiefChangeMaps.add(myMap);
         }
         int totalCount = chiefChangeMaps.size();

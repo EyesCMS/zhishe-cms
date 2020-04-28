@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *社团创建审核申请表单数据
@@ -15,8 +16,10 @@ public class CmsClubsAuditParam {
      * state : 1
      */
     @ApiModelProperty(value = " 申请id ", required = true)
+    @NotNull(message = " 申请id不能为空 ")
     private int id;
     @ApiModelProperty(value = " 审核状态 ", required = true)
+    @NotNull(message = " 审核状态不能为空 ")
     private int state;
 
     public int getId() {

@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.dto;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *社团解散申请表单数据
@@ -16,7 +17,8 @@ public class CmsClubsDisbandParam {
      * reason : 没为什么
      * accessoryUrl : https://xxx/xxx/xx.doc
      */
-
+    @ApiModelProperty(value = " 社团id ", required = true)
+    @NotNull(message = " 社团id不能为空 ")
     private int clubId;
     @ApiModelProperty(value = " 申请人 ", required = true)
     @NotEmpty(message = " 申请人不能为空 ")
@@ -24,6 +26,8 @@ public class CmsClubsDisbandParam {
     @ApiModelProperty(value = " 理由 ", required = true)
     @NotEmpty(message = " 理由不能为空 ")
     private String reason;
+//    @ApiModelProperty(value = " 附件 ", required = true)
+//    @NotEmpty(message = " 附件不能为空? ")
     private String accessoryUrl;
 
     public int getClubId() {
