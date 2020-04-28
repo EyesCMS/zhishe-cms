@@ -45,18 +45,18 @@
     LIMIT #{queryParam.page}, #{queryParam.limit}
   </select>
 
-  <select id="getActivityDetailsById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getActivityById" parameterType="java.lang.Integer" resultMap="BaseActivityResultMap">
     SELECT
+     a.id,
      a.title,
      a.body,
+     c.`name` c_name,
      a.create_at,
-     ar.content ar_content,
-     ar.create_at ar_create_at,
-     u.username ar_username
+     a.img_url,
+     c.avatar_url c_avatar_url
     FROM
      cms_activity a
-     LEFT JOIN cms_user_activity_remark ar ON a.id = ar.activity_id
-     LEFT JOIN sys_user u ON ar.user_id = u.id
+     LEFT JOIN cms_club c ON a.club_id = c.id
     WHERE
      a.id = #{id}
   </select>

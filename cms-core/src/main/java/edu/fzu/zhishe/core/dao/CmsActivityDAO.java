@@ -15,5 +15,5 @@ public interface CmsActivityDAO {
     List<CmsActivityDTO> listActivity(@Param("clubId") Integer clubId,
         @Param("queryParam") QueryParam queryParam);
 
-    CmsActivityDetails getActivityDetailsById(@Param("id") Integer id);
+    CmsActivityDTO getActivityById(@Param("id") Integer id);
 }

@@ -1,8 +1,6 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
-import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import java.util.List;
 
@@ -14,7 +12,7 @@ public interface CmsForumService {
 
     List<CmsActivityDTO> listPosts(Integer clubId, QueryParam queryParam);
 
-    CmsActivityDetails getActivityDetailById(Integer id);
+    CmsActivityDTO getActivityById(Integer id);
 
     void deleteActivity(Integer id);
 }

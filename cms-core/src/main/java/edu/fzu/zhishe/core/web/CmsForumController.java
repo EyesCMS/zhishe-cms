@@ -2,7 +2,6 @@ package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
-import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
 import io.swagger.annotations.Api;
@@ -54,10 +53,10 @@ public class CmsForumController {
         return ResponseEntity.ok().body(CommonList.getCommonList(activities, activities.size()));
     }
 
-    @ApiOperation(" 帖子详情 ")
+    @ApiOperation(" 根据活动 id 查看某一帖子 ")
     @GetMapping("/posts/{id}")
-    public ResponseEntity<CmsActivityDetails> getPostDetail(@PathVariable Integer id) {
-        return ResponseEntity.ok().body(forumService.getActivityDetailById(id));
+    public ResponseEntity<CmsActivityDTO> getPost(@PathVariable Integer id) {
+        return ResponseEntity.ok().body(forumService.getActivityById(id));
     }
 
     @ApiOperation(" 删除一条帖子(活动) ")

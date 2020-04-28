@@ -6,7 +6,6 @@ import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
-import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
 import edu.fzu.zhishe.core.service.CmsForumService;
 import java.util.List;
@@ -35,9 +34,8 @@ public class CmsForumServiceImpl implements CmsForumService {
     }
 
     @Override
-    public CmsActivityDetails getActivityDetailById(Integer id) {
-        CmsActivityDetails activityDetails = activityDAO.getActivityDetailsById(id);
-        return activityDetails;
+    public CmsActivityDTO getActivityById(Integer id) {
+        return activityDAO.getActivityById(id);
     }
 
     @Override
