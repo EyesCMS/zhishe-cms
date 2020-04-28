@@ -57,7 +57,9 @@ public interface CmsClubService {
     /**
      * @author PSF
      */
-    void AtivityApply(CmsClubActivityParam param);
+    void ativityApply(CmsClubActivityParam param);
 
-    void ActivityStateChange(Integer applyId, Integer stateId, String role);
+    void activityStateChange(Integer applyId, Integer stateId, String role);
+
+    void delActivity(Integer id);
 }

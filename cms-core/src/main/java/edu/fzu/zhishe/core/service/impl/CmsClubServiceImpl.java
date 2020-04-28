@@ -1,7 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.sun.org.apache.xerces.internal.xs.datatypes.ObjectList;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
@@ -11,6 +10,7 @@ import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
+import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -21,6 +21,9 @@ import java.util.*;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -601,7 +604,7 @@ public class CmsClubServiceImpl implements CmsClubService {
      */
 
     @Override
-    public void AtivityApply(CmsClubActivityParam param) {
+    public void ativityApply(CmsClubActivityParam param) {
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
         SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -620,7 +623,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public void ActivityStateChange(Integer applyId, Integer stateId, String role) {
+    public void activityStateChange(Integer applyId, Integer stateId, String role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
         if (role.equals("sys") && activity.getState() == 0) {
             if (stateId == 1 || stateId == 3) {
@@ -637,5 +640,33 @@ public class CmsClubServiceImpl implements CmsClubService {
             }
         }
         Asserts.fail("状态未改变或权限不足");
+    }
+
+    @Override
+    public void delActivity(Integer id) {
+        CmsActivity activity = activityMapper.selectByPrimaryKey(id);
+        CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+        if (activity == null || club == null) {
+            Asserts.fail("活动ID不存在");
+        }
+        SysUser user = getCurrentUser();
+        if (user.getIsAdmin() == 1 || user.getId().equals(club.getChiefId())) {
+            activity.setState(5);
+            if (activityMapper.updateByPrimaryKey(activity) == 0) {
+                Asserts.fail("删除失败，删除0行");
+            }
+        } else {
+            Asserts.fail("非社长或管理员，权限不足");
+        }
+    }
+
+    private SysUser getCurrentUser() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication auth = context.getAuthentication();
+        if (auth.getPrincipal() == "anonymousUser") {
+            return null;
+        }
+        SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();
+        return userDetails.getSysUser();
     }
 }

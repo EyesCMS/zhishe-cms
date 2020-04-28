@@ -217,38 +217,30 @@ public class CmsClubController {
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
-        try {
-            clubService.AtivityApply(param);
-        }
-        catch (ApiException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        clubService.ativityApply(param);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ApiOperation(" 6.2 活动申请审核 ")
+    @ApiOperation(" 6.3 活动申请审核 ")
     @PutMapping("/activities/audit")
     public ResponseEntity<Object> activityAudit(@RequestParam(value = "id") Integer applyId,
                                                 @RequestParam(value = "state_id") Integer stateId){
-        try {
-            clubService.ActivityStateChange(applyId, stateId, "sys");
-        }
-        catch (ApiException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        clubService.activityStateChange(applyId, stateId, "sys");
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(" 6.3 修改社团活动状态 ")
+    @ApiOperation(" 6.4 修改社团活动状态 ")
     @PutMapping("/activities/state")
     public ResponseEntity<Object> activityStateChange(@RequestParam(value = "id") Integer applyId,
                                                 @RequestParam(value = "state_id") Integer stateId){
-        try {
-            clubService.ActivityStateChange(applyId, stateId, "chief");
-        }
-        catch (ApiException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        clubService.activityStateChange(applyId, stateId, "chief");
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(" 6.6 根据活动id删除活动 ")
+    @DeleteMapping("/activities/{id}")
+    public ResponseEntity<Object> delActivity(@PathVariable(value = "id") Integer id) {
+        clubService.delActivity(id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -59,13 +59,8 @@ public class AuthController {
     @ApiOperation(" 用户注册 ")
     @PostMapping("/register")
     public ResponseEntity<Object> register(@RequestBody SysUserRegisterParam userRegisterParam) {
-        try {
-            userService.register(userRegisterParam);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        catch (ApiException a) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+        userService.register(userRegisterParam);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation("  登录以后返回 token ")
