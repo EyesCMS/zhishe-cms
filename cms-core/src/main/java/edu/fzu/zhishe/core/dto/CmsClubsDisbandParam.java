@@ -19,7 +19,7 @@ public class CmsClubsDisbandParam {
      */
     @ApiModelProperty(value = " 社团id ", required = true)
     @NotNull(message = " 社团id不能为空 ")
-    private int clubId;
+    private Integer clubId;
     @ApiModelProperty(value = " 申请人 ", required = true)
     @NotEmpty(message = " 申请人不能为空 ")
     private String applicant;

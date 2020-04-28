@@ -17,10 +17,10 @@ public class CmsClubsAuditParam {
      */
     @ApiModelProperty(value = " 申请id ", required = true)
     @NotNull(message = " 申请id不能为空 ")
-    private int id;
+    private Integer id;
     @ApiModelProperty(value = " 审核状态 ", required = true)
     @NotNull(message = " 审核状态不能为空 ")
-    private int state;
+    private Integer state;
 
     public int getId() {
         return id;

@@ -14,10 +14,10 @@ public class CmsClubsChiefChangeParam {
      */
     @ApiModelProperty(value = " 社团id ", required = true)
     @NotNull(message = " 社团id不能为空 ")
-    private int clubId;
+    private Integer clubId;
     @ApiModelProperty(value = " 老社长id ", required = true)
     @NotNull(message = " 老社长id不能为空 ")
-    private int oldChiefId;
+    private Integer oldChiefId;
     @ApiModelProperty(value = " 新社长用户名 ", required = true)
     @NotEmpty(message = " 新社长用户名不能为空 ")
     private String newChiefName;

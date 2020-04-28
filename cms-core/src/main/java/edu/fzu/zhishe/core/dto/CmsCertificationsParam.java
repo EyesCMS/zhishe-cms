@@ -14,7 +14,7 @@ public class CmsCertificationsParam {
 
     @ApiModelProperty(value = " 社团id ", required = true)
     @NotNull(message = " 社团id不能为空 ")
-    private int clubId;
+    private Integer clubId;
     @ApiModelProperty(value = " 理由 ", required = true)
     @NotEmpty(message = " 理由不能为空 ")
     private String reason;
