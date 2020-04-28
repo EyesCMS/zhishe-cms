@@ -178,11 +178,7 @@ public class CmsClubController {
         clubService.clubChiefChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
-    /**
-     *
-     * 以下三个控制器是复制的暂未实现
-     *
-     */
+
     @ApiOperation(" 4.15提交社团认证申请表单 ")
     @PostMapping("/certifications")
     public ResponseEntity<Object> clubOfficialChange(@Validated @RequestBody CmsCertificationsParam cmsCertificationsParam){
@@ -190,7 +186,11 @@ public class CmsClubController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-
+    /**
+     *
+     * 以下两个控制器是复制的暂未实现
+     *
+     */
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
     public ResponseEntity<Object> clubOfficialChangeList(@RequestParam(value = "page", defaultValue = "0") Integer page,

@@ -560,6 +560,20 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CommonList getClubOfficialChangeList(QueryParam queryParam) {
+//        //设置日期格式
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        List<CmsOfficialChangeApply> cmsOfficialChangeApplies = officialChangeApplyMapper.selectByExample(null);
+//        List<Map<String, Object>> officialChangeMaps = new ArrayList<Map<String, Object>>();
+//        for (CmsOfficialChangeApply cmsOfficialChangeApply : cmsOfficialChangeApplies) {
+//            Map<String, Object> myMap = new LinkedHashMap<>();
+//            myMap.put("id",cmsOfficialChangeApply.getId());
+//            myMap.put("clubName",clubMapper.selectByPrimaryKey(cmsOfficialChangeApply.getClubId()).getName());
+//            myMap.put("accessoryUrl", cmsOfficialChangeApply.);
+//            myMap.put("create_at", simpleDateFormat.format(cmsChiefChangeApply.getCreateAt()));
+//            myMap.put("state", ApplyStateEnum.toString(cmsChiefChangeApply.getState()));
+//            chiefChangeMaps.add(myMap);
+//        }
+//        int totalCount = chiefChangeMaps.size();
         return null;
     }
 
