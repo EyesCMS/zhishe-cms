@@ -65,10 +65,10 @@ public interface CmsClubDAO {
      */
     List<CmsClub> listClubMember(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                       @Param("sort") String sort, @Param("order") String order,
-                                      @Param("userId") Integer clubId);
+                                      @Param("clubId") Integer clubId);
 
     /**
      * 查看社员详情
      */
-    List<CmsClub> showClubMemberInfo(Integer clubId, Integer userId);
+    List<CmsClub> showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
 }

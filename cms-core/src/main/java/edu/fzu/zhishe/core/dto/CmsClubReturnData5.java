@@ -16,6 +16,9 @@ public class CmsClubReturnData5 {
     @ApiModelProperty(value = "头衔")
     private String honor;
 
+    @ApiModelProperty(value = "角色")
+    private String role;
+
     @ApiModelProperty(value = "活跃度")
     private Integer credit;
 
@@ -52,6 +55,12 @@ public class CmsClubReturnData5 {
 
     public void setHonor(String honor) {
         this.honor = honor;
+    }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Integer getCredit() { return credit; }

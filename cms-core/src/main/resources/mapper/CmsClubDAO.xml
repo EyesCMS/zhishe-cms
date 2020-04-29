@@ -8,6 +8,8 @@
     grade, create_at
   </sql>
 
+
+  <!--
   <select id="listClubMember" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
     SELECT
@@ -29,6 +31,7 @@
     WHERE
       r.club_id = #{id,jdbcType=INTEGER} AND r.user_id=u.id
   </select>
+-->
 
   <select id="listHotClub" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
@@ -152,6 +155,48 @@
     user_id = #{userId,jdbcType=INTEGER}
   </select>
 
+  <select id="listClubMember" parameterType="java.lang.Integer"
+          resultMap="ClubMap5">
+    SELECT
+      u.id,
+      u.username,
+      u.nickname,
+      h.name,
+      r.description,
+      rel.credit,
+      u.avatar_url
+    FROM
+      sys_user u,
+      cms_member_honor h,
+      sys_role r,
+      cms_user_club_rel rel
+    WHERE
+      rel.club_id = #{clubId,jdbcType=INTEGER}
+</select>
+
+  <select id="showClubMemberInfo" parameterType="java.lang.Integer"
+          resultMap="ClubMap6">
+    SELECT
+      u.username,
+      u.nickname,
+      u.slogan,
+      r.description,
+      u.major,
+      u.phone,
+      u.email,
+      u.address,
+      h.name,
+      rel.credit,
+      u.avatar_url
+    FROM
+      sys_user u,
+      cms_member_honor h,
+      sys_role r,
+      cms_user_club_rel rel
+    WHERE
+      rel.club_id = #{clubId,jdbcType=INTEGER}
+</select>
+
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -187,6 +232,28 @@
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
 
+  <resultMap id="ClubMap5" type="edu.fzu.zhishe.core.dto.CmsClubReturnData5">
+    <id column="id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="name" jdbcType="VARCHAR" property="honor" />
+    <result column="description" jdbcType="VARCHAR" property="role" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
 
+  <resultMap id="ClubMap6" type="edu.fzu.zhishe.core.dto.CmsClubReturnData6">
+    <id column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="description" jdbcType="VARCHAR" property="role" />
+    <result column="major" jdbcType="VARCHAR" property="major" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="name" jdbcType="VARCHAR" property="honor" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
 
 </mapper>
