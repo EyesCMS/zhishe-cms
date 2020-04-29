@@ -22,6 +22,15 @@ public class CommonList {
         return result;
     }
 
+    public static  CommonList getCommonList(List list,Integer pageNum,
+                                            Integer pageSize) {
+        CommonList result = new CommonList();
+        int totalCount = list.size();
+        result.setItems(PageUtil.startPage(list, pageNum, pageSize));
+        result.setTotalCount(totalCount);
+        return result;
+    }
+
     public int getTotalCount(){
         return this.totalCount;
     }

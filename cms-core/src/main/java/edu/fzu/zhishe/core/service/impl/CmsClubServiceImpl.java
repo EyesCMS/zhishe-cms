@@ -227,10 +227,19 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubDisbandApply> listClubDisbandApply(QueryParam queryParam) {
-        // TODO: 对照api添加jsonignore
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return clubDisbandApplyMapper.selectByExample(null);
+    public List<CmsClubsDisbandReturnParam> listClubDisbandApply(QueryParam queryParam) {
+        // TODO: 数据库没有申请人字段
+        //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
+        List<CmsClubDisbandApply> cmsClubDisbandApplies = clubDisbandApplyMapper.selectByExample(null);
+        List<CmsClubsDisbandReturnParam> cmsClubsDisbandReturnParamList = new ArrayList<CmsClubsDisbandReturnParam>();
+        for (CmsClubDisbandApply cmsClubDisbandApply:cmsClubDisbandApplies){
+            CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam = new CmsClubsDisbandReturnParam();
+            BeanUtils.copyProperties(cmsClubDisbandApply,cmsClubsDisbandReturnParam);
+            cmsClubsDisbandReturnParam.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
+            cmsClubsDisbandReturnParam.setApplicant("数据库申请记录没有这个字段");
+            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam);
+        }
+        return cmsClubsDisbandReturnParamList;
     }
 
     @Override
