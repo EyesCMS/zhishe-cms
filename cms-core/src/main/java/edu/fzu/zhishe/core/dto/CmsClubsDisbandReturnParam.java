@@ -19,7 +19,7 @@ public class CmsClubsDisbandReturnParam {
     private int id;
     private String clubName;
     private String createAt;
-    private String applicant;
+
     private String reason;
     private int state;
 
@@ -49,13 +49,6 @@ public class CmsClubsDisbandReturnParam {
         this.createAt = createAt;
     }
 
-    public String getApplicant() {
-        return applicant;
-    }
-
-    public void setApplicant(String applicant) {
-        this.applicant = applicant;
-    }
 
     public String getReason() {
         return reason;

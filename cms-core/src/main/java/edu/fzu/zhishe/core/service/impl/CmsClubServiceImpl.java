@@ -227,17 +227,18 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsDisbandReturnParam> listClubDisbandApply(QueryParam queryParam) {
+    public List<CmsClubsDisbandReturnParam> listClubDisbandApply(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam) {
         // TODO: 数据库没有申请人字段
         //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
+        //CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
+        //example.createCriteria().andId(cmsClubsDisbandReturnParam.getId());
         List<CmsClubDisbandApply> cmsClubDisbandApplies = clubDisbandApplyMapper.selectByExample(null);
         List<CmsClubsDisbandReturnParam> cmsClubsDisbandReturnParamList = new ArrayList<CmsClubsDisbandReturnParam>();
         for (CmsClubDisbandApply cmsClubDisbandApply:cmsClubDisbandApplies){
-            CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam = new CmsClubsDisbandReturnParam();
-            BeanUtils.copyProperties(cmsClubDisbandApply,cmsClubsDisbandReturnParam);
-            cmsClubsDisbandReturnParam.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
-            cmsClubsDisbandReturnParam.setApplicant("数据库申请记录没有这个字段");
-            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam);
+            CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam1 = new CmsClubsDisbandReturnParam();
+            BeanUtils.copyProperties(cmsClubDisbandApply,cmsClubsDisbandReturnParam1);
+            cmsClubsDisbandReturnParam1.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
+            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam1);
         }
         return cmsClubsDisbandReturnParamList;
     }
@@ -336,7 +337,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList listJoinClubApply(Integer clubId, QueryParam queryParam) {
+    public List<CmsClubsJoinReturnParam> listJoinClubApply(Integer clubId,CmsClubsJoinReturnParam cmsClubsJoinReturnParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
@@ -349,16 +350,17 @@ public class CmsClubServiceImpl implements CmsClubService {
         example.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
         List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
+        List<CmsClubsJoinReturnParam> cmsClubsJoinReturnParamList = new ArrayList<CmsClubsJoinReturnParam>();
         for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-            Map<String, Object> myMap = new LinkedHashMap<>();
-            myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
-            myMap.put("reason", cmsClubJoinApply.getReason());
-            myMap.put("create_at", simpleDateFormat.format(cmsClubJoinApply.getCreateAt()));
-            myMap.put("state", cmsClubJoinApply.getState());
-            joinMaps.add(myMap);
+            CmsClubsJoinReturnParam cmsClubsJoinReturnParam1 = new CmsClubsJoinReturnParam();
+            cmsClubsJoinReturnParam1.setId(cmsClubJoinApply.getId());
+            cmsClubsJoinReturnParam1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
+            cmsClubsJoinReturnParam1.setReason(cmsClubJoinApply.getReason());
+            cmsClubsJoinReturnParam1.setCreateAt(simpleDateFormat.format(cmsClubJoinApply.getCreateAt()));
+            cmsClubsJoinReturnParam1.setState(cmsClubJoinApply.getState());
+            cmsClubsJoinReturnParamList.add(cmsClubsJoinReturnParam1);
         }
-        int totalCount = joinMaps.size();
-        return CommonList.getCommonList(PageUtil.startPage(joinMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
+        return cmsClubsJoinReturnParamList;
     }
 
     @Override

@@ -21,13 +21,13 @@ public interface CmsClubService {
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubsDisbandReturnParam> listClubDisbandApply(QueryParam queryParam);
+    List<CmsClubsDisbandReturnParam> listClubDisbandApply(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    CommonList listJoinClubApply(Integer clubId,QueryParam queryParam);
+    List<CmsClubsJoinReturnParam> listJoinClubApply(Integer clubId,CmsClubsJoinReturnParam cmsClubsJoinReturnParam);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

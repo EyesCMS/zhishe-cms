@@ -159,16 +159,17 @@ public class CmsClubController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<CommonList> clubDisbandList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                  @RequestParam(value = "keyword") String keyword){
+    public ResponseEntity<CommonList> clubDisbandList(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam,
+                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                      @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                      @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                      @RequestParam(value = "keyword") String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
 
         return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listClubDisbandApply(queryParam),queryParam.getPage(),queryParam.getLimit()));
+                .getCommonList(clubService.listClubDisbandApply(cmsClubsDisbandReturnParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.6审核解散社团申请 ")
@@ -187,14 +188,16 @@ public class CmsClubController {
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(@PathVariable("clubId") Integer clubId,
+    public ResponseEntity<Object> joinsList(CmsClubsJoinReturnParam cmsClubsJoinReturnParam,
+                                            @PathVariable("clubId") Integer clubId,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
                                             @RequestParam(value = "keyword") String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(clubService.listJoinClubApply(clubId,queryParam));
+        return ResponseEntity.ok().body(CommonList
+                .getCommonList(clubService.listJoinClubApply(clubId,cmsClubsJoinReturnParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")
