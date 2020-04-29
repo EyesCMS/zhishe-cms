@@ -164,7 +164,7 @@ public class CmsClubController {
                                                       @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                       @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                      @RequestParam(value = "keyword") String keyword){
+                                                      @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
 
@@ -194,7 +194,7 @@ public class CmsClubController {
                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
-                                            @RequestParam(value = "keyword") String keyword) {
+                                            @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         return ResponseEntity.ok().body(CommonList
                 .getCommonList(clubService.listJoinClubApply(clubId,cmsClubsJoinReturnParam),queryParam.getPage(),queryParam.getLimit()));
@@ -221,7 +221,7 @@ public class CmsClubController {
                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
-                                            @RequestParam(value = "keyword") String keyword) {
+                                            @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         return ResponseEntity.ok().body(clubService.listClubQuit(clubId,queryParam));
     }
@@ -240,7 +240,7 @@ public class CmsClubController {
                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                  @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                 @RequestParam(value = "keyword") String keyword){
+                                                 @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         CommonList clubChiefChangeList = clubService.listClubChiefChangeApply(queryParam);
         return ResponseEntity.ok().body(clubChiefChangeList);
@@ -271,7 +271,7 @@ public class CmsClubController {
                                                       @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                       @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                      @RequestParam(value = "keyword") String keyword){
+                                                      @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         // TODO: 等待api修改
        // CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
