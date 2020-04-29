@@ -20,7 +20,24 @@
         FROM
             cms_club_disband_apply a left join cms_club b on a.club_id = b.id
         WHERE
-          1
+            1
+        <if test="queryParam.id!=null">
+            AND a.id = #{queryParam.id}
+        </if>
+        <if test="queryParam.clubName!=null and  queryParam.clubName!=''">
+            AND b.name LIKE concat("%", #{queryParam.clubName},"%")
+        </if>
+        <if test="queryParam.reason!=null and  queryParam.reason!=''">
+            AND a.reason LIKE concat("%", #{queryParam.reason},"%")
+        </if>
+        <if test="queryParam.createAt!=null and  queryParam.createAt!=''">
+            AND a.create_at LIKE concat("%", #{queryParam.createAt},"%")
+        </if>
+        <if test="queryParam.state!=null">
+            AND a.state = #{queryParam.state}
+        </if>
+
+
     </select>
 
 </mapper>

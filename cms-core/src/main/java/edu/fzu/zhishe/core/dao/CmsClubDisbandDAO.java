@@ -7,5 +7,5 @@ import edu.fzu.zhishe.core.dto.CmsClubsDisbandReturnParam;
 import org.apache.ibatis.annotations.Param;
 
 public interface CmsClubDisbandDAO {
-    List<CmsClubsDisbandReturnParam> listClubDisbandApply(@Param("queryParam") CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam);
+    List<CmsClubsDisbandReturnParam> listClubDisbandApply(@Param("queryParam") CmsClubsDisbandQueryParam queryParam);
 }

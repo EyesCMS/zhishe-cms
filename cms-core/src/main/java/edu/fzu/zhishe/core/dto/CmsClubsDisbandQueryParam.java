@@ -17,20 +17,19 @@ public class CmsClubsDisbandQueryParam {
      * state : 0
      */
 
-    private int id;
+    private Integer id;
     private String clubName;
     private String createAt;
-
     private String reason;
-    private int state;
+    private Integer state;
 
 
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -59,11 +58,11 @@ public class CmsClubsDisbandQueryParam {
         this.reason = reason;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 }
