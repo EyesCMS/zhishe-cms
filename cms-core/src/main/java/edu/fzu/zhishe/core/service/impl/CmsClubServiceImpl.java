@@ -744,9 +744,15 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> showClubMemberInfo(Integer clubId, Integer userId) {
+    public CmsClub showClubMemberInfo(Integer clubId, Integer userId) {
         return clubDAO.showClubMemberInfo(clubId, userId);
     }
+
+    @Override
+    public List<CmsClub> addClubMember(Integer clubId, Integer userId){
+        return clubDAO.addClubMember(clubId, userId);
+    }
+
 
     /*
      * @author PSF 2020/04/27

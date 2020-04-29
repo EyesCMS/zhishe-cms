@@ -111,11 +111,18 @@ public class CmsClubController {
     }
 
     //SQL待完善
-    @ApiOperation(" 3.4查看某个社团详情 ")
+    @ApiOperation(" 3.4查看某个社员详情 ")
     @GetMapping("/{clubId}/members/{userId}")
     public ResponseEntity<CmsClub> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
                                                       @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId).get(0));
+        return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
+    }
+
+    //没写完没写完没写完 只写了个壳
+    @ApiOperation(" 3.4添加社团成员 ")
+    public ResponseEntity<CmsClub> addClubMember(@PathVariable("clubId") Integer clubId,
+                                                 @PathVariable("userId") Integer userId) {
+        return ResponseEntity.ok(clubService.addClubMember(clubId, userId).get(0));
     }
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")

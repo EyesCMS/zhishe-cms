@@ -70,5 +70,12 @@ public interface CmsClubDAO {
     /**
      * 查看社员详情
      */
-    List<CmsClub> showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
+    CmsClub showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
+
+
+    /**
+     * 添加社员
+     */
+    List<CmsClub> addClubMember(Integer clubId, Integer userId);
+
 }
