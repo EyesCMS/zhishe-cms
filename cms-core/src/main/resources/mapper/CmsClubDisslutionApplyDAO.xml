@@ -2,6 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsClubDisbandDAO">
+    <resultMap id="CmsClubDisbandReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsDisbandReturnParam">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="reason" jdbcType="VARCHAR" property="reason" />
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result property="clubName" jdbcType="VARCHAR" column="name" />
+    </resultMap>
 
+    <select id="listClubDisbandApply" resultMap="CmsClubDisbandReturnResultMapper">
+        SELECT
+            a.id,
+            a.reason,
+            a.create_at,
+            a.state,
+            b.name
+        FROM
+            cms_club_disband_apply a left join cms_club b on a.club_id = b.id
+        WHERE
+          1
+    </select>
 
 </mapper>

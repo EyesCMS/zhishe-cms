@@ -56,7 +56,7 @@ public class CmsClubController {
     @ApiOperation(" 3.4查看某个社团详情 ")
     @GetMapping("/{id}")
     public ResponseEntity<CmsClub> searchClubById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(clubService.getClubById(id).get(0));
+        return ResponseEntity.ok(clubService.getClubById(id));
     }
 
     @ApiOperation(" 3.2查看学生加入的社团列表 ")

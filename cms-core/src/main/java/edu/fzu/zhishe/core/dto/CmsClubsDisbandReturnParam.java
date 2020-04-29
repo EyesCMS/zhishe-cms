@@ -1,13 +1,8 @@
 package edu.fzu.zhishe.core.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 
-/**
- *社团解散申请列表查询数据
- *
- * @author yang
- */
-public class CmsClubsDisbandQueryParam {
+public class CmsClubsDisbandReturnParam {
     /**
      * id:1
      * clubName : 羽毛球社
@@ -19,8 +14,7 @@ public class CmsClubsDisbandQueryParam {
 
     private int id;
     private String clubName;
-    private String createAt;
-
+    private Date createAt;
     private String reason;
     private int state;
 
@@ -42,14 +36,13 @@ public class CmsClubsDisbandQueryParam {
         this.clubName = clubName;
     }
 
-    public String getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(String createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
-
 
     public String getReason() {
         return reason;
