@@ -29,7 +29,12 @@ public enum ActivityStateEnum {
     /**
      * 已结束
      */
-    FINISHED(4);
+    FINISHED(4),
+
+    /**
+     * 已删除
+     */
+    DELETED(5);
 
     private Integer value;
     ActivityStateEnum(Integer value) {
