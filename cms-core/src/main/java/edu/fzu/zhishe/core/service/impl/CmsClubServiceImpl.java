@@ -15,6 +15,8 @@ import edu.fzu.zhishe.core.dao.CmsActivityDAO;
 import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
 
+
+import edu.fzu.zhishe.core.dao.CmsClubDisbandDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -50,8 +52,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Autowired
     CmsClubDisbandApplyMapper clubDisbandApplyMapper;
 
-//    @Autowired
-//    private CmsClubDisbandDAO cmsClubDisbandDAO;
+    @Autowired
+    private CmsClubDisbandDAO cmsClubDisbandDAO;
 
     @Autowired
     CmsClubJoinApplyMapper clubJoinApplyMapper;
