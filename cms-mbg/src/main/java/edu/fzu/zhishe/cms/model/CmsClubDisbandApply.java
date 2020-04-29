@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.cms.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Date;

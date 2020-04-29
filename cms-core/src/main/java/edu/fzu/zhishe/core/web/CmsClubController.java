@@ -269,7 +269,7 @@ public class CmsClubController {
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
-        clubService.ativityApply(param);
+        clubService.activityApply(param);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

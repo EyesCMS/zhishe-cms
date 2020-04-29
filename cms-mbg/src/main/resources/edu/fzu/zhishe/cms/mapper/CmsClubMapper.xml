@@ -15,7 +15,6 @@
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
   </resultMap>
-
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">

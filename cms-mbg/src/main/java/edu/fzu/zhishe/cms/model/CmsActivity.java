@@ -39,7 +39,7 @@ public class CmsActivity implements Serializable {
     @ApiModelProperty(value = "处理时间")
     private Date handleAt;
 
-    @ApiModelProperty(value = "活动状态: 0 -> “未审核”; 1 -> '审核通过'; 2 -> '已发布'; 3 -> '审核未通过'; 4 -> '已结束'")
+    @ApiModelProperty(value = "活动状态: 0 -> “未审核”; 1 -> '审核通过'; 2 -> '已发布'; 3 -> '审核未通过'; 4 -> '已结束';  5->'已删除';")
     private Integer state;
 
     private static final long serialVersionUID = 1L;

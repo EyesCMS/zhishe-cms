@@ -6,6 +6,7 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.common.util.PageUtil;
+import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
@@ -646,7 +647,7 @@ public class CmsClubServiceImpl implements CmsClubService {
      */
 
     @Override
-    public void ativityApply(CmsClubActivityParam param) {
+    public void activityApply(CmsClubActivityParam param) {
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
         SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
@@ -693,7 +694,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         SysUser user = getCurrentUser();
         if (user.getIsAdmin() == 1 || user.getId().equals(club.getChiefId())) {
-            activity.setState(5);
+            activity.setState(ActivityStateEnum.DELETED.getValue());
             if (activityMapper.updateByPrimaryKey(activity) == 0) {
                 Asserts.fail("删除失败，删除0行");
             }

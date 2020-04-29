@@ -65,7 +65,7 @@ public interface CmsClubService {
     /**
      * @author PSF
      */
-    void ativityApply(CmsClubActivityParam param);
+    void activityApply(CmsClubActivityParam param);
 
     void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role);
 
