@@ -43,7 +43,7 @@ public interface CmsClubService {
 
     CmsOfficialChangeApply clubOfficialChange(CmsCertificationsParam certificationsParam);
 
-    CommonList getClubOfficialChangeList(QueryParam queryParam);
+    CommonList listClubOfficialChange(QueryParam queryParam);
 
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

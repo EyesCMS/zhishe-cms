@@ -277,7 +277,7 @@ public class CmsClubController {
     @PutMapping("/certifications")
     public ResponseEntity<Object> clubOfficialChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
         // TODO: 等待api修改
-        //clubService.clubChiefChangeAudit(cmsClubsAuditParam);
+        clubService.clubOfficialChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 

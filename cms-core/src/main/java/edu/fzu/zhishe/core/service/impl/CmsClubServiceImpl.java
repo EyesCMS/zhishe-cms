@@ -533,6 +533,11 @@ public class CmsClubServiceImpl implements CmsClubService {
             clubMapper.updateByPrimaryKeySelective(cmsClub);
             //老社长要不要退社有待讨论
 
+            //更新申请记录
+            cmsChiefChangeApply.setState(ApplyStateEnum.ACTIVE.getValue());
+            cmsChiefChangeApply.setHandleAt(new Date());
+            chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply);
+
             return cmsChiefChangeApply;
         }
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
@@ -576,7 +581,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubOfficialChangeList(QueryParam queryParam) {
+    public CommonList listClubOfficialChange(QueryParam queryParam) {
         // TODO: 等待api修改
 //        //设置日期格式
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -598,7 +603,41 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         // TODO: 等待api修改
-        return null;
+        CmsOfficialChangeApply cmsOfficialChangeApply = officialChangeApplyMapper
+                .selectByPrimaryKey(cmsClubsAuditParam.getId());
+        if (cmsOfficialChangeApply == null) {
+            Asserts.fail(" 该社团认证申请不存在 ");
+        }
+        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
+            Asserts.fail(" 该申请状态码不正确 ");
+        }
+        if (cmsOfficialChangeApply.getState() != ApplyStateEnum.PENDING.getValue()) {
+            Asserts.fail(" 该申请已经审核完毕 ");
+        }
+
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
+            return cmsOfficialChangeApply;
+        }
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.ACTIVE.getValue()) {
+            //更新社团官方状态
+            CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsOfficialChangeApply.getClubId());
+            cmsClub.setOfficialState(ClubOfficialStateEnum.OFFICIAL.getValue());
+            clubMapper.updateByPrimaryKeySelective(cmsClub);
+
+            //更新申请记录
+            cmsOfficialChangeApply.setState(ApplyStateEnum.ACTIVE.getValue());
+            cmsOfficialChangeApply.setHandleAt(new Date());
+            officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply);
+
+            return cmsOfficialChangeApply;
+        }
+        if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
+            cmsOfficialChangeApply.setState(ApplyStateEnum.REJECTED.getValue());
+            cmsOfficialChangeApply.setHandleAt(new Date());
+            officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply);
+            return cmsOfficialChangeApply;
+        }
+        return cmsOfficialChangeApply;
     }
 
 
