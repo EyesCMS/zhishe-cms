@@ -9,6 +9,7 @@ import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
+import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
@@ -87,6 +88,38 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Autowired
     private CmsActivityDAO activityDAO;
+
+    @Override
+    public boolean isClubMember(Integer clubId) {
+        ClubStatueEnum clubStatue = getClubStatue(clubId);
+        return clubStatue == ClubStatueEnum.CHIEF || clubStatue == ClubStatueEnum.MEMBER;
+    }
+
+    @Override
+    public ClubStatueEnum getClubStatue(Integer clubId) {
+        // 找不到社团
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        if (club == null) {
+            return ClubStatueEnum.NONE;
+        }
+
+        SysUser currentUser = sysUserService.getCurrentUser();
+        Integer userId = currentUser.getId();
+        if (club.getChiefId().equals(userId)) {
+            return ClubStatueEnum.CHIEF;
+        }
+
+        CmsUserClubRelExample example = new CmsUserClubRelExample();
+        example.createCriteria()
+            .andClubIdEqualTo(clubId)
+            .andUserIdEqualTo(userId);
+        List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(userClubRels)) {
+            return ClubStatueEnum.NONE;
+        }
+
+        return ClubStatueEnum.MEMBER;
+    }
 
     //一下三个函数用于社团创建
     @Override
@@ -677,7 +710,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> getClubById(Integer id) {
+    public CmsClub getClubById(Integer id) {
         return clubDAO.getClubById(id);
     }
 

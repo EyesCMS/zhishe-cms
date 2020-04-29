@@ -30,7 +30,7 @@ public interface CmsClubDAO {
     /**
      * 按ID搜索社团
      */
-    List<CmsClub> getClubById(@Param("id") Integer id);
+    CmsClub getClubById(@Param("id") Integer id);
 
     /**
      * 加入社团列表

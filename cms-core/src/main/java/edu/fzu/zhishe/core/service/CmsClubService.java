@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.util.CommonList;
+import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 
@@ -13,6 +14,11 @@ import java.util.List;
  * @author yang
  */
 public interface CmsClubService {
+
+    boolean isClubMember(Integer clubId);
+
+    ClubStatueEnum getClubStatue(Integer clubId);
+
     CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
 
     List<CmsClubCreateApply> listClubCreationApply(CmsClubCreationQueryParam queryParam, Integer page, Integer limit);
@@ -52,7 +58,7 @@ public interface CmsClubService {
 
     List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword);
 
-    List<CmsClub> getClubById(Integer id);
+    CmsClub getClubById(Integer id);
 
     List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
