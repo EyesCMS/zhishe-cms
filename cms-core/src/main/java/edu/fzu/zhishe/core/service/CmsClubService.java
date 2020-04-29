@@ -6,9 +6,6 @@ import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *社团管理服务层
@@ -24,23 +21,23 @@ public interface CmsClubService {
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    CommonList getClubDisbandList(QueryParam queryParam);
+    List<CmsClubDisbandApply> listClubDisbandApply(QueryParam queryParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    CommonList getClubJoinsList(Integer clubId,QueryParam queryParam);
+    CommonList listJoinClubApply(Integer clubId,QueryParam queryParam);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
 
-    CommonList getClubQuitList(Integer clubId,QueryParam queryParam);
+    CommonList listClubQuit(Integer clubId,QueryParam queryParam);
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
-    CommonList getClubChiefChangeList(QueryParam queryParam);
+    CommonList listClubChiefChangeApply(QueryParam queryParam);
 
     CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
@@ -51,21 +48,19 @@ public interface CmsClubService {
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
 
-    List<CmsClub> getHotClubList(Integer page, Integer limit);
+    List<CmsClub> listHotClub(Integer page, Integer limit);
 
-    List<CmsClub> getClubList(Integer page, Integer limit, String sort, String order);
+    List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword);
 
-    List<CmsClub> searchClubByKeyword(Integer page, Integer limit, String sort, String order, String keyword);
+    List<CmsClub> getClubById(Integer id);
 
-    List<CmsClub> searchClubById(Integer id);
+    List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> searchJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClub> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> searchManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClub> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> searchJoinedApplyList(Integer page, Integer limit, String sort, String order, Integer userId);
-
-    List<CmsClub> searchCreateApplyList(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClub> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
     /**
      * @author PSF

@@ -222,11 +222,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubDisbandList(QueryParam queryParam) {
+    public List<CmsClubDisbandApply> listClubDisbandApply(QueryParam queryParam) {
         // TODO: 对照api添加jsonignore
-        int totalCount = clubDisbandApplyMapper.selectByExample(null).size();
         PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return CommonList.getCommonList(clubDisbandApplyMapper.selectByExample(null), totalCount);
+        return clubDisbandApplyMapper.selectByExample(null);
     }
 
     @Override
@@ -323,7 +322,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubJoinsList(Integer clubId, QueryParam queryParam) {
+    public CommonList listJoinClubApply(Integer clubId, QueryParam queryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
@@ -429,7 +428,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubQuitList(Integer clubId,QueryParam queryParam) {
+    public CommonList listClubQuit(Integer clubId,QueryParam queryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
@@ -490,7 +489,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList getClubChiefChangeList(QueryParam queryParam) {
+    public CommonList listClubChiefChangeApply(QueryParam queryParam) {
         //设置日期格式
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<CmsChiefChangeApply> cmsChiefChangeApplies = chiefChangeApplyMapper.selectByExample(null);
@@ -603,49 +602,43 @@ public class CmsClubServiceImpl implements CmsClubService {
 
 
     @Override
-    public List<CmsClub> getHotClubList(Integer page, Integer limit) {
-        return clubDAO.getHotClubList(page, limit);
+    public List<CmsClub> listHotClub(Integer page, Integer limit) {
+        return clubDAO.listHotClub(page, limit);
     }
 
     @Override
-    public List<CmsClub> getClubList(Integer page, Integer limit,String sort, String order) {
+    public List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword) {
         PageHelper.startPage(page, limit);
-        return clubDAO.getClubList(page,limit,sort,order);
+        return clubDAO.listClub(sort, order, keyword);
     }
 
     @Override
-    public List<CmsClub> searchClubByKeyword(Integer page, Integer limit, String sort, String order, String keyword) {
+    public List<CmsClub> getClubById(Integer id) {
+        return clubDAO.getClubById(id);
+    }
+
+    @Override
+    public List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
-        return clubDAO.searchClubByKeyword(page,limit,sort,order, keyword);
+        return clubDAO.listJoinedClub(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> searchClubById (Integer id) {
-        return clubDAO.searchClubById(id);
-    }
-
-    @Override
-    public List<CmsClub> searchJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClub> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
-        return clubDAO.searchJoinedClub(page,limit,sort,order, userId);
+        return clubDAO.listManagedClub(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> searchManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClub> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
-        return clubDAO.searchManagedClub(page,limit,sort,order, userId);
+        return clubDAO.listJoinClubApply(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> searchJoinedApplyList(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClub> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
-        return clubDAO.searchJoinedApplyList(page,limit,sort,order, userId);
-    }
-
-    @Override
-    public List<CmsClub> searchCreateApplyList(Integer page, Integer limit, String sort, String order, Integer userId) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.searchCreateApplyList(page,limit,sort,order, userId);
+        return clubDAO.listCreateClubApply(page,limit,sort,order, userId);
     }
 
     /*

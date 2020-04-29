@@ -14,56 +14,49 @@ public interface CmsClubDAO {
     /*
      * 通过社团id获取社团的成员对象列表
      */
-    List<SysUser> selectUserByClubId(Integer id);
+    List<SysUser> listClubMember(Integer id);
 
     /**
      * 获取人气推荐社团
      */
-    List<CmsClub> getHotClubList(@Param("offset") Integer offset, @Param("limit") Integer limit);
-
-    /**
-     * 获取社团列表
-     */
-    List<CmsClub> getClubList(@Param("offset") Integer offset, @Param("limit") Integer limit,
-                              @Param("sort") String sort,@Param("order") String order);
+    List<CmsClub> listHotClub(@Param("offset") Integer offset, @Param("limit") Integer limit);
 
     /**
      * 模糊搜索社团
      */
-    List<CmsClub> searchClubByKeyword(@Param("offset") Integer offset, @Param("limit") Integer limit,
-                                  @Param("sort") String sort, @Param("order") String order,
-                                  @Param("keyword") String keyword);
+    List<CmsClub> listClub(@Param("sort") String sort, @Param("order") String order,
+        @Param("keyword") String keyword);
 
     /**
      * 按ID搜索社团
      */
-    List<CmsClub> searchClubById(@Param("id") Integer id);
+    List<CmsClub> getClubById(@Param("id") Integer id);
 
     /**
      * 加入社团列表
      */
-    List<CmsClub> searchJoinedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClub> listJoinedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                       @Param("sort") String sort, @Param("order") String order,
                                       @Param("userId") Integer userId);
 
     /**
      * 管理社团列表
      */
-    List<CmsClub> searchManagedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClub> listManagedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                    @Param("sort") String sort, @Param("order") String order,
                                    @Param("userId") Integer userId);
 
     /**
      * 加入社团申请列表
      */
-    List<CmsClub> searchJoinedApplyList(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClub> listJoinClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                    @Param("sort") String sort, @Param("order") String order,
                                    @Param("userId") Integer userId);
 
     /**
      * 创建社团申请列表
      */
-    List<CmsClub> searchCreateApplyList(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClub> listCreateClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                     @Param("sort") String sort, @Param("order") String order,
                                     @Param("userId") Integer userId);
 }

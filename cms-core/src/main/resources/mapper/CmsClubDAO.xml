@@ -8,7 +8,7 @@
     grade, create_at
   </sql>
 
-  <select id="selectUserByClubId" parameterType="java.lang.Integer"
+  <select id="listClubMember" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
     SELECT
       u.id,
@@ -30,7 +30,7 @@
       r.club_id = #{id,jdbcType=INTEGER} AND r.user_id=u.id
   </select>
 
-  <select id="getHotClubList" parameterType="java.lang.Integer"
+  <select id="listHotClub" parameterType="java.lang.Integer"
     resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
     SELECT
       <include refid="Base_Column_List"/>
@@ -41,7 +41,7 @@
       LIMIT #{offset}, #{limit}
   </select>
 
-  <select id="getClubList" parameterType="java.lang.Integer"
+  <select id="listClub" parameterType="java.lang.String"
           resultMap="ClubMap1">
     SELECT
       club.id,
@@ -54,24 +54,12 @@
       sys_user u
     WHERE
       club.chief_id = u.id
+      <if test="keyword != null and keyword != ''">
+        AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
+      </if>
   </select>
 
-  <select id="searchClubByKeyword" parameterType="java.lang.String"
-          resultMap="ClubMap1">
-    SELECT
-      club.id,
-      club.name,
-      club.chief_id,
-      u.nickname,
-      club.avatar_url
-    FROM
-      cms_club club,
-      sys_user u
-    WHERE
-      club.chief_id = u.id AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
-  </select>
-
-  <select id="searchClubById" parameterType="java.lang.Integer"
+  <select id="getClubById" parameterType="java.lang.Integer"
           resultMap="ClubMap2">
     SELECT
       club.id,
@@ -89,7 +77,7 @@
       club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="searchJoinedClub" parameterType="java.lang.Integer"
+  <select id="listJoinedClub" parameterType="java.lang.Integer"
           resultMap="ClubMap1">
     SELECT
       club.id,
@@ -112,7 +100,7 @@
       )
   </select>
 
-  <select id="searchManagedClub" parameterType="java.lang.Integer"
+  <select id="listManagedClub" parameterType="java.lang.Integer"
                    resultMap="ClubMap1">
     SELECT
       club.id,
@@ -135,7 +123,7 @@
       )
   </select>
 
-  <select id="searchJoinedApplyList" parameterType="java.lang.Integer"
+  <select id="listJoinClubApply" parameterType="java.lang.Integer"
           resultMap="ClubMap3">
     SELECT
       a.user_id,
@@ -150,7 +138,7 @@
     a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id
   </select>
 
-  <select id="searchCreateApplyList" parameterType="java.lang.Integer"
+  <select id="listCreateClubApply" parameterType="java.lang.Integer"
           resultMap="ClubMap4">
     SELECT
       club_name,
