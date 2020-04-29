@@ -781,4 +781,20 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         return activityDAO.selectActivitiesApply(clubId);
     }
+
+    @Override
+    public CmsActivity getActivityApplyItem(Integer id) {
+        CmsActivity activity = activityMapper.selectByPrimaryKey(id);
+        if (activity == null) {
+            Asserts.fail("申请ID错误，获取申请活动失败");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+        SysUser user = getCurrentUser();
+        if (user == null || !user.getId().equals(club.getChiefId())) {
+            Asserts.fail("非社长无法查看申请活动");
+        }
+
+        return activity;
+    }
 }

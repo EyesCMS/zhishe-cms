@@ -320,4 +320,10 @@ public class CmsClubController {
     public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId) {
         return ResponseEntity.ok().body(clubService.getActivitiesApply(clubId));
     }
+
+    @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")
+    @GetMapping("/activities/apply/{id}")
+    public ResponseEntity<Object> getApplyItem(@PathVariable(value = "id") Integer id) {
+        return ResponseEntity.ok().body(clubService.getActivityApplyItem(id));
+    }
 }
