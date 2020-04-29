@@ -21,7 +21,7 @@ public interface CmsClubService {
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubsDisbandReturnParam> listClubDisbandApply(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam);
+    List<CmsClubsDisbandQueryParam> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

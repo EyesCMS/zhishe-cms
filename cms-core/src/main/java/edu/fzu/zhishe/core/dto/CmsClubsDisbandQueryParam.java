@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  *
  * @author yang
  */
-public class CmsClubsDisbandReturnParam {
+public class CmsClubsDisbandQueryParam {
     /**
      * clubName : 羽毛球社
      * createAt : 2018-04-19 18:14:12

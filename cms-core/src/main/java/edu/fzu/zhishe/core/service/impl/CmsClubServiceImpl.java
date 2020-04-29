@@ -233,18 +233,21 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsDisbandReturnParam> listClubDisbandApply(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam) {
+    public List<CmsClubsDisbandQueryParam> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam) {
         // TODO: 数据库没有申请人字段
         //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         //CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
         //example.createCriteria().andId(cmsClubsDisbandReturnParam.getId());
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<CmsClubDisbandApply> cmsClubDisbandApplies = clubDisbandApplyMapper.selectByExample(null);
-        List<CmsClubsDisbandReturnParam> cmsClubsDisbandReturnParamList = new ArrayList<CmsClubsDisbandReturnParam>();
+        List<CmsClubsDisbandQueryParam> cmsClubsDisbandReturnParamList = new ArrayList<CmsClubsDisbandQueryParam>();
         for (CmsClubDisbandApply cmsClubDisbandApply:cmsClubDisbandApplies){
-            CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam1 = new CmsClubsDisbandReturnParam();
-            BeanUtils.copyProperties(cmsClubDisbandApply,cmsClubsDisbandReturnParam1);
-            cmsClubsDisbandReturnParam1.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
-            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam1);
+            CmsClubsDisbandQueryParam cmsClubsDisbandReturnParam = new CmsClubsDisbandQueryParam();
+            BeanUtils.copyProperties(cmsClubDisbandApply, cmsClubsDisbandReturnParam);
+            cmsClubsDisbandReturnParam.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
+            cmsClubsDisbandReturnParam.setCreateAt(simpleDateFormat.format(cmsClubDisbandApply.getCreateAt()));
+            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam);
         }
         return cmsClubsDisbandReturnParamList;
     }

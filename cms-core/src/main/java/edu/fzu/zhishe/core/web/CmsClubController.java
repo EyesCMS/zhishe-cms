@@ -4,7 +4,6 @@ package edu.fzu.zhishe.core.web;
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
@@ -159,7 +158,7 @@ public class CmsClubController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<CommonList> clubDisbandList(CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam,
+    public ResponseEntity<CommonList> clubDisbandList(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,
                                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -169,7 +168,7 @@ public class CmsClubController {
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
 
         return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listClubDisbandApply(cmsClubsDisbandReturnParam),queryParam.getPage(),queryParam.getLimit()));
+                .getCommonList(clubService.listClubDisbandApply(cmsClubsDisbandQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.6审核解散社团申请 ")
