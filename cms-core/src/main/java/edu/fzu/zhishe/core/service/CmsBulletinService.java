@@ -5,20 +5,20 @@ import edu.fzu.zhishe.core.dto.CmsBulletinParam;
 import java.util.List;
 
 /**
- * @author liang on 4/25/2020.
- * @version 1.0
+ * @author zou
+ * 公告模块服务层
  */
 public interface CmsBulletinService {
 
-    List<CmsBulletin> listBulletin(int page, int limit);
+    List<CmsBulletin> listBulletin(int bulletinId,int page, int limit);
 
     CmsBulletin getBulletinById(int id);
 
-    void saveBulletin(CmsBulletinParam cmsBulletinParam);
+    int creatBulletin(CmsBulletinParam cmsBulletinParam);
 
-    void updateBulletin(CmsBulletinParam cmsBulletinParam);
+    int updateBulletin(CmsBulletinParam cmsBulletinParam);
 
-    void deleteBulletin(int id);
+    int deleteBulletin(int id);
 
     List<CmsBulletin> listClubBulletin(int clubId, int page, int limit);
 }
