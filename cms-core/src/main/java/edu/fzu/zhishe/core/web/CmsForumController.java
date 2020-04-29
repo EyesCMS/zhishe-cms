@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.common.util.CommonList;
@@ -40,14 +41,13 @@ public class CmsForumController {
 
     @ApiOperation(" 7.1 帖子列表 ")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
-    public ResponseEntity<Object> listPosts(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsActivityDTO>> listPosts(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
                                             @RequestParam(value = "keyword", required = false) String title) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, title);
-        List<CmsActivityDTO> activities = forumService.listPosts(null, queryParam);
-        return ResponseEntity.ok().body(CommonList.getCommonList(activities, activities.size()));
+        return ResponseEntity.ok().body(CommonPage.restPage(forumService.listPosts(null, queryParam)));
     }
 
     @ApiOperation(" 7.2 根据活动 id 查看某一帖子 ")
@@ -68,7 +68,7 @@ public class CmsForumController {
 
     @ApiOperation(" 7.5 某个社团的帖子列表 ")
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
-    public ResponseEntity<Object> listClubPosts(@PathVariable("clubId") Integer clubId,
+    public ResponseEntity<CommonPage<CmsActivityDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                 @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -76,7 +76,7 @@ public class CmsForumController {
                                                 @RequestParam(value = "keyword", required = false) String title) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, title);
         List<CmsActivityDTO> activities = forumService.listPosts(clubId, queryParam);
-        return ResponseEntity.ok().body(CommonList.getCommonList(activities, activities.size()));
+        return ResponseEntity.ok().body(CommonPage.restPage(activities));
     }
 
     @ApiOperation(" 8.1 对某一活动帖子发表评论 ")

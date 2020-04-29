@@ -2,18 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsActivityDAO">
 
-  <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDetails">
-    <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="body" jdbcType="VARCHAR" property="content" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
-    <collection property="remarks" columnPrefix="ar_" ofType="edu.fzu.zhishe.core.dto.CmsRemarkDTO">
-      <result property="content" column="content" />
-      <result property="createAt" column="create_at" />
-      <result property="username" column="username" />
-    </collection>
-  </resultMap>
-
-  <resultMap id="BaseActivityResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDTO">
+  <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDTO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="body" jdbcType="VARCHAR" property="content" />
@@ -23,7 +12,7 @@
     <result column="c_avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
 
-  <select id="listActivity" parameterType="java.lang.Integer" resultMap="BaseActivityResultMap">
+  <select id="listActivity" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
      a.id,
      a.title,
@@ -36,7 +25,7 @@
      cms_activity a
      LEFT JOIN cms_club c ON a.club_id = c.id
     WHERE
-     1
+     a.state != 5
     <if test="queryParam.keyword != null and queryParam.keyword != ''">
       AND title LIKE concat("%",#{queryParam.keyword},"%")
     </if>
@@ -45,7 +34,7 @@
     LIMIT #{queryParam.page}, #{queryParam.limit}
   </select>
 
-  <select id="getActivityById" parameterType="java.lang.Integer" resultMap="BaseActivityResultMap">
+  <select id="getActivityById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
      a.id,
      a.title,
@@ -58,7 +47,7 @@
      cms_activity a
      LEFT JOIN cms_club c ON a.club_id = c.id
     WHERE
-     a.id = #{id}
+     a.id = #{id} AND a.state != 5
   </select>
 
 </mapper>
