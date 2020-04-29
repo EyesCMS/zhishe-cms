@@ -100,6 +100,25 @@ public class CmsClubController {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(page, limit, sort, order, userId)));
     }
 
+    //SQL待完善
+    @ApiOperation(" 3.2查看社团成员列表 ")
+    @GetMapping("/{clubId}/members")
+    public ResponseEntity<CommonPage<CmsClub>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                                   @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                                   @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                                   @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                                   @PathVariable(value = "clubId", required = false) Integer clubId) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(page, limit, sort, order, clubId)));
+    }
+
+    //SQL待完善
+    @ApiOperation(" 3.4查看某个社团详情 ")
+    @GetMapping("/{clubId}/members/{userId}")
+    public ResponseEntity<CmsClub> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
+                                                      @PathVariable("userId") Integer userId) {
+        return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId).get(0));
+    }
+
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
     public ResponseEntity<Object> createClub(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){

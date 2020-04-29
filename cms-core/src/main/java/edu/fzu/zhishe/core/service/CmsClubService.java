@@ -62,6 +62,9 @@ public interface CmsClubService {
 
     List<CmsClub> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
+    List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
+
+    List<CmsClub> showClubMemberInfo(Integer clubId, Integer userId);
     /**
      * @author PSF
      */
@@ -70,4 +73,5 @@ public interface CmsClubService {
     void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role);
 
     void delActivity(Integer id);
+
 }
