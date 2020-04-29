@@ -11,6 +11,7 @@ import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dao.CmsActivityDAO;
 import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
@@ -77,6 +78,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Autowired
     private CmsActivityMapper activityMapper;
+
+    @Autowired
+    private CmsActivityDAO activityDAO;
 
     //一下三个函数用于社团创建
     @Override
@@ -761,5 +765,20 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();
         return userDetails.getSysUser();
+    }
+
+    @Override
+    public List<CmsActivityApplyDTO> getActivitiesApply(Integer clubId) {
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        SysUser user = getCurrentUser();
+
+        if (club == null) {
+            Asserts.fail("社团ID错误，无法获取社团信息");
+        }
+
+        if (user == null || !user.getId().equals(club.getChiefId())) {
+            Asserts.fail("非社长无法查看申请活动");
+        }
+        return activityDAO.selectActivitiesApply(clubId);
     }
 }

@@ -74,4 +74,6 @@ public interface CmsClubService {
 
     void delActivity(Integer id);
 
+    List<CmsActivityApplyDTO> getActivitiesApply(Integer clubId);
+
 }

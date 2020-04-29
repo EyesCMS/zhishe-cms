@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.dao;
 
+import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityDetails;
 import edu.fzu.zhishe.core.dto.QueryParam;
@@ -16,4 +17,10 @@ public interface CmsActivityDAO {
         @Param("queryParam") QueryParam queryParam);
 
     CmsActivityDTO getActivityById(@Param("id") Integer id);
+
+    /**
+     * 查看活动申请列表
+     * @author PSF
+     */
+    List<CmsActivityApplyDTO> selectActivitiesApply(Integer clubId);
 }

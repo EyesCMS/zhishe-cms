@@ -314,4 +314,10 @@ public class CmsClubController {
         clubService.delActivity(id);
         return ResponseEntity.noContent().build();
     }
+
+    @ApiOperation(" 6.7 社长可以获取自己社团申请的活动列表 ")
+    @GetMapping("/{clubId}/activities/apply")
+    public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId) {
+        return ResponseEntity.ok().body(clubService.getActivitiesApply(clubId));
+    }
 }

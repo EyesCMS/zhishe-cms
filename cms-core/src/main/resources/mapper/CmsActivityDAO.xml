@@ -10,7 +10,18 @@
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="c_avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
-  </resultMap>
+</resultMap>
+
+<resultMap id="ActivitiesApplyMap" type="edu.fzu.zhishe.core.dto.CmsActivityApplyDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="body" jdbcType="VARCHAR" property="content" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+    <result column="star_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+</resultMap>
 
   <select id="listActivity" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
@@ -48,6 +59,21 @@
      LEFT JOIN cms_club c ON a.club_id = c.id
     WHERE
      a.id = #{id} AND a.state != 5
+  </select>
+  <select id="selectActivitiesApply" parameterType="java.lang.Integer" resultMap="ActivitiesApplyMap">
+    SELECT
+     a.id,
+     a.name,
+     a.location,
+     a.body,
+     a.member_count,
+     a.star_date,
+     a.end_data,
+     a.state
+    FROM
+     cms_activity a
+    WHERE
+     a.club_id = #{id}
   </select>
 
 </mapper>
