@@ -161,7 +161,6 @@ public class CmsApplyAuditController {
                                                       @RequestParam(value = "order", defaultValue = "asc") String order,
                                                       @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-
         return ResponseEntity.ok().body(CommonList
                 .getCommonList(clubService.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
@@ -190,9 +189,8 @@ public class CmsApplyAuditController {
                                                          @RequestParam(value = "order", defaultValue = "asc") String order,
                                                          @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        // TODO: 等待api修改
-        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam);
-        return ResponseEntity.ok().body(cmsClubsCertificationsDTOList);
+        return ResponseEntity.ok().body(CommonList
+                .getCommonList(clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.17审核社团认证申请 ")

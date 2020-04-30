@@ -8,6 +8,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface CmsClubChiefChangeApplyDAO {
+public interface CmsClubChiefChangeDAO {
     List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(@Param("queryParam")CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam);
 }

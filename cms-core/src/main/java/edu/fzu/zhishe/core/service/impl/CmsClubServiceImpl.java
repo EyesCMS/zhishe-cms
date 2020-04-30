@@ -5,7 +5,6 @@ import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.util.CommonList;
-import edu.fzu.zhishe.common.util.PageUtil;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
@@ -78,10 +77,13 @@ public class CmsClubServiceImpl implements CmsClubService {
     CmsChiefChangeApplyMapper chiefChangeApplyMapper;
 
     @Autowired
-    private CmsClubChiefChangeApplyDAO cmsClubChiefChangeApplyDAO;
+    private CmsClubChiefChangeDAO cmsClubChiefChangeDAO;
 
     @Autowired
     CmsOfficialChangeApplyMapper officialChangeApplyMapper;
+
+    @Autowired
+    CmsClubCertificationDAO cmsClubCertificationDAO;
 
     @Autowired
     SysUserService sysUserService;
@@ -568,7 +570,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam) {
-        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeApplyDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
+        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
         return cmsClubsChiefChangeDTOList;
     }
 
@@ -650,8 +652,8 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam) {
-
-        return null;
+        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(cmsClubsCertificationsQueryParam);
+        return cmsClubsCertificationsDTOList;
     }
 
     @Override

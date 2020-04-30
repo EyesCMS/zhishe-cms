@@ -1,28 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubChiefChangeApplyDAO">
-    <resultMap id="CmsClubChiefChangeReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsChiefChangeDTO">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubCertificationDAO">
+    <resultMap id="CmsClubCertificationReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsCertificationsDTO">
         <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="reason" jdbcType="VARCHAR" property="reason" />
         <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
         <result column="state" jdbcType="INTEGER" property="state" />
         <result property="clubName" jdbcType="VARCHAR" column="name" />
-        <result property="oldChiefName" jdbcType="VARCHAR" column="old_chief_name" />
-        <result property="newChiefName" jdbcType="VARCHAR" column="new_chief_name" />
     </resultMap>
 
-    <select id="listClubChiefChangeApply" resultMap="CmsClubChiefChangeReturnResultMapper">
+    <select id="listClubCertificationApply" resultMap="CmsClubCertificationReturnResultMapper">
         SELECT
         a.id,
+        a.reason,
         a.create_at,
         a.state,
-        b.name,
-        c.username as old_chief_name,
-        d.username as new_chief_name
+        b.name
         FROM
-        cms_chief_change_apply a left join cms_club b on a.club_id = b.id
-                                left join sys_user c on a.old_chief_id = c.id
-                                left join sys_user d on a.new_chief_id = d.id
+        cms_official_change_apply a left join cms_club b on a.club_id = b.id
         WHERE
         1
         <if test="queryParam.id!=null">
@@ -31,11 +27,8 @@
         <if test="queryParam.clubName!=null and  queryParam.clubName!=''">
             AND b.name LIKE concat("%", #{queryParam.clubName},"%")
         </if>
-        <if test="queryParam.oldChiefName!=null and  queryParam.oldChiefName!=''">
-            AND c.username LIKE concat("%", #{queryParam.oldChiefName},"%")
-        </if>
-        <if test="queryParam.newChiefName!=null and  queryParam.newChiefName!=''">
-            AND d.username LIKE concat("%", #{queryParam.newChiefName},"%")
+        <if test="queryParam.reason!=null and  queryParam.reason!=''">
+            AND a.reason LIKE concat("%", #{queryParam.reason},"%")
         </if>
         <if test="queryParam.createAt!=null and  queryParam.createAt!=''">
             AND a.create_at LIKE concat("%", #{queryParam.createAt},"%")
