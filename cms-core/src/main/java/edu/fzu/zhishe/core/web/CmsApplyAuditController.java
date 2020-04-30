@@ -3,17 +3,7 @@ package edu.fzu.zhishe.core.web;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.util.CommonList;
-import edu.fzu.zhishe.core.dto.CmsCertificationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubCreationQueryParam;
-import edu.fzu.zhishe.core.dto.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.dto.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandQueryParam;
-import edu.fzu.zhishe.core.dto.CmsClubsJoinDTO;
-import edu.fzu.zhishe.core.dto.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.dto.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.dto.QueryParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -113,16 +103,16 @@ public class CmsApplyAuditController {
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(CmsClubsJoinDTO cmsClubsJoinDTO,
-        @PathVariable("clubId") Integer clubId,
-        @RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-        @RequestParam(value = "sort", defaultValue = "id") String sort,
-        @RequestParam(value = "order", defaultValue = "asc") String order,
-        @RequestParam(value = "keyword", required = false) String keyword) {
+    public ResponseEntity<Object> joinsList(CmsClubsJoinQueryParam cmsClubsJoinQueryParam,
+                                            @PathVariable("clubId") Integer clubId,
+                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                            @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                            @RequestParam(value = "order", defaultValue = "asc") String order,
+                                            @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         return ResponseEntity.ok().body(CommonList
-            .getCommonList(clubService.listJoinClubApply(clubId, cmsClubsJoinDTO),queryParam.getPage(),queryParam.getLimit()));
+            .getCommonList(clubService.listJoinClubApply(clubId, cmsClubsJoinQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")

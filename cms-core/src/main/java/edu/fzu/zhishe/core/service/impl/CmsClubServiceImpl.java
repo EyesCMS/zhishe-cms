@@ -12,12 +12,9 @@ import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
-import edu.fzu.zhishe.core.dao.CmsActivityDAO;
-import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
-import edu.fzu.zhishe.core.dao.CmsClubDAO;
+import edu.fzu.zhishe.core.dao.*;
 
 
-import edu.fzu.zhishe.core.dao.CmsClubDisbandDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -58,6 +55,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Autowired
     CmsClubJoinApplyMapper clubJoinApplyMapper;
+
+    @Autowired
+    private CmsClubJoinDAO cmsClubJoinDAO;
 
     @Autowired
     CmsClubMapper clubMapper;
@@ -382,29 +382,30 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinDTO cmsClubsJoinDTO) {
+    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
         }
 
-        //设置日期格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
-        example.createCriteria().andClubIdEqualTo(clubId);
-        List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
-        List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
-        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = new ArrayList<CmsClubsJoinDTO>();
-        for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-            CmsClubsJoinDTO cmsClubsJoinDTO1 = new CmsClubsJoinDTO();
-            cmsClubsJoinDTO1.setId(cmsClubJoinApply.getId());
-            cmsClubsJoinDTO1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
-            cmsClubsJoinDTO1.setReason(cmsClubJoinApply.getReason());
-            cmsClubsJoinDTO1.setCreateAt(cmsClubJoinApply.getCreateAt());
-            cmsClubsJoinDTO1.setState(cmsClubJoinApply.getState());
-            cmsClubsJoinDTOList.add(cmsClubsJoinDTO1);
-        }
+//        //设置日期格式
+////        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+////
+////        CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
+////        example.createCriteria().andClubIdEqualTo(clubId);
+////        List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
+////        List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
+////        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = new ArrayList<CmsClubsJoinDTO>();
+////        for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
+////            CmsClubsJoinDTO cmsClubsJoinDTO1 = new CmsClubsJoinDTO();
+////            cmsClubsJoinDTO1.setId(cmsClubJoinApply.getId());
+////            cmsClubsJoinDTO1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
+////            cmsClubsJoinDTO1.setReason(cmsClubJoinApply.getReason());
+////            cmsClubsJoinDTO1.setCreateAt(cmsClubJoinApply.getCreateAt());
+////            cmsClubsJoinDTO1.setState(cmsClubJoinApply.getState());
+////            cmsClubsJoinDTOList.add(cmsClubsJoinDTO1);
+////        }
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(cmsClubsJoinQueryParam,clubId);
         return cmsClubsJoinDTOList;
     }
 

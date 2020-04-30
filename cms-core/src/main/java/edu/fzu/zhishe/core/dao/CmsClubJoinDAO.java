@@ -10,6 +10,6 @@ import java.util.List;
  * @version 1.0
  */
 public interface CmsClubJoinDAO {
-    List<CmsClubsJoinDTO> listJoinClubApply(@Param("queryParam")CmsClubsJoinQueryParam queryParam,
+    List<CmsClubsJoinDTO> listClubJoinApply(@Param("queryParam")CmsClubsJoinQueryParam queryParam,
                                             @Param("clubId") Integer clubId);
 }
