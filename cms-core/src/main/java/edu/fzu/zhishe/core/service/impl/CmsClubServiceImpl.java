@@ -72,6 +72,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     CmsQuitNoticeMapper quitNoticeMapper;
 
     @Autowired
+    CmsClubQuitDAO cmsClubQuitDAO;
+
+    @Autowired
     CmsChiefChangeApplyMapper chiefChangeApplyMapper;
 
     @Autowired
@@ -490,28 +493,29 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList listClubQuit(Integer clubId,QueryParam queryParam) {
+    public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,CmsClubsQuitQueryParam cmsClubsQuitQueryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
         }
 
-        //设置日期格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        CmsQuitNoticeExample example = new CmsQuitNoticeExample();
-        example.createCriteria().andClubIdEqualTo(clubId);
-        List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
-        List<Map<String, Object>> quitMaps = new ArrayList<Map<String, Object>>();
-        for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
-            Map<String, Object> myMap = new LinkedHashMap<>();
-            myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
-            myMap.put("reason", cmsQuitNotice.getReadon());
-            myMap.put("createAt", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
-            quitMaps.add(myMap);
-        }
-        int totalCount = quitMaps.size();
-        return CommonList.getCommonList(PageUtil.startPage(quitMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
+//        //设置日期格式
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//        CmsQuitNoticeExample example = new CmsQuitNoticeExample();
+//        example.createCriteria().andClubIdEqualTo(clubId);
+//        List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
+//        List<Map<String, Object>> quitMaps = new ArrayList<Map<String, Object>>();
+//        for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
+//            Map<String, Object> myMap = new LinkedHashMap<>();
+//            myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
+//            myMap.put("reason", cmsQuitNotice.getReadon());
+//            myMap.put("createAt", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
+//            quitMaps.add(myMap);
+//        }
+//        int totalCount = quitMaps.size();
+        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQueryParam,clubId);
+        return cmsClubsQuitDTOList;
     }
 
     //以下三个函数用于社长换届

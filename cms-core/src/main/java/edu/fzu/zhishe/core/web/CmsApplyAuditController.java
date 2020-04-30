@@ -131,14 +131,16 @@ public class CmsApplyAuditController {
 
     @ApiOperation(value = " 4.11根据社团 ID 获取退社申请列表 ")
     @GetMapping("/{clubId}/quit")
-    public ResponseEntity<Object> quitList(@PathVariable("clubId") Integer clubId,
-        @RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-        @RequestParam(value = "sort", defaultValue = "id") String sort,
-        @RequestParam(value = "order", defaultValue = "asc") String order,
-        @RequestParam(value = "keyword", required = false) String keyword) {
+    public ResponseEntity<Object> quitList(CmsClubsQuitQueryParam cmsClubsQuitQueryParam,
+                                           @PathVariable("clubId") Integer clubId,
+                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                           @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                           @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                           @RequestParam(value = "order", defaultValue = "asc") String order,
+                                           @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(clubService.listClubQuit(clubId,queryParam));
+        return ResponseEntity.ok().body(CommonList
+                .getCommonList(clubService.listClubQuit(clubId, cmsClubsQuitQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.12提交社团换届申请表单 ")
