@@ -1,9 +1,10 @@
 package edu.fzu.zhishe.core.dto;
 
 /**
+ * 帖子传递类
  * @author liang on 4/26/2020.
  */
-public class CmsActivityDTO {
+public class CmsPostDTO {
 
     /**
      * id : 1

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsActivityDAO">
 
-  <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsActivityDTO">
+  <resultMap id="ActivityPostResultMap" type="edu.fzu.zhishe.core.dto.CmsPostDTO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="body" jdbcType="VARCHAR" property="content" />
@@ -23,7 +23,7 @@
     <result column="state" jdbcType="INTEGER" property="state" />
 </resultMap>
 
-  <select id="listActivity" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="listActivityPost" parameterType="java.lang.Integer" resultMap="ActivityPostResultMap">
     SELECT
      a.id,
      a.title,
@@ -37,15 +37,17 @@
      LEFT JOIN cms_club c ON a.club_id = c.id
     WHERE
      a.state != 5
+     <if test="clubId != null">
+       AND a.club_id = #{clubId}
+     </if>
     <if test="queryParam.keyword != null and queryParam.keyword != ''">
       AND title LIKE concat("%",#{queryParam.keyword},"%")
     </if>
     ORDER BY
      #{queryParam.sort} DESC
-    LIMIT #{queryParam.page}, #{queryParam.limit}
   </select>
 
-  <select id="getActivityById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getActivityPostById" parameterType="java.lang.Integer" resultMap="ActivityPostResultMap">
     SELECT
      a.id,
      a.title,

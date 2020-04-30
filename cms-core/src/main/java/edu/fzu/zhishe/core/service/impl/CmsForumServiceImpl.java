@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsUserActivityRemarkMapper;
 import edu.fzu.zhishe.cms.model.CmsActivity;
@@ -8,7 +9,7 @@ import edu.fzu.zhishe.cms.model.CmsUserActivityRemarkExample;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.dao.CmsActivityDAO;
 import edu.fzu.zhishe.core.dao.CmsRemarkDAO;
-import edu.fzu.zhishe.core.dto.CmsActivityDTO;
+import edu.fzu.zhishe.core.dto.CmsPostDTO;
 import edu.fzu.zhishe.core.dto.CmsRemarkDTO;
 import edu.fzu.zhishe.core.dto.CmsRemarkParam;
 import edu.fzu.zhishe.core.dto.QueryParam;
@@ -26,9 +27,6 @@ import org.springframework.stereotype.Service;
 public class CmsForumServiceImpl implements CmsForumService {
 
     @Autowired
-    private CmsActivityMapper activityMapper;
-
-    @Autowired
     private CmsActivityDAO activityDAO;
 
     @Autowired
@@ -38,27 +36,18 @@ public class CmsForumServiceImpl implements CmsForumService {
     private CmsRemarkDAO remarkDAO;
 
     @Override
-    public List<CmsActivityDTO> listPosts(Integer clubId, QueryParam queryParam) {
-        return activityDAO.listActivity(clubId, queryParam);
+    public List<CmsPostDTO> listActivityPost(Integer clubId, QueryParam queryParam) {
+        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
+        return activityDAO.listActivityPost(clubId, queryParam);
     }
 
     @Override
-    public CmsActivityDTO getActivityById(Integer id) {
-        return activityDAO.getActivityById(id);
+    public CmsPostDTO getActivityPostById(Integer id) {
+        return activityDAO.getActivityPostById(id);
     }
 
     @Override
-    public int deleteActivity(Integer id) {
-        CmsActivity cmsActivity = activityMapper.selectByPrimaryKey(id);
-        if (cmsActivity != null) {
-            cmsActivity.setState(ActivityStateEnum.FINISHED.getValue());
-            return activityMapper.updateByPrimaryKey(cmsActivity);
-        }
-        return 0;
-    }
-
-    @Override
-    public int postRemark(CmsRemarkParam remarkParam) {
+    public int saveRemark(CmsRemarkParam remarkParam) {
         CmsUserActivityRemark userActivityRemark = new CmsUserActivityRemark() {{
             setUserId(remarkParam.getUid());
             setActivityId(remarkParam.getPid());
@@ -66,7 +55,7 @@ public class CmsForumServiceImpl implements CmsForumService {
             setCreateAt(new Date());
             setUpdateAt(null);
         }};
-        return remarkMapper.insert(userActivityRemark);
+        return remarkMapper.insertSelective(userActivityRemark);
     }
 
     @Override
