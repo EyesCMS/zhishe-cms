@@ -54,19 +54,19 @@ public interface CmsClubService {
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
 
-    List<CmsClub> listHotClub(Integer page, Integer limit);
+    List<CmsClubReturnData1> listHotClub(Integer page, Integer limit, String sort, String order);
 
-    List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword);
+    List<CmsClubReturnData1> listClub(Integer page, Integer limit, String sort, String order, String keyword);
 
-    List<CmsClub> getClubById(Integer id);
+    CmsClubReturnData2 getClubById(Integer id);
 
-    List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubReturnData1> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubReturnData1> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubReturnData3> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubReturnData4> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
     List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
 

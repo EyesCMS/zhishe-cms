@@ -4,6 +4,11 @@ import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.SysUser;
 
 import java.util.List;
+
+import edu.fzu.zhishe.core.dto.CmsClubReturnData1;
+import edu.fzu.zhishe.core.dto.CmsClubReturnData2;
+import edu.fzu.zhishe.core.dto.CmsClubReturnData3;
+import edu.fzu.zhishe.core.dto.CmsClubReturnData4;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -19,46 +24,43 @@ public interface CmsClubDAO {
     /**
      * 获取人气推荐社团
      */
-    List<CmsClub> listHotClub(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<CmsClubReturnData1> listHotClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                         @Param("sort") String sort, @Param("order") String order);
 
     /**
      * 模糊搜索社团
      */
-    List<CmsClub> listClub(@Param("sort") String sort, @Param("order") String order,
-        @Param("keyword") String keyword);
+    List<CmsClubReturnData1> listClub(@Param("sort") String sort, @Param("order") String order,
+                                      @Param("keyword") String keyword);
 
-    /**
-     * 按ID搜索社团
-     */
-    List<CmsClub> getClubById(@Param("id") Integer id);
 
     /**
      * 加入社团列表
      */
-    List<CmsClub> listJoinedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClubReturnData1> listJoinedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                       @Param("sort") String sort, @Param("order") String order,
                                       @Param("userId") Integer userId);
 
     /**
      * 管理社团列表
      */
-    List<CmsClub> listManagedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
+    List<CmsClubReturnData1> listManagedClub(@Param("offset") Integer offset, @Param("limit") Integer limit,
                                    @Param("sort") String sort, @Param("order") String order,
                                    @Param("userId") Integer userId);
 
     /**
      * 加入社团申请列表
      */
-    List<CmsClub> listJoinClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
-                                   @Param("sort") String sort, @Param("order") String order,
-                                   @Param("userId") Integer userId);
+    List<CmsClubReturnData3> listJoinClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                               @Param("sort") String sort, @Param("order") String order,
+                                               @Param("userId") Integer userId);
 
     /**
      * 创建社团申请列表
      */
-    List<CmsClub> listCreateClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
-                                    @Param("sort") String sort, @Param("order") String order,
-                                    @Param("userId") Integer userId);
+    List<CmsClubReturnData4> listCreateClubApply(@Param("offset") Integer offset, @Param("limit") Integer limit,
+                                                 @Param("sort") String sort, @Param("order") String order,
+                                                 @Param("userId") Integer userId);
 
     /**
      * 查看社员列表

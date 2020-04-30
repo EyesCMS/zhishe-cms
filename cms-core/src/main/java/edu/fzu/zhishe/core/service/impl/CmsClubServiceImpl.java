@@ -698,41 +698,53 @@ public class CmsClubServiceImpl implements CmsClubService {
 
 
     @Override
-    public List<CmsClub> listHotClub(Integer page, Integer limit) {
-        return clubDAO.listHotClub(page, limit);
+    public List<CmsClubReturnData1> listHotClub(Integer page, Integer limit, String sort, String order) {
+        PageHelper.startPage(page, limit);
+        return clubDAO.listHotClub(page, limit, sort, order);
     }
 
     @Override
-    public List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword) {
+    public List<CmsClubReturnData1> listClub(Integer page, Integer limit, String sort, String order, String keyword) {
         PageHelper.startPage(page, limit);
         return clubDAO.listClub(sort, order, keyword);
     }
 
     @Override
-    public List<CmsClub> getClubById(Integer id) {
-        return clubDAO.getClubById(id);
+    public CmsClubReturnData2 getClubById(Integer id) {
+            CmsClub club = clubMapper.selectByPrimaryKey(id);
+            SysUser user = sysUserMapper.selectByPrimaryKey(club.getChiefId());
+            CmsClubReturnData2 data = new CmsClubReturnData2();
+            data.setId(club.getId());
+            data.setName(club.getName());
+            data.setChiefId(club.getChiefId());
+            data.setChiefName(user.getNickname());
+            data.setAvatarUrl(club.getAvatarUrl());
+            data.setSlogan(club.getSlogan());
+            data.setMemberCount(club.getMemberCount());
+            data.setQqGroup(club.getQqGroup());
+            return data ;
     }
 
     @Override
-    public List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClubReturnData1> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
         return clubDAO.listJoinedClub(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClubReturnData1> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
         return clubDAO.listManagedClub(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClubReturnData3> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
         return clubDAO.listJoinClubApply(page,limit,sort,order, userId);
     }
 
     @Override
-    public List<CmsClub> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
+    public List<CmsClubReturnData4> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
         PageHelper.startPage(page, limit);
         return clubDAO.listCreateClubApply(page,limit,sort,order, userId);
     }

@@ -34,14 +34,20 @@
 -->
 
   <select id="listHotClub" parameterType="java.lang.Integer"
-    resultMap="edu.fzu.zhishe.cms.mapper.CmsClubMapper.BaseResultMap">
+    resultMap="ClubMap1">
     SELECT
-      <include refid="Base_Column_List"/>
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url
     FROM
-      cms_club
+      cms_club club,
+      sys_user u
     WHERE
-     delete_status = 0
-      LIMIT #{offset}, #{limit}
+     delete_status != 1 AND club.chief_id = u.id
+     ORDER BY
+     club.grade DESC
   </select>
 
   <select id="listClub" parameterType="java.lang.String"
@@ -56,12 +62,13 @@
       cms_club club,
       sys_user u
     WHERE
-      club.chief_id = u.id
+      club.chief_id = u.id AND club.delete_status = 0
       <if test="keyword != null and keyword != ''">
         AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
       </if>
   </select>
 
+  <!--
   <select id="getClubById" parameterType="java.lang.Integer"
           resultMap="ClubMap2">
     SELECT
@@ -80,6 +87,8 @@
       club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
   </select>
 
+-->
+
   <select id="listJoinedClub" parameterType="java.lang.Integer"
           resultMap="ClubMap1">
     SELECT
@@ -92,7 +101,7 @@
       cms_club club,
       sys_user u
     WHERE
-      club.chief_id = u.id AND club.id IN
+      club.chief_id = u.id AND AND club.delete_status != 1 AND club.id IN
       (
       SELECT
       club_id
@@ -115,7 +124,7 @@
       cms_club club,
       sys_user u
     WHERE
-      club.chief_id = u.id AND club.id IN
+      club.chief_id = u.id AND AND club.delete_status != 1 AND club.id IN
       (
       SELECT
       club_id
@@ -138,7 +147,7 @@
       cms_club club,
       cms_club_join_apply a
     WHERE
-    a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id
+    a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id AND club.delete_status != 1
   </select>
 
   <select id="listCreateClubApply" parameterType="java.lang.Integer"

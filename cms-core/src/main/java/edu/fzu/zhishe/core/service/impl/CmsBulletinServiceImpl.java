@@ -1,7 +1,9 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsBulletinMapper;
+import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.cms.model.CmsClub;
@@ -30,6 +32,9 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
 
     @Autowired
     private CmsClubService clubService;
+
+    @Autowired
+    CmsClubMapper clubMapper;
 
     @Override
     public CmsBulletin getBulletin(Integer clubId, int bulletinId) {
@@ -75,7 +80,8 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         Integer clubId = bulletin.getClubId();
-        CmsClub club = clubService.getClubById(clubId).get(0);
+        //CmsClub club = clubService.getClubById(clubId);
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
             Asserts.fail(" 找不到该社团 ");
         }
