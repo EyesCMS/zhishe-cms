@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.util.CommonList;
@@ -153,14 +154,16 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.13社团换届申请列表 ")
     @GetMapping("/leader/changes")
-    public ResponseEntity<Object> clubChiefChangeList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-        @RequestParam(value = "sort", defaultValue = "id") String sort,
-        @RequestParam(value = "order", defaultValue = "asc") String order,
-        @RequestParam(value = "keyword", required = false) String keyword){
+    public ResponseEntity<Object> clubChiefChangeList(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,
+                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                      @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                      @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                      @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        CommonList clubChiefChangeList = clubService.listClubChiefChangeApply(queryParam);
-        return ResponseEntity.ok().body(clubChiefChangeList);
+
+        return ResponseEntity.ok().body(CommonList
+                .getCommonList(clubService.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.14审核社团换届申请 ")
@@ -172,8 +175,8 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.15提交社团认证申请表单 ")
     @PostMapping("/certifications")
-    public ResponseEntity<Object> clubOfficialChange(@Validated @RequestBody CmsCertificationsParam cmsCertificationsParam){
-        clubService.clubOfficialChange(cmsCertificationsParam);
+    public ResponseEntity<Object> clubOfficialChange(@Validated @RequestBody CmsClubsCertificationsParam cmsClubsCertificationsParam){
+        clubService.clubOfficialChange(cmsClubsCertificationsParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

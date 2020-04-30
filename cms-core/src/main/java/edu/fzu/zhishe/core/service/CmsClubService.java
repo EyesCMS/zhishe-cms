@@ -43,11 +43,11 @@ public interface CmsClubService {
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
-    CommonList listClubChiefChangeApply(QueryParam queryParam);
+    List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam);
 
     CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
-    CmsOfficialChangeApply clubOfficialChange(CmsCertificationsParam certificationsParam);
+    CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam certificationsParam);
 
     CommonList listClubOfficialChange(QueryParam queryParam);
 

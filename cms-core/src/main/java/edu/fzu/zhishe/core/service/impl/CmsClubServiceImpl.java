@@ -72,10 +72,13 @@ public class CmsClubServiceImpl implements CmsClubService {
     CmsQuitNoticeMapper quitNoticeMapper;
 
     @Autowired
-    CmsClubQuitDAO cmsClubQuitDAO;
+    private CmsClubQuitDAO cmsClubQuitDAO;
 
     @Autowired
     CmsChiefChangeApplyMapper chiefChangeApplyMapper;
+
+    @Autowired
+    private CmsClubChiefChangeApplyDAO cmsClubChiefChangeApplyDAO;
 
     @Autowired
     CmsOfficialChangeApplyMapper officialChangeApplyMapper;
@@ -560,23 +563,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList listClubChiefChangeApply(QueryParam queryParam) {
-        //设置日期格式
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        List<CmsChiefChangeApply> cmsChiefChangeApplies = chiefChangeApplyMapper.selectByExample(null);
-        List<Map<String, Object>> chiefChangeMaps = new ArrayList<Map<String, Object>>();
-        for (CmsChiefChangeApply cmsChiefChangeApply : cmsChiefChangeApplies) {
-            Map<String, Object> myMap = new LinkedHashMap<>();
-            myMap.put("id",cmsChiefChangeApply.getId());
-            myMap.put("clubName",clubMapper.selectByPrimaryKey(cmsChiefChangeApply.getClubId()).getName());
-            myMap.put("odlChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getOldChiefId()).getUsername());
-            myMap.put("newChiefName", sysUserMapper.selectByPrimaryKey(cmsChiefChangeApply.getNewChiefId()).getUsername());
-            myMap.put("create_at", simpleDateFormat.format(cmsChiefChangeApply.getCreateAt()));
-            myMap.put("state", cmsChiefChangeApply.getState());
-            chiefChangeMaps.add(myMap);
-        }
-        int totalCount = chiefChangeMaps.size();
-        return CommonList.getCommonList(PageUtil.startPage(chiefChangeMaps, queryParam.getPage(), queryParam.getLimit()), totalCount);
+    public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam) {
+        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeApplyDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
+        return cmsClubsChiefChangeDTOList;
     }
 
     @Override
@@ -619,10 +608,11 @@ public class CmsClubServiceImpl implements CmsClubService {
         return cmsChiefChangeApply;
     }
 
+    //以下三个用于社团认证
     @Override
-    public CmsOfficialChangeApply clubOfficialChange(CmsCertificationsParam certificationsParam) {
+    public CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam cmsClubsCertificationsParam) {
         //查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(certificationsParam.getClubId());
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsCertificationsParam.getClubId());
         if(cmsClub == null){
             Asserts.fail(" 该社团不存在 ");
         }
@@ -636,7 +626,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         // 查询是否已申请认证该社团
         CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
-        example.createCriteria().andClubIdEqualTo(certificationsParam.getClubId())
+        example.createCriteria().andClubIdEqualTo(cmsClubsCertificationsParam.getClubId())
                 .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
         List<CmsOfficialChangeApply> cmsOfficialChangeApplies = officialChangeApplyMapper
                 .selectByExample(example);
@@ -645,8 +635,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
 
         CmsOfficialChangeApply cmsOfficialChangeApply = new CmsOfficialChangeApply();
-        cmsOfficialChangeApply.setClubId(certificationsParam.getClubId());
-        cmsOfficialChangeApply.setReason(certificationsParam.getReason());
+        cmsOfficialChangeApply.setClubId(cmsClubsCertificationsParam.getClubId());
+        cmsOfficialChangeApply.setReason(cmsClubsCertificationsParam.getReason());
         cmsOfficialChangeApply.setCreateAt(new Date());
         cmsOfficialChangeApply.setHandleAt(null);
         cmsOfficialChangeApply.setState(ApplyStateEnum.PENDING.getValue());

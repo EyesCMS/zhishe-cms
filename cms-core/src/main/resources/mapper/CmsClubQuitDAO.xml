@@ -4,7 +4,7 @@
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsClubQuitDAO">
     <resultMap id="CmsClubQuitReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsQuitDTO">
         <id column="id" jdbcType="INTEGER" property="id" />
-        <result column="readon" jdbcType="VARCHAR" property="reason" />
+        <result column="reason" jdbcType="VARCHAR" property="reason" />
         <result column="qiut_date" jdbcType="TIMESTAMP" property="createAt" />
         <result property="username" jdbcType="VARCHAR" column="username" />
     </resultMap>
@@ -12,7 +12,7 @@
     <select id="listClubQuit" resultMap="CmsClubQuitReturnResultMapper">
         SELECT
         a.id,
-        a.readon,
+        a.readon as reason,
         a.qiut_date,
         b.username
         FROM
