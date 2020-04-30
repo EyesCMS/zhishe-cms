@@ -2,7 +2,7 @@ package edu.fzu.zhishe.core.dto;
 
 import java.util.Date;
 
-public class CmsClubsDisbandReturnParam {
+public class CmsClubsDisbandDTO {
     /**
      * id:1
      * clubName : 羽毛球社

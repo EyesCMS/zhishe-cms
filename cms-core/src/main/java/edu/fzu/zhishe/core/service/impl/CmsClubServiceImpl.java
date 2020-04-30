@@ -266,7 +266,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsDisbandReturnParam> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam) {
+    public List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam) {
         // TODO: 数据库没有申请人字段
         //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         //CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
@@ -280,8 +280,8 @@ public class CmsClubServiceImpl implements CmsClubService {
 //            cmsClubsDisbandReturnParam.setCreateAt(cmsClubDisbandApply.getCreateAt());
 //            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam);
 //        }
-        List<CmsClubsDisbandReturnParam> cmsClubsDisbandReturnParamList1 = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
-        return cmsClubsDisbandReturnParamList1;
+        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList1 = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
+        return cmsClubsDisbandDTOList1;
     }
 
     @Override
