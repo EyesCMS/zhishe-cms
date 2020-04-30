@@ -1,6 +1,9 @@
 package edu.fzu.zhishe.core.dto;
-
-public class CmsClubsJoinReturnParam {
+/**
+ * @author Yang on 4/29/2020.
+ * @version 1.0
+ */
+public class CmsClubsJoinQueryParam {
     /**
      * id : 1
      * applicant : wangs
@@ -9,17 +12,17 @@ public class CmsClubsJoinReturnParam {
      * state : 0
      */
 
-    private int id;
+    private Integer id;
     private String applicant;
     private String reason;
     private String createAt;
-    private int state;
+    private Integer state;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -47,11 +50,11 @@ public class CmsClubsJoinReturnParam {
         this.createAt = createAt;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 }

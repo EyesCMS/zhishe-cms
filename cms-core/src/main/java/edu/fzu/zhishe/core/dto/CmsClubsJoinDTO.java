@@ -5,23 +5,20 @@ import java.util.Date;
  * @author Yang on 4/29/2020.
  * @version 1.0
  */
-public class CmsClubsDisbandDTO {
+public class CmsClubsJoinDTO {
     /**
-     * id:1
-     * clubName : 羽毛球社
+     * id : 1
+     * applicant : wangs
+     * reason : 锻炼自己
      * createAt : 2018-04-19 18:14:12
-     * applicant : 张三
-     * reason : 本社团没有存在意义
      * state : 0
      */
 
     private int id;
-    private String clubName;
-    private Date createAt;
+    private String applicant;
     private String reason;
+    private Date createAt;
     private int state;
-
-
 
     public int getId() {
         return id;
@@ -31,20 +28,12 @@ public class CmsClubsDisbandDTO {
         this.id = id;
     }
 
-    public String getClubName() {
-        return clubName;
+    public String getApplicant() {
+        return applicant;
     }
 
-    public void setClubName(String clubName) {
-        this.clubName = clubName;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
+    public void setApplicant(String applicant) {
+        this.applicant = applicant;
     }
 
     public String getReason() {
@@ -53,6 +42,14 @@ public class CmsClubsDisbandDTO {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 
     public int getState() {

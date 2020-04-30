@@ -33,7 +33,7 @@ public interface CmsClubService {
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<CmsClubsJoinReturnParam> listJoinClubApply(Integer clubId,CmsClubsJoinReturnParam cmsClubsJoinReturnParam);
+    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinDTO cmsClubsJoinDTO);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 

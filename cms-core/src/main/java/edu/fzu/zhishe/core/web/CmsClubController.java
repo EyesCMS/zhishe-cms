@@ -194,7 +194,7 @@ public class CmsClubController {
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(CmsClubsJoinReturnParam cmsClubsJoinReturnParam,
+    public ResponseEntity<Object> joinsList(CmsClubsJoinDTO cmsClubsJoinDTO,
                                             @PathVariable("clubId") Integer clubId,
                                             @RequestParam(value = "page", defaultValue = "0") Integer page,
                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
@@ -203,7 +203,7 @@ public class CmsClubController {
                                             @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listJoinClubApply(clubId,cmsClubsJoinReturnParam),queryParam.getPage(),queryParam.getLimit()));
+                .getCommonList(clubService.listJoinClubApply(clubId, cmsClubsJoinDTO),queryParam.getPage(),queryParam.getLimit()));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")

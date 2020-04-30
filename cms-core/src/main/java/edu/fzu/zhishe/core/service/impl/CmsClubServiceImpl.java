@@ -378,7 +378,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsJoinReturnParam> listJoinClubApply(Integer clubId,CmsClubsJoinReturnParam cmsClubsJoinReturnParam) {
+    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinDTO cmsClubsJoinDTO) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
@@ -391,17 +391,17 @@ public class CmsClubServiceImpl implements CmsClubService {
         example.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
         List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
-        List<CmsClubsJoinReturnParam> cmsClubsJoinReturnParamList = new ArrayList<CmsClubsJoinReturnParam>();
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = new ArrayList<CmsClubsJoinDTO>();
         for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-            CmsClubsJoinReturnParam cmsClubsJoinReturnParam1 = new CmsClubsJoinReturnParam();
-            cmsClubsJoinReturnParam1.setId(cmsClubJoinApply.getId());
-            cmsClubsJoinReturnParam1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
-            cmsClubsJoinReturnParam1.setReason(cmsClubJoinApply.getReason());
-            cmsClubsJoinReturnParam1.setCreateAt(simpleDateFormat.format(cmsClubJoinApply.getCreateAt()));
-            cmsClubsJoinReturnParam1.setState(cmsClubJoinApply.getState());
-            cmsClubsJoinReturnParamList.add(cmsClubsJoinReturnParam1);
+            CmsClubsJoinDTO cmsClubsJoinDTO1 = new CmsClubsJoinDTO();
+            cmsClubsJoinDTO1.setId(cmsClubJoinApply.getId());
+            cmsClubsJoinDTO1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
+            cmsClubsJoinDTO1.setReason(cmsClubJoinApply.getReason());
+            cmsClubsJoinDTO1.setCreateAt(cmsClubJoinApply.getCreateAt());
+            cmsClubsJoinDTO1.setState(cmsClubJoinApply.getState());
+            cmsClubsJoinDTOList.add(cmsClubsJoinDTO1);
         }
-        return cmsClubsJoinReturnParamList;
+        return cmsClubsJoinDTOList;
     }
 
     @Override

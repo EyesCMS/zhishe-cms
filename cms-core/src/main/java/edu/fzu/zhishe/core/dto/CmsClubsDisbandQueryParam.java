@@ -2,10 +2,11 @@ package edu.fzu.zhishe.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 /**
- *社团解散申请列表查询数据
- *
- * @author yang
+ * *社团解散申请列表查询数据
+ * @author Yang on 4/29/2020.
+ * @version 1.0
  */
 public class CmsClubsDisbandQueryParam {
     /**
