@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
@@ -81,7 +80,7 @@ public interface SysUserService {
      * 修改用户信息
      */
     @Transactional
-    String updateUserByParam(SysUserUpdateParam updateParam);
+    int updateUserByParam(SysUserUpdateParam updateParam);
 
     /**
      * 选择性更新非空字段

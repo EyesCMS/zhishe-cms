@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserLoginParam;
 import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
@@ -64,8 +65,10 @@ public class SysUserController {
 
     @ApiOperation(value = " 用户修改个人信息 ")
     @PutMapping(value = "/info")
-    public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updataParam) {
-        userService.updateUserByParam(updataParam);
+    public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
+        if (userService.updateUserByParam(updateParam) == 0) {
+            Asserts.fail(" 修改失败 ");
+        }
         return noContent().build();
     }
 

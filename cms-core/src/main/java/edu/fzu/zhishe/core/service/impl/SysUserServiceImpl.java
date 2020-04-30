@@ -5,9 +5,7 @@ import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
-import edu.fzu.zhishe.core.dao.CmsClubDAO;
 import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
-import edu.fzu.zhishe.core.dao.SysUserDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
@@ -16,7 +14,6 @@ import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import edu.fzu.zhishe.security.util.JwtTokenUtil;
-import io.swagger.models.auth.In;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +29,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 //import org.springframework.security.core.userdetails.UserDetails;
@@ -187,35 +183,16 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public String updateUserByParam(SysUserUpdateParam updateParam) {
+    public int updateUserByParam(SysUserUpdateParam updateParam) {
         SysUser user = getCurrentUser();
-        if (updateParam.getPassword() != null) {
-            user.setPassword(updateParam.getPassword());
-        }
-        if (updateParam.getEmail() != null) {
-            user.setEmail(updateParam.getEmail());
-        }
-        if (updateParam.getMajor() != null) {
-            user.setMajor(updateParam.getMajor());
-        }
-        if (updateParam.getAddress() != null) {
-            user.setAddress(updateParam.getAddress());
-        }
-        if (updateParam.getNickname() != null) {
-            user.setNickname(updateParam.getNickname());
-        }
-        if (updateParam.getPhone() != null) {
-            user.setPhone(updateParam.getPhone());
-        }
-        if (updateParam.getSlogan() != null) {
-            user.setSlogan(updateParam.getSlogan());
-        }
-        if (updateParam.getAvatarUrl() != null) {
-            user.setAvatarUrl(updateParam.getAvatarUrl());
-        }
-        userMapper.updateByPrimaryKey(user);
-        userCacheService.delUser(user.getId());
-        return "SUCCESS";
+        SysUser updatedUser = new SysUser() {{
+            setId(user.getId());
+        }};
+        BeanUtils.copyProperties(updateParam, updatedUser);
+
+        int result = userMapper.updateByPrimaryKeySelective(updatedUser);
+        userCacheService.delUser(updatedUser.getId());
+        return result;
     }
 
     @Override
