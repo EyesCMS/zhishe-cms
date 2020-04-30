@@ -57,7 +57,7 @@ public class CmsClubController {
     @GetMapping("/{id}")
     public ResponseEntity<CmsClub> searchClubById(@PathVariable("id") String cid) {
         Integer id = Integer.parseInt(cid);
-        return ResponseEntity.ok(clubService.getClubById(id));
+        return ResponseEntity.ok(clubService.getClubById(id).get(0));
     }
 
     @ApiOperation(" 3.2查看学生加入的社团列表 ")
@@ -66,8 +66,9 @@ public class CmsClubController {
                                                              @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                              @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                             @PathVariable(value = "userId", required = false) Integer userId) {
-        return ResponseEntity.ok(clubService.listJoinedClub(page, limit, sort, order, userId));
+                                                             @PathVariable(value = "userId", required = false) String userId) {
+        Integer id = Integer.parseInt(userId);
+        return ResponseEntity.ok(clubService.listJoinedClub(page, limit, sort, order, id));
     }
 
     @ApiOperation(" 3.2查看学生管理的社团列表 ")

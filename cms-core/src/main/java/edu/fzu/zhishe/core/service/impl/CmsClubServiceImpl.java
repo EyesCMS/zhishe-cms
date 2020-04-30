@@ -709,7 +709,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CmsClub getClubById(Integer id) {
+    public List<CmsClub> getClubById(Integer id) {
         return clubDAO.getClubById(id);
     }
 

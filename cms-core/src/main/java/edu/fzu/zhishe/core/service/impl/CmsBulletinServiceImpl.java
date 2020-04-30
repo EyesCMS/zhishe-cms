@@ -75,7 +75,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         Integer clubId = bulletin.getClubId();
-        CmsClub club = clubService.getClubById(clubId);
+        CmsClub club = clubService.getClubById(clubId).get(0);
         if (club.getDeleteStatus() == 1) {
             Asserts.fail(" 找不到该社团 ");
         }

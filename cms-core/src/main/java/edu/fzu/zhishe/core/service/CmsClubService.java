@@ -58,7 +58,7 @@ public interface CmsClubService {
 
     List<CmsClub> listClub(Integer page, Integer limit, String sort, String order, String keyword);
 
-    CmsClub getClubById(Integer id);
+    List<CmsClub> getClubById(Integer id);
 
     List<CmsClub> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
 
