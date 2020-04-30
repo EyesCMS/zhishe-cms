@@ -33,6 +33,9 @@ public class SysUserUpdateParam {
     @Email(message = " 邮箱格式不合法 ")
     private String email;
 
+    @ApiModelProperty(value = " 头像链接 ")
+    private String avatarUrl;
+
     public String getPassword() {
         return password;
     }
@@ -58,4 +61,6 @@ public class SysUserUpdateParam {
     public String getEmail() {
         return email;
     }
+
+    public String getAvatarUrl() { return avatarUrl; }
 }

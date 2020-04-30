@@ -210,6 +210,9 @@ public class SysUserServiceImpl implements SysUserService {
         if (updateParam.getSlogan() != null) {
             user.setSlogan(updateParam.getSlogan());
         }
+        if (updateParam.getAvatarUrl() != null) {
+            user.setAvatarUrl(updateParam.getAvatarUrl());
+        }
         userMapper.updateByPrimaryKey(user);
         userCacheService.delUser(user.getId());
         return "SUCCESS";
