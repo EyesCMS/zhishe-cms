@@ -132,7 +132,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     public CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam) {
         //查询是否已存在该社团
         CmsClubExample example2 = new CmsClubExample();
-        example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClubName());
+        example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClubName())
+                .andDeleteStatusEqualTo(DeleteStateEnum.Existence.getValue());
         List<CmsClub> cmsClubs = clubMapper.selectByExample(example2);
         if (!CollectionUtils.isEmpty(cmsClubs)) {
             Asserts.fail(" 该社团已经存在 ");
@@ -277,7 +278,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam) {
-        // TODO: 数据库没有申请人字段
+
         //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         //CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
         //example.createCriteria().andId(cmsClubsDisbandReturnParam.getId());
@@ -353,7 +354,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam) {
         // 查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(cmsClubsJoinParam.getClubId()) == null) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsJoinParam.getClubId());
+        //System.out.println(cmsClub.getDeleteStatus());
+        if (cmsClub == null||cmsClub.getDeleteStatus()== DeleteStateEnum.Deleted.getValue()) {
             Asserts.fail(" 该社团不存在 ");
         }
         // 查询是否已经是社团成员
@@ -466,7 +469,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     public CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam) {
         //由于不用审核，就不需要重复申请判断
         // 查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId()) == null) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId());
+        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
             Asserts.fail(" 该社团不存在 ");
         }
         //前端页面社长没有退社按钮就不需要验证了
@@ -489,7 +493,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         //删除user_club表相关记录
         userClubRelMapper.deleteByExample(example);
         //更新club表相关记录人数
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId());
+
         cmsClub.setMemberCount(cmsClub.getMemberCount()-1);
         clubMapper.updateByPrimaryKeySelective(cmsClub);
         return cmsQuitNotice;
@@ -526,7 +530,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam) {
         //虽然感觉多余但是还是验证一下社团是否存在
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsChiefChangeParam.getClubId());
-        if (cmsClub == null) {
+        if (cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
             Asserts.fail(" 该社团不存在 ");
         }
         //验证是否是社长提出的解散
@@ -543,7 +547,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             Asserts.fail(" 该社团已经申请换届，请等待审核 ");
         }
         //TODO:是不是要多验证一部有无新社长这个人？以及验证新社长是否是该社团成员？
-        //TODO:验证旧社长是否是这个社团的社长？这些验证如果前端在新社长选择用的是下拉框可能就不需要了
+
 
 
         //形成申请
@@ -573,7 +577,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsChiefChangeApply cmsChiefChangeApply = chiefChangeApplyMapper
                 .selectByPrimaryKey(cmsClubsAuditParam.getId());
         if (cmsChiefChangeApply == null) {
-            Asserts.fail(" 该社团解散申请不存在 ");
+            Asserts.fail(" 该社团换届申请不存在 ");
         }
         if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
             Asserts.fail(" 该申请状态码不正确 ");
@@ -613,7 +617,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam cmsClubsCertificationsParam) {
         //查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsCertificationsParam.getClubId());
-        if(cmsClub == null){
+        if(cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()){
             Asserts.fail(" 该社团不存在 ");
         }
         //验证是否是社长提出的认证
@@ -645,22 +649,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CommonList listClubOfficialChange(QueryParam queryParam) {
-        // TODO: 等待api修改
-//        //设置日期格式
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        List<CmsOfficialChangeApply> cmsOfficialChangeApplies = officialChangeApplyMapper.selectByExample(null);
-//        List<Map<String, Object>> officialChangeMaps = new ArrayList<Map<String, Object>>();
-//        for (CmsOfficialChangeApply cmsOfficialChangeApply : cmsOfficialChangeApplies) {
-//            Map<String, Object> myMap = new LinkedHashMap<>();
-//            myMap.put("id",cmsOfficialChangeApply.getId());
-//            myMap.put("clubName",clubMapper.selectByPrimaryKey(cmsOfficialChangeApply.getClubId()).getName());
-//            myMap.put("accessoryUrl", cmsOfficialChangeApply.);
-//            myMap.put("create_at", simpleDateFormat.format(cmsChiefChangeApply.getCreateAt()));
-//            myMap.put("state", ApplyStateEnum.toString(cmsChiefChangeApply.getState()));
-//            chiefChangeMaps.add(myMap);
-//        }
-//        int totalCount = chiefChangeMaps.size();
+    public List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam) {
+
         return null;
     }
 
@@ -703,6 +693,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         return cmsOfficialChangeApply;
     }
+
+
+
+
 
 
     @Override

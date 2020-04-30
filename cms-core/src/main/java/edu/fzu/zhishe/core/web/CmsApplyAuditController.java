@@ -180,22 +180,19 @@ public class CmsApplyAuditController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    /**
-     *
-     * 以下两个控制器是复制的暂未实现
-     *
-     */
+
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
-    public ResponseEntity<Object> clubOfficialChangeList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-        @RequestParam(value = "sort", defaultValue = "id") String sort,
-        @RequestParam(value = "order", defaultValue = "asc") String order,
-        @RequestParam(value = "keyword", required = false) String keyword){
+    public ResponseEntity<Object> clubOfficialChangeList(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,
+                                                         @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                         @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                         @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                         @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         // TODO: 等待api修改
-        // CommonList clubChiefChangeList = clubService.getClubChiefChangeList(queryParam);
-        return ResponseEntity.ok().body(null);
+        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam);
+        return ResponseEntity.ok().body(cmsClubsCertificationsDTOList);
     }
 
     @ApiOperation(" 4.17审核社团认证申请 ")

@@ -49,7 +49,7 @@ public interface CmsClubService {
 
     CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam certificationsParam);
 
-    CommonList listClubOfficialChange(QueryParam queryParam);
+    List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam);
 
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
