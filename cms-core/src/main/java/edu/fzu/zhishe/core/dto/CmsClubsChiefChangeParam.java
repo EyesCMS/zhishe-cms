@@ -16,9 +16,7 @@ public class CmsClubsChiefChangeParam {
     @ApiModelProperty(value = " 社团id ", required = true)
     @NotNull(message = " 社团id不能为空 ")
     private Integer clubId;
-    @ApiModelProperty(value = " 老社长id ", required = true)
-    @NotNull(message = " 老社长id不能为空 ")
-    private Integer oldChiefId;
+
     @ApiModelProperty(value = " 新社长用户名 ", required = true)
     @NotBlank(message = " 新社长用户名不能为空 ")
     private String newChiefName;
@@ -34,13 +32,6 @@ public class CmsClubsChiefChangeParam {
         this.clubId = clubId;
     }
 
-    public int getOldChiefId() {
-        return oldChiefId;
-    }
-
-    public void setOldChiefId(int oldChiefId) {
-        this.oldChiefId = oldChiefId;
-    }
 
     public String getNewChiefName() {
         return newChiefName;

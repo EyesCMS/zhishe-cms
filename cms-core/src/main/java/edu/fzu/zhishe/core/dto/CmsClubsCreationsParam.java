@@ -23,9 +23,6 @@ public class CmsClubsCreationsParam {
     @ApiModelProperty(value = " 社团名 ", required = true)
     @NotBlank(message = " 社团名不能为空 ")
     private String clubName;
-    @ApiModelProperty(value = " 申请人 ", required = true)
-    @NotBlank(message = " 申请人不能为空 ")
-    private String applicant;
     @ApiModelProperty(value = " 理由 ", required = true)
     @NotBlank(message = " 理由不能为空 ")
     private String reason;
@@ -35,7 +32,7 @@ public class CmsClubsCreationsParam {
 
     private boolean officialState;
 
-    private String accessoryUrl;
+
 
     public String getClubName() {
         return clubName;
@@ -45,13 +42,7 @@ public class CmsClubsCreationsParam {
         this.clubName = clubName;
     }
 
-    public String getApplicant() {
-        return applicant;
-    }
 
-    public void setApplicant(String applicant) {
-        this.applicant = applicant;
-    }
 
     public String getReason() {
         return reason;
@@ -77,11 +68,5 @@ public class CmsClubsCreationsParam {
         this.officialState = officialState;
     }
 
-    public String getAccessoryUrl() {
-        return accessoryUrl;
-    }
 
-    public void setAccessoryUrl(String accessoryUrl) {
-        this.accessoryUrl = accessoryUrl;
-    }
 }

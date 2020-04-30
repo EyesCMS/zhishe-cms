@@ -145,7 +145,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         SysUser sysUser = sysUserService.getCurrentUser();
         CmsClubCreateApply cmsClubCreateApply = new CmsClubCreateApply();
 
-        cmsClubCreateApply.setApplicant(clubsCreationsParam.getApplicant());
+        cmsClubCreateApply.setApplicant(sysUser.getUsername());
         cmsClubCreateApply.setClubName(clubsCreationsParam.getClubName());
         cmsClubCreateApply.setType(clubsCreationsParam.getType());
         cmsClubCreateApply.setOfficialState(clubsCreationsParam.isOfficialState());
@@ -242,6 +242,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         //查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()) == null) {
             Asserts.fail(" 该社团不存在 ");
+        }
+        //查询是否已解散
+        if(clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()).getDeleteStatus() == DeleteStateEnum.Deleted.getValue()){
+            Asserts.fail(" 该社团已解散 ");
         }
         // 查询是否已申请解散该社团
         CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
@@ -513,8 +517,13 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam) {
         //虽然感觉多余但是还是验证一下社团是否存在
-        if (clubMapper.selectByPrimaryKey(cmsClubsChiefChangeParam.getClubId()) == null) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsChiefChangeParam.getClubId());
+        if (cmsClub == null) {
             Asserts.fail(" 该社团不存在 ");
+        }
+        //验证是否是社长提出的解散
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.fail(" 你不是该社团社长无权换届 ");
         }
         //验证是否存在PENDING状态的申请
         CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
@@ -525,8 +534,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (!CollectionUtils.isEmpty(cmsChiefChangeApplies)) {
             Asserts.fail(" 该社团已经申请换届，请等待审核 ");
         }
-        //是不是要多验证一部有无新社长这个人？以及验证新社长是否是该社团成员？
-        //验证旧社长是否是这个社团的社长？这些验证如果前端在新社长选择用的是下拉框可能就不需要了
+        //TODO:是不是要多验证一部有无新社长这个人？以及验证新社长是否是该社团成员？
+        //TODO:验证旧社长是否是这个社团的社长？这些验证如果前端在新社长选择用的是下拉框可能就不需要了
 
 
         //形成申请
@@ -535,7 +544,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         SysUser newChief = sysUserMapper.selectByExample(example1).get(0);
         CmsChiefChangeApply cmsChiefChangeApply = new CmsChiefChangeApply();
         cmsChiefChangeApply.setClubId(cmsClubsChiefChangeParam.getClubId());
-        cmsChiefChangeApply.setOldChiefId(cmsClubsChiefChangeParam.getOldChiefId());
+        cmsChiefChangeApply.setOldChiefId(sysUserService.getCurrentUser().getId());
         cmsChiefChangeApply.setNewChiefId(newChief.getId());
         cmsChiefChangeApply.setReason(cmsClubsChiefChangeParam.getReason());
         cmsChiefChangeApply.setCreateAt(new Date());
@@ -611,6 +620,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(certificationsParam.getClubId());
         if(cmsClub == null){
             Asserts.fail(" 该社团不存在 ");
+        }
+        //验证是否是社长提出的认证
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.fail(" 你不是该社团社长无权认证 ");
         }
         //查询该社团是否是非认证社团
         if(cmsClub.getOfficialState() == ClubOfficialStateEnum.OFFICIAL.getValue()){
