@@ -203,7 +203,27 @@
       sys_role r,
       cms_user_club_rel rel
     WHERE
-      rel.club_id = #{clubId,jdbcType=INTEGER}
+      rel.club_id = #{clubId,jdbcType=INTEGER} AND rel.user_id = #{userId,jdbcType=INTEGER}
+    AND u.id = #{userId,jdbcType=INTEGER}
+    AND h.id IN
+    (
+      SELECT
+      id
+      FROM
+      cms_member_honor
+      WHERE
+      id = rel.honor_id
+    )
+    AND r.id IN
+    (
+        SELECT
+        role_id
+        FROM
+        sys_user_role_rel
+        WHERE
+        user_id = #{userId,jdbcType=INTEGER} AND club_id = #{clubId,jdbcType=INTEGER}
+    )
+
 </select>
 
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">

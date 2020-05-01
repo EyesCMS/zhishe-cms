@@ -70,7 +70,7 @@ public interface CmsClubService {
 
     List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
 
-    CmsClub showClubMemberInfo(Integer clubId, Integer userId);
+    CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId);
 
     List<CmsClub> addClubMember(Integer clubId, Integer userId);
 

@@ -760,7 +760,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CmsClub showClubMemberInfo(Integer clubId, Integer userId) {
+    public CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId) {
         return clubDAO.showClubMemberInfo(clubId, userId);
     }
 
