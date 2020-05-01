@@ -870,4 +870,31 @@ public class CmsClubServiceImpl implements CmsClubService {
 
         return activity;
     }
+
+    @Override
+    public void updateActivity(Integer id, CmsActivityUpdateParam param) {
+        SysUser user = getCurrentUser();
+        CmsActivity activity = activityMapper.selectByPrimaryKey(id);
+        if (user == null) {
+            Asserts.fail("请登录");
+        }
+        if (activity == null) {
+            Asserts.fail("获取活动失败");
+        }
+        CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+        if (!club.getChiefId().equals(user.getId())) {
+            Asserts.fail("非社长不能修改活动");
+        }
+        activity.setName(param.getName());
+        activity.setTitle(param.getTitle());
+        activity.setBody(param.getContent());
+        activity.setStarDate(param.getStarDate());
+        activity.setEndData(param.getEndDate());
+        if (param.getLocation() != null) {
+            activity.setLocation(param.getLocation());
+        }
+        if (activityMapper.updateByPrimaryKey(activity) == 0) {
+            Asserts.fail("更新失败");
+        }
+    }
 }

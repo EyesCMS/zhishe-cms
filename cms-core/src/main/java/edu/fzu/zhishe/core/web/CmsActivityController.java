@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.web;
 
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dto.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.dto.CmsClubActivityParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +50,14 @@ public class CmsActivityController {
     public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object){
         clubService.activityStateChange((Integer) object.get("id"),
             (Integer) object.get("state_id"), UserRoleEnum.CHIEF);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(" 6.5 社长修改社团活动 ")
+    @PutMapping("/activities/{id}")
+    public ResponseEntity<Object> updateActivity(@PathVariable(value = "id") Integer id,
+                                                 @Validated @RequestBody CmsActivityUpdateParam param) {
+        clubService.updateActivity(id, param);
         return ResponseEntity.noContent().build();
     }
 

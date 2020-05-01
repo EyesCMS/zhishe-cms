@@ -86,4 +86,6 @@ public interface CmsClubService {
     List<CmsActivityApplyDTO> getActivitiesApply(Integer clubId);
 
     CmsActivity getActivityApplyItem(Integer id);
+
+    void updateActivity(Integer id, CmsActivityUpdateParam param);
 }
