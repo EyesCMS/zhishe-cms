@@ -489,8 +489,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsQuitNotice cmsQuitNotice = new CmsQuitNotice();
         cmsQuitNotice.setClubId(cmsClubsQuitParam.getClubId());
         cmsQuitNotice.setUserId(sysUserService.getCurrentUser().getId());
-        cmsQuitNotice.setQiutDate(new Date());
-        cmsQuitNotice.setReadon(cmsClubsQuitParam.getReason());
+        cmsQuitNotice.setQuitDate(new Date());
+        cmsQuitNotice.setReason(cmsClubsQuitParam.getReason());
         quitNoticeMapper.insert(cmsQuitNotice);
         //删除user_club表相关记录
         userClubRelMapper.deleteByExample(example);
