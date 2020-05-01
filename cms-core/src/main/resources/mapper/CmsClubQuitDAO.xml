@@ -31,7 +31,8 @@
         <if test="queryParam.createAt!=null and  queryParam.createAt!=''">
             AND a.quit_date LIKE concat("%", #{queryParam.createAt},"%")
         </if>
-
+        ORDER BY
+            a.id ASC
 
 
     </select>

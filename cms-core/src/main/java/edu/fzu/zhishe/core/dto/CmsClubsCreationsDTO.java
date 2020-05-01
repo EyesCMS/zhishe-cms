@@ -2,11 +2,15 @@ package edu.fzu.zhishe.core.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Date;
+
 /**
- * 创建社团申请查询参数
- * @author liang on 4/28/2020.
+ * 创建社团申请返回参数
+ * @author Yang on 5/1/2020.
  */
-public class CmsClubCreationQueryParam {
+public class CmsClubsCreationsDTO {
+    @ApiModelProperty(value = "申请id")
+    private Integer id;
 
     @ApiModelProperty(value = "申请人")
     private String applicant;
@@ -14,14 +18,25 @@ public class CmsClubCreationQueryParam {
     @ApiModelProperty(value = "社团名称")
     private String clubName;
 
+    @ApiModelProperty(value = "理由")
+    private String reason;
+
     @ApiModelProperty(value = "官方状态: 0 -> 非正式; 1 -> 正式;")
     private Integer officialState;
 
     @ApiModelProperty(value = "申请时间")
-    private String createAt;
+    private Date createAt;
 
     @ApiModelProperty(value = "申请状态：0 -> 未审核; 1 -> 审核通过; 2 -> 审核未通过;")
     private Integer state;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getApplicant() {
         return applicant;
@@ -39,6 +54,14 @@ public class CmsClubCreationQueryParam {
         this.clubName = clubName;
     }
 
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
     public Integer getOfficialState() {
         return officialState;
     }
@@ -47,11 +70,11 @@ public class CmsClubCreationQueryParam {
         this.officialState = officialState;
     }
 
-    public String getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(String createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 

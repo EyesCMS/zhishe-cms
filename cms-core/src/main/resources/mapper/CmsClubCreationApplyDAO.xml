@@ -2,19 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.fzu.zhishe.core.dao.CmsClubCreationDAO">
+  <resultMap id="CmsClubCreationReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsCreationsDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="club_name" jdbcType="VARCHAR" property="clubName"/>
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="official_state" jdbcType="INTEGER" property="officialState" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="state" jdbcType="INTEGER" property="state" />
 
-  <select id="listClubCreationApply" parameterType="java.lang.Integer"
-    resultMap="edu.fzu.zhishe.cms.mapper.CmsClubCreateApplyMapper.BaseResultMap">
-    SELECT *
+  </resultMap>
+  <select id="listClubCreationApply" resultMap="CmsClubCreationReturnResultMapper">
+    SELECT
+    id,
+    applicant,
+    club_name,
+    reason,
+    official_state,
+    create_at,
+    state
     FROM
     cms_club_create_apply
     WHERE
       1
+    <if test="queryParam.id!=null">
+      AND id = #{queryParam.id}
+    </if>
     <if test="queryParam.applicant!=null and  queryParam.applicant!=''">
       AND applicant LIKE concat("%", #{queryParam.applicant},"%")
     </if>
     <if test="queryParam.clubName!=null and  queryParam.clubName!=''">
       AND club_name LIKE concat("%", #{queryParam.clubName},"%")
+    </if>
+    <if test="queryParam.reason!=null and  queryParam.reason!=''">
+      AND reason LIKE concat("%", #{queryParam.reason},"%")
     </if>
     <if test="queryParam.officialState!=null">
       AND official_state = #{queryParam.officialState}
@@ -26,7 +47,7 @@
       AND state = #{queryParam.state}
     </if>
     ORDER BY
-      state ASC
+      id ASC
   </select>
 
 </mapper>

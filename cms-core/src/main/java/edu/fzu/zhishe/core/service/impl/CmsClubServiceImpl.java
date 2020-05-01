@@ -169,9 +169,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubCreateApply> listClubCreationApply(CmsClubCreationQueryParam queryParam, Integer page, Integer limit) {
-        PageHelper.startPage(page, limit);
-        return cmsClubCreationDAO.listClubCreationApply(queryParam);
+    public List<CmsClubsCreationsDTO> listClubCreationApply(CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,QueryParam queryParam) {
+        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
+        return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQueryParam);
     }
 
     // @Override

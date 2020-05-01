@@ -1,10 +1,7 @@
 package edu.fzu.zhishe.core.web;
 
-import com.github.pagehelper.PageHelper;
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
-import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
@@ -50,13 +47,16 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
-    public ResponseEntity<CommonPage<CmsClubCreateApply>> clubCreateList(
-        CmsClubCreationQueryParam queryParam,
-        @RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit) {
-        List<CmsClubCreateApply> clubCreateApplyList = clubService.listClubCreationApply(queryParam, page, limit);
+    public ResponseEntity<Object> clubCreateList(CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,
+                                                 @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                 @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                 @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                 @RequestParam(value = "keyword", required = false) String keyword) {
+        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+        List<CmsClubsCreationsDTO> cmsClubsCreationsDTOList = clubService.listClubCreationApply(cmsClubsCreationsQueryParam,queryParam);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
-        return ResponseEntity.ok().body(CommonPage.restPage(clubCreateApplyList));
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsCreationsDTOList));
     }
 
     @ApiOperation(" 4.3审核创建社团申请 ")
@@ -75,7 +75,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<CommonPage<CmsClubsDisbandDTO>> clubDisbandList(
+    public ResponseEntity<Object> clubDisbandList(
         CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "limit", defaultValue = "3") Integer limit,

@@ -1,7 +1,6 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.*;
-import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
@@ -21,7 +20,7 @@ public interface CmsClubService {
 
     CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
 
-    List<CmsClubCreateApply> listClubCreationApply(CmsClubCreationQueryParam queryParam, Integer page, Integer limit);
+    List<CmsClubsCreationsDTO> listClubCreationApply(CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,QueryParam queryParam);
 
     CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
