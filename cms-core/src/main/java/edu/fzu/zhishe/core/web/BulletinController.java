@@ -59,6 +59,23 @@ public class BulletinController {
             .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, page, limit)));
     }
 
+
+    @ApiOperation("5.3查看公告详情")
+    @GetMapping("/{club}/bulletins/{bulletinId}")
+    public ResponseEntity<CmsBulletinDTO> getBulletin(
+            @PathVariable("club") Integer clubId,
+            @PathVariable("bulletinId") Integer bulletinId) {
+
+        CmsBulletin bulletin = bulletinService.getBulletin(clubId, bulletinId);
+        if (bulletin == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        CmsBulletinDTO bulletinDTO = new CmsBulletinDTO();
+        BeanUtils.copyProperties(bulletin, bulletinDTO);
+        bulletinDTO.setContent(bulletin.getBody());
+        return ok().body(bulletinDTO);
+    }
+
     @ApiOperation("5.4修改公告内容")
     @PutMapping("/{club}/bulletins/{bulletinId}")
     public ResponseEntity<Object> updateBulletin(
@@ -70,21 +87,6 @@ public class BulletinController {
             Asserts.fail("操作失败！");
         }
         return ResponseEntity.noContent().build();
-    }
-
-    @ApiOperation("5.3查看公告详情")
-    @GetMapping("/{club}/bulletins/{bulletinId}")
-    public ResponseEntity<CmsBulletinDTO> getBulletin(
-        @PathVariable("club") Integer clubId,
-        @PathVariable("bulletinId") Integer bulletinId) {
-
-        CmsBulletin bulletin = bulletinService.getBulletin(clubId, bulletinId);
-        if (bulletin == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        CmsBulletinDTO bulletinDTO = new CmsBulletinDTO();
-        BeanUtils.copyProperties(bulletin, bulletinDTO);
-        return ok().body(bulletinDTO);
     }
 
     @ApiOperation("5.5删除公告")

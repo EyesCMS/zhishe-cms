@@ -91,6 +91,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         BeanUtils.copyProperties(cmsBulletinParam, bulletin);
+        bulletin.setBody(cmsBulletinParam.getContent());
         bulletin.setUpdateAt(new Date());
        return bulletinMapper.updateByPrimaryKey(bulletin);
     }
