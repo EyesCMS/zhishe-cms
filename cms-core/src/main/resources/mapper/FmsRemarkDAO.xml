@@ -1,30 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="edu.fzu.zhishe.core.dao.CmsRemarkDAO">
+<mapper namespace="edu.fzu.zhishe.core.dao.FmsRemarkDAO">
 
-  <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.CmsRemarkDTO">
-    <result column="user_id" javaType="INTEGER" property="userId" />
+  <resultMap id="PostResultMap" type="edu.fzu.zhishe.core.dto.FmsRemarkDTO">
+    <id column="id" jdbcType="INTEGER" property="userId" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
-  </resultMap>
+</resultMap>
 
-  <select id="listRemarkByPostId" resultMap="BaseResultMap">
+  <select id="listRemarkByPostId" parameterType="java.lang.Long" resultMap="PostResultMap">
     SELECT
-     u.id user_id,
+     u.id,
      u.nickname,
      u.avatar_url,
      r.content,
      r.create_at
     FROM
-     cms_user_activity_remark r
+     fms_post_remark r
      LEFT JOIN sys_user u ON r.user_id = u.id
     WHERE
-     r.activity_id = #{postId}
+     r.post_id = #{postId}
     ORDER BY
-     #{queryParam.sort} DESC
-    LIMIT #{queryParam.page}, #{queryParam.limit}
+     r.create_at DESC
   </select>
 
 </mapper>

@@ -8,9 +8,6 @@ public class CmsClubReturnData1 {
 
     private String name;
 
-    @ApiModelProperty(value = "社长 id")
-    private Integer chiefId;
-
     @ApiModelProperty(value = "社长 name")
     private String chiefName;
 
@@ -31,14 +28,6 @@ public class CmsClubReturnData1 {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Integer getChiefId() {
-        return chiefId;
-    }
-
-    public void setChiefId(Integer chiefId) {
-        this.chiefId = chiefId;
     }
 
     public String getChiefName() {

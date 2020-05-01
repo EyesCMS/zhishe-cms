@@ -37,7 +37,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     CmsClubMapper clubMapper;
 
     @Override
-    public CmsBulletin getBulletin(Integer clubId, int bulletinId) {
+    public CmsBulletin getBulletin(Integer clubId, Integer bulletinId) {
         if (!clubService.isClubMember(clubId)) {
             Asserts.fail(" 您没有访问的权限！ ");
         }
@@ -54,7 +54,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public CmsBulletin getBulletinById(int id) {
+    public CmsBulletin getBulletinById(Integer id) {
         return bulletinMapper.selectByPrimaryKey(id);
     }
 
@@ -97,7 +97,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public int deleteBulletin(int id) {
+    public int deleteBulletin(Integer id) {
         return bulletinMapper.deleteByPrimaryKey(id);
     }
 }

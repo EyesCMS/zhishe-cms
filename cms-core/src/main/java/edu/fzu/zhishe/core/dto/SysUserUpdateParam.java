@@ -11,9 +11,6 @@ import javax.validation.constraints.NotEmpty;
  */
 public class SysUserUpdateParam {
 
-    @ApiModelProperty(value = " 密码 ")
-    private String password;
-
     @ApiModelProperty(value = " 昵称 ")
     private String nickname;
 
@@ -35,10 +32,6 @@ public class SysUserUpdateParam {
 
     @ApiModelProperty(value = " 头像链接 ")
     private String avatarUrl;
-
-    public String getPassword() {
-        return password;
-    }
 
     public String getNickname() {
         return nickname;

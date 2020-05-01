@@ -10,15 +10,15 @@ import java.util.List;
  */
 public interface CmsBulletinService {
 
-    CmsBulletin getBulletin(Integer clubId, int bulletinId);
+    CmsBulletin getBulletin(Integer clubId, Integer bulletinId);
 
-    CmsBulletin getBulletinById(int id);
+    CmsBulletin getBulletinById(Integer id);
 
     int creatBulletin(Integer clubId, CmsBulletinParam cmsBulletinParam);
 
     int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam);
 
-    int deleteBulletin(int id);
+    int deleteBulletin(Integer id);
 
     List<CmsBulletin> listClubBulletin(int clubId, int page, int limit);
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.FmsPostDAO">
+
+  <resultMap id="PostResultMap" type="edu.fzu.zhishe.core.dto.FmsPostDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="poster_name" jdbcType="VARCHAR" property="posterName" />
+    <result column="poster_avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+</resultMap>
+
+  <select id="listActivityPost" parameterType="java.lang.Integer" resultMap="PostResultMap">
+    SELECT
+     p.id,
+     p.title,
+     p.content,
+     p.img_url,
+     c.`name` poster_name,
+     c.avatar_url poster_avatar_url,
+     p.create_at
+    FROM
+     fms_post AS p
+     LEFT JOIN cms_club AS c ON p.poster_id = c.id
+    WHERE
+     p.delete_state = 0
+     AND p.type = 1
+     <if test="clubId != null">
+       AND p.poster_id = #{clubId}
+     </if>
+    <if test="queryParam.keyword != null and queryParam.keyword != ''">
+      AND title LIKE concat("%",#{queryParam.keyword},"%")
+    </if>
+    ORDER BY
+     #{queryParam.sort} DESC
+  </select>
+
+  <select id="getActivityPostById" parameterType="java.lang.Integer" resultMap="PostResultMap">
+    SELECT
+     p.id,
+     p.title,
+     p.content,
+     p.img_url,
+     c.`name` poster_name,
+     c.avatar_url poster_avatar_url,
+     p.create_at
+    FROM
+     fms_post AS p
+     LEFT JOIN cms_club AS c ON p.poster_id = c.id
+    WHERE
+     p.delete_state = 0
+     AND p.type = 1
+     AND p.id = #{id}
+  </select>
+
+  <select id="listPersonalPost" parameterType="java.lang.Integer" resultMap="PostResultMap">
+    SELECT
+     p.id,
+     p.title,
+     p.content,
+     p.img_url,
+     u.username poster_name,
+     u.avatar_url poster_avatar_url,
+     p.create_at
+    FROM
+     fms_post AS p
+     LEFT JOIN sys_user AS u ON p.poster_id = u.id
+    WHERE
+     p.delete_state = 0
+     AND p.type = 0
+    <if test="clubId != null">
+      AND p.poster_id IN (
+        SELECT
+          t1.user_id
+        FROM
+          cms_user_club_rel AS t1
+        WHERE
+          t1.club_id = #{clubId}
+      )
+    </if>
+    <if test="queryParam.keyword != null and queryParam.keyword != ''">
+      AND title LIKE concat("%",#{queryParam.keyword},"%")
+    </if>
+    ORDER BY
+    #{queryParam.sort} DESC
+  </select>
+
+  <select id="getPersonalPostById" parameterType="java.lang.Integer" resultMap="PostResultMap">
+    SELECT
+     p.id,
+     p.title,
+     p.content,
+     p.img_url,
+     u.username poster_name,
+     u.avatar_url poster_avatar_url,
+     p.create_at
+    FROM
+     fms_post AS p
+     LEFT JOIN sys_user AS u ON p.poster_id = u.id
+    WHERE
+     p.delete_state = 0
+     AND p.type = 0
+     AND p.id = #{id}
+  </select>
+</mapper>

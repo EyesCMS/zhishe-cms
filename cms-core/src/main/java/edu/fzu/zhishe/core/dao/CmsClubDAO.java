@@ -5,10 +5,7 @@ import edu.fzu.zhishe.cms.model.SysUser;
 
 import java.util.List;
 
-import edu.fzu.zhishe.core.dto.CmsClubReturnData1;
-import edu.fzu.zhishe.core.dto.CmsClubReturnData2;
-import edu.fzu.zhishe.core.dto.CmsClubReturnData3;
-import edu.fzu.zhishe.core.dto.CmsClubReturnData4;
+import edu.fzu.zhishe.core.dto.*;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -72,7 +69,7 @@ public interface CmsClubDAO {
     /**
      * 查看社员详情
      */
-    CmsClub showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
+    CmsClubReturnData6 showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
 
 
     /**
