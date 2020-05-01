@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.dto;
 
-public class CmsRemarkDTO {
+public class FmsRemarkDTO {
 
     /**
      * userId : 1

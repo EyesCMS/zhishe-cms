@@ -39,7 +39,7 @@ mybatis:
 jwt:
   tokenHeader: Authorization # JWT 存储的请求头
   secret: cms-secret # JWT 加解密使用的密钥
-  expiration: 300 # JWT 的超期限时间 (60 * 5 * 1 * 1)
+  expiration: 900 # JWT 的超期限时间 (60 * 15 * 1 * 1)
   tokenHead: Bearer  # JWT 负载中拿到开头
 
 secure:
@@ -60,6 +60,8 @@ secure:
       - /auth/register
       - /auth/info
       - /auth/logout
+      - /users/anwser
+      - /users/question
       - /home/**
       - /test/**
       - /clubs/recommended
