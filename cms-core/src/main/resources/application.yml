@@ -62,6 +62,7 @@ secure:
       - /auth/logout
       - /users/anwser
       - /users/question
+      - /users/password
       - /home/**
       - /test/**
       - /clubs/recommended
