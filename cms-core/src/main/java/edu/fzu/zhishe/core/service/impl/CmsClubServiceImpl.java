@@ -720,7 +720,6 @@ public class CmsClubServiceImpl implements CmsClubService {
             CmsClubReturnData2 data = new CmsClubReturnData2();
             data.setId(club.getId());
             data.setName(club.getName());
-            data.setChiefId(club.getChiefId());
             data.setChiefName(user.getNickname());
             data.setAvatarUrl(club.getAvatarUrl());
             data.setSlogan(club.getSlogan());

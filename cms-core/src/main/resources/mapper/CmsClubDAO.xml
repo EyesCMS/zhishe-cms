@@ -38,7 +38,6 @@
     SELECT
       club.id,
       club.name,
-      club.chief_id,
       u.nickname,
       club.avatar_url
     FROM
@@ -55,7 +54,6 @@
     SELECT
       club.id,
       club.name,
-      club.chief_id,
       u.nickname,
       club.avatar_url
     FROM
@@ -94,14 +92,13 @@
     SELECT
       club.id,
       club.name,
-      club.chief_id,
       u.nickname,
       club.avatar_url
     FROM
       cms_club club,
       sys_user u
     WHERE
-      club.chief_id = u.id AND AND club.delete_status != 1 AND club.id IN
+      club.chief_id = u.id AND club.delete_status != 1 AND club.id IN
       (
       SELECT
       club_id
@@ -117,14 +114,13 @@
     SELECT
       club.id,
       club.name,
-      club.chief_id,
       u.nickname,
       club.avatar_url
     FROM
       cms_club club,
       sys_user u
     WHERE
-      club.chief_id = u.id AND AND club.delete_status != 1 AND club.id IN
+      club.chief_id = u.id AND club.delete_status != 1 AND club.id IN
       (
       SELECT
       club_id
@@ -229,7 +225,6 @@
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="chief_id" jdbcType="INTEGER" property="chiefId" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
@@ -237,7 +232,6 @@
   <resultMap id="ClubMap2" type="edu.fzu.zhishe.core.dto.CmsClubReturnData2">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="chief_id" jdbcType="INTEGER" property="chiefId" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="slogan" jdbcType="VARCHAR" property="slogan" />
