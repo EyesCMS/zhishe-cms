@@ -15,6 +15,7 @@ public class SysUserUpdatePwdByAnswer {
     private String username;
 
     @ApiModelProperty(value = " 密码 ")
+    @NotEmpty(message = " 新密码不能为空 ")
     private String password;
 
     @ApiModelProperty(value = " 密保问题答案 ")

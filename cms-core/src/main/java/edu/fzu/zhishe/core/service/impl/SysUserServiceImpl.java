@@ -123,7 +123,10 @@ public class SysUserServiceImpl implements SysUserService {
             return UpdatePasswordResultEnum.ERROR_OLD_PASSWORD;
         }
         user.setPassword(passwordEncoder.encode(param.getNewPassword()));
-        userMapper.updateByPrimaryKey(user);
+        if (userMapper.updateByPrimaryKey(user) == 0) {
+            return UpdatePasswordResultEnum.UPDATE_ERROR;
+        }
+        userCacheService.delUser(user.getId());
         return UpdatePasswordResultEnum.SUCCESS;
     }
 
@@ -208,8 +211,12 @@ public class SysUserServiceImpl implements SysUserService {
         if (user.getLoginAnswer().equals(param.getAnswer())) {
             user.setPassword(passwordEncoder.encode(param.getPassword()));
 
-            userMapper.updateByPrimaryKey(user);
-            return UpdatePasswordResultEnum.SUCCESS;
+            if (userMapper.updateByPrimaryKeySelective(user) != 0) {
+                System.out.println(user.getPassword());
+                userCacheService.delUser(user.getId());
+                return UpdatePasswordResultEnum.SUCCESS;
+            }
+            return UpdatePasswordResultEnum.UPDATE_ERROR;
         } else {
             return UpdatePasswordResultEnum.ANSWER_ERROR;
         }

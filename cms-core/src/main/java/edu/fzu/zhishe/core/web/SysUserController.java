@@ -24,6 +24,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -74,7 +75,7 @@ public class SysUserController {
 
     @ApiOperation(value = " 忘记密码时通过回答保密问题修改密码 ")
     @PutMapping(value = "/password")
-    public ResponseEntity<Object> password(@RequestBody SysUserUpdatePwdByAnswer param) {
+    public ResponseEntity<Object> password(@Validated @RequestBody SysUserUpdatePwdByAnswer param) {
         UpdatePasswordResultEnum result = userService.updateUserPasswordAfterAnswer(param);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {
