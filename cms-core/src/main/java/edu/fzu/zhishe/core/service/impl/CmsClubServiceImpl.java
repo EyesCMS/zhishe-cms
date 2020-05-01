@@ -285,22 +285,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam) {
-
-        //PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        //CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
-        //example.createCriteria().andId(cmsClubsDisbandReturnParam.getId());
-//        List<CmsClubDisbandApply> cmsClubDisbandApplies = clubDisbandApplyMapper.selectByExample(null);
-//        List<CmsClubsDisbandReturnParam> cmsClubsDisbandReturnParamList = new ArrayList<CmsClubsDisbandReturnParam>();
-//        for (CmsClubDisbandApply cmsClubDisbandApply:cmsClubDisbandApplies){
-//            CmsClubsDisbandReturnParam cmsClubsDisbandReturnParam = new CmsClubsDisbandReturnParam();
-//            BeanUtils.copyProperties(cmsClubDisbandApply, cmsClubsDisbandReturnParam);
-//            cmsClubsDisbandReturnParam.setClubName(clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId()).getName());
-//            cmsClubsDisbandReturnParam.setCreateAt(cmsClubDisbandApply.getCreateAt());
-//            cmsClubsDisbandReturnParamList.add(cmsClubsDisbandReturnParam);
-//        }
-        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList1 = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
-        return cmsClubsDisbandDTOList1;
+    public List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,QueryParam queryParam) {
+        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
+        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
+        return cmsClubsDisbandDTOList;
     }
 
     @Override
@@ -414,29 +402,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam) {
+    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam,QueryParam queryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
         }
-
-//        //设置日期格式
-////        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-////
-////        CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
-////        example.createCriteria().andClubIdEqualTo(clubId);
-////        List<CmsClubJoinApply> cmsClubJoinApplies = clubJoinApplyMapper.selectByExample(example);
-////        List<Map<String, Object>> joinMaps = new ArrayList<Map<String, Object>>();
-////        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = new ArrayList<CmsClubsJoinDTO>();
-////        for (CmsClubJoinApply cmsClubJoinApply : cmsClubJoinApplies) {
-////            CmsClubsJoinDTO cmsClubsJoinDTO1 = new CmsClubsJoinDTO();
-////            cmsClubsJoinDTO1.setId(cmsClubJoinApply.getId());
-////            cmsClubsJoinDTO1.setApplicant(sysUserMapper.selectByPrimaryKey(cmsClubJoinApply.getUserId()).getUsername());
-////            cmsClubsJoinDTO1.setReason(cmsClubJoinApply.getReason());
-////            cmsClubsJoinDTO1.setCreateAt(cmsClubJoinApply.getCreateAt());
-////            cmsClubsJoinDTO1.setState(cmsClubJoinApply.getState());
-////            cmsClubsJoinDTOList.add(cmsClubsJoinDTO1);
-////        }
+        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(cmsClubsJoinQueryParam,clubId);
         return cmsClubsJoinDTOList;
     }
@@ -528,27 +499,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,CmsClubsQuitQueryParam cmsClubsQuitQueryParam) {
+    public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,CmsClubsQuitQueryParam cmsClubsQuitQueryParam,QueryParam queryParam) {
         // 查询是否已存在该社团
         if (clubMapper.selectByPrimaryKey(clubId) == null) {
             Asserts.fail(" 该社团不存在 ");
         }
-
-//        //设置日期格式
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//        CmsQuitNoticeExample example = new CmsQuitNoticeExample();
-//        example.createCriteria().andClubIdEqualTo(clubId);
-//        List<CmsQuitNotice> cmsQuitNotices = quitNoticeMapper.selectByExample(example);
-//        List<Map<String, Object>> quitMaps = new ArrayList<Map<String, Object>>();
-//        for (CmsQuitNotice cmsQuitNotice : cmsQuitNotices) {
-//            Map<String, Object> myMap = new LinkedHashMap<>();
-//            myMap.put("applicant", sysUserMapper.selectByPrimaryKey(cmsQuitNotice.getUserId()).getUsername());
-//            myMap.put("reason", cmsQuitNotice.getReadon());
-//            myMap.put("createAt", simpleDateFormat.format(cmsQuitNotice.getQiutDate()));
-//            quitMaps.add(myMap);
-//        }
-//        int totalCount = quitMaps.size();
+        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQueryParam,clubId);
         return cmsClubsQuitDTOList;
     }
@@ -610,7 +566,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam) {
+    public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,QueryParam queryParam) {
+        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
         return cmsClubsChiefChangeDTOList;
     }
@@ -692,7 +649,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam) {
+    public List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,QueryParam queryParam) {
+        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(cmsClubsCertificationsQueryParam);
         return cmsClubsCertificationsDTOList;
     }

@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
+import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
@@ -74,7 +75,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<CommonList> clubDisbandList(
+    public ResponseEntity<CommonPage<CmsClubsDisbandDTO>> clubDisbandList(
         CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
@@ -83,9 +84,8 @@ public class CmsApplyAuditController {
         @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
-
-        return ResponseEntity.ok().body(CommonList
-            .getCommonList(clubService.listClubDisbandApply(cmsClubsDisbandQueryParam),queryParam.getPage(),queryParam.getLimit()));
+        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = clubService.listClubDisbandApply(cmsClubsDisbandQueryParam,queryParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsDisbandDTOList));
     }
 
     @ApiOperation(" 4.6审核解散社团申请 ")
@@ -112,8 +112,8 @@ public class CmsApplyAuditController {
                                             @RequestParam(value = "order", defaultValue = "asc") String order,
                                             @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(CommonList
-            .getCommonList(clubService.listJoinClubApply(clubId, cmsClubsJoinQueryParam),queryParam.getPage(),queryParam.getLimit()));
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = clubService.listJoinClubApply(clubId, cmsClubsJoinQueryParam,queryParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsJoinDTOList));
     }
 
     @ApiOperation(" 4.9审核解散社团申请 ")
@@ -140,8 +140,8 @@ public class CmsApplyAuditController {
                                            @RequestParam(value = "order", defaultValue = "asc") String order,
                                            @RequestParam(value = "keyword", required = false) String keyword) {
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listClubQuit(clubId, cmsClubsQuitQueryParam),queryParam.getPage(),queryParam.getLimit()));
+        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = clubService.listClubQuit(clubId, cmsClubsQuitQueryParam,queryParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsQuitDTOList));
     }
 
     @ApiOperation(" 4.12提交社团换届申请表单 ")
@@ -161,8 +161,8 @@ public class CmsApplyAuditController {
                                                       @RequestParam(value = "order", defaultValue = "asc") String order,
                                                       @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam),queryParam.getPage(),queryParam.getLimit()));
+        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = clubService.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam,queryParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsChiefChangeDTOList));
     }
 
     @ApiOperation(" 4.14审核社团换届申请 ")
@@ -189,8 +189,8 @@ public class CmsApplyAuditController {
                                                          @RequestParam(value = "order", defaultValue = "asc") String order,
                                                          @RequestParam(value = "keyword", required = false) String keyword){
         QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        return ResponseEntity.ok().body(CommonList
-                .getCommonList(clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam),queryParam.getPage(),queryParam.getLimit()));
+        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam,queryParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsCertificationsDTOList));
     }
 
     @ApiOperation(" 4.17审核社团认证申请 ")
