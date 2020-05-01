@@ -37,6 +37,7 @@ public class FmsForumController {
     private FmsForumService forumService;
 
     @ApiOperation(" 7.1 帖子列表(个人/活动) ")
+    //@PreAuthorize("hasAuthority('fms:post:read')")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listPosts(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -58,6 +59,7 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.2 查看某一帖子 ")
+    //@PreAuthorize("hasAuthority('fms:remark:read')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
     public ResponseEntity<FmsPostDTO> getPost(
             @PathVariable("id") Integer id, @RequestParam(value = "type") Integer type) {
@@ -76,6 +78,7 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.3 删除一条帖子 ")
+    @PreAuthorize("hasAuthority('fms:remark:delete')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         if (forumService.deletePost(id) == 0) {
@@ -85,6 +88,7 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.4 发布个人帖 ")
+    @PreAuthorize("hasAuthority('fms:remark:create')")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public ResponseEntity<Object> savePost(@RequestBody FmsPostParam postParam) {
         if (forumService.savePost(postParam) == 0) {
@@ -94,8 +98,10 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.5 修改个人帖 ")
+    @PreAuthorize("hasAuthority('fms:post:update')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @RequestBody FmsPostParam postParam) {
+        // TODO: 校验身份
         if (forumService.updatePost(id, postParam) == 0) {
             Asserts.fail();
         }
@@ -103,6 +109,7 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.6 某个社团的活动帖子列表 ")
+    //@PreAuthorize("hasAuthority('fms:post:read')")
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam(value = "type") Integer type,
@@ -122,7 +129,9 @@ public class FmsForumController {
         return ResponseEntity.ok().body(CommonPage.restPage(postList));
     }
 
+    // 登陆后才可
     @ApiOperation(" 8.1 对某一帖子发表评论 ")
+    @PreAuthorize("hasAuthority('fms:remark:create')")
     @RequestMapping(value = "/posts/remarks", method = RequestMethod.POST)
     public ResponseEntity<Object> createRemark(@RequestBody FmsRemarkParam remarkParam) {
         if (forumService.saveRemark(remarkParam) == 0) {
@@ -132,6 +141,7 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 8.2 获取某一帖子的评论列表 ")
+    //@PreAuthorize("hasAuthority('fms:remark:read')")
     @RequestMapping(value = "/posts/{id}/remarks", method = RequestMethod.GET)
     public ResponseEntity<Object> getRemarksByPostId(@PathVariable("id") Long postId,
                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,

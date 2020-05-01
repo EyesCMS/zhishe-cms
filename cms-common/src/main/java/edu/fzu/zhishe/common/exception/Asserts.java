@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.common.exception;
 
 import edu.fzu.zhishe.common.api.IErrorCode;
+import io.micrometer.core.lang.Nullable;
 import javax.naming.AuthenticationException;
 
 /**
@@ -11,7 +12,7 @@ import javax.naming.AuthenticationException;
  */
 public class Asserts {
 
-    public static void notNull(Object object) {
+    public static void notNull(@Nullable Object object) {
         if (object == null) {
             throw new EntityNotFoundException("Object isn't exist");
         }
