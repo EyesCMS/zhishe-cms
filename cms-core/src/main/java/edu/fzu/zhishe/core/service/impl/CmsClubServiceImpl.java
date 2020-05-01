@@ -451,6 +451,11 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
             Asserts.fail(" 该申请状态码不正确 ");
         }
+        //增加社长判定，只有社长才能审核加入申请
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubJoinApply.getClubId());
+        if(!sysUserService.getCurrentUser().getId().equals(cmsClub.getChiefId())){
+            Asserts.fail(" 您不是该社社长无权进行加入申请审核 ");
+        }
         if (cmsClubJoinApply.getState() != ApplyStateEnum.PENDING.getValue()) {
             Asserts.fail(" 该申请已经审核完毕 ");
         }
@@ -460,7 +465,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.ACTIVE.getValue()) {
             //更新社团人数
-            CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubJoinApply.getClubId());
+
             cmsClub.setMemberCount(cmsClub.getMemberCount() + 1);
             clubMapper.updateByPrimaryKeySelective(cmsClub);
             //更新加入申请
