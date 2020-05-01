@@ -328,8 +328,22 @@ public class CmsClubServiceImpl implements CmsClubService {
             example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
             clubJoinApplyMapper.deleteByExample(example1);
 
-            //更新相关disbandApply表记录
+            //删除相关quitNotice记录
+            CmsQuitNoticeExample example2 = new CmsQuitNoticeExample();
+            example2.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            quitNoticeMapper.deleteByExample(example2);
 
+            //删除相关社团换届记录
+            CmsChiefChangeApplyExample example3 = new CmsChiefChangeApplyExample();
+            example3.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            chiefChangeApplyMapper.deleteByExample(example3);
+
+            //删除相关社团认证记录
+            CmsOfficialChangeApplyExample example4 = new CmsOfficialChangeApplyExample();
+            example4.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            officialChangeApplyMapper.deleteByExample(example4);
+
+            //更新相关disbandApply表记录
             cmsClubDisbandApply.setState(ApplyStateEnum.REJECTED.getValue());
             clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
 

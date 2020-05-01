@@ -8,9 +8,8 @@ import java.util.List;
 public class CommonList {
     /**
      * 通用列表返回封装类
-     *
-     * @param totalCount 整个列表的size
-     * @param items 分好页！！！！！！！！！！的列表
+     * @param items 存放分页好的列表
+     * @param totalCount 存放整个列表的size
      * @return
      */
     private int totalCount;
@@ -22,6 +21,13 @@ public class CommonList {
         return result;
     }
 
+    /**
+     * 通用列表返回封装类
+     * List 传送查询到的整个列表
+     * pageNum 页号
+     * pageSize 页大小
+     * 直接可以返回分好页的CommonList
+     */
     public static  CommonList getCommonList(List list,Integer pageNum,
                                             Integer pageSize) {
         CommonList result = new CommonList();
