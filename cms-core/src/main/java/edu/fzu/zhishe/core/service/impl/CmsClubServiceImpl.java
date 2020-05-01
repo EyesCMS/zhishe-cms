@@ -248,14 +248,20 @@ public class CmsClubServiceImpl implements CmsClubService {
     //以下三个函数用于社团解散
     @Override
     public CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId());
         //查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()) == null) {
+        if (cmsClub == null) {
             Asserts.fail(" 该社团不存在 ");
         }
         //查询是否已解散
-        if(clubMapper.selectByPrimaryKey(clubsDisbandParam.getClubId()).getDeleteStatus() == DeleteStateEnum.Deleted.getValue()){
+        if(cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()){
             Asserts.fail(" 该社团已解散 ");
         }
+        //查询是否是社长
+        if (!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.fail(" 您不是社长无权解散 ");
+        }
+
         // 查询是否已申请解散该社团
         CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
         example.createCriteria().andClubIdEqualTo(clubsDisbandParam.getClubId())
@@ -344,7 +350,8 @@ public class CmsClubServiceImpl implements CmsClubService {
             officialChangeApplyMapper.deleteByExample(example4);
 
             //更新相关disbandApply表记录
-            cmsClubDisbandApply.setState(ApplyStateEnum.REJECTED.getValue());
+            cmsClubDisbandApply.setState(ApplyStateEnum.ACTIVE.getValue());
+            cmsClubDisbandApply.setHandleAt(new Date());
             clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
 
             //删除社团（逻辑删除）
@@ -553,23 +560,38 @@ public class CmsClubServiceImpl implements CmsClubService {
         if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
             Asserts.fail(" 你不是该社团社长无权换届 ");
         }
+        //验证新社长是否存在
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andUsernameEqualTo(cmsClubsChiefChangeParam.getNewChiefName());
+        List<SysUser> sysUsers = sysUserMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(sysUsers)){
+            Asserts.fail(" 该新社长"+ cmsClubsChiefChangeParam.getNewChiefName()+ "用户不存在 ");
+        }
+        SysUser newChief = sysUsers.get(0);
+        //验证新社长是否是社员
+        CmsUserClubRelExample example1 = new CmsUserClubRelExample();
+        example1.createCriteria().andClubIdEqualTo(cmsClubsChiefChangeParam.getClubId()).andUserIdEqualTo(newChief.getId());
+        List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example1);
+        if (CollectionUtils.isEmpty(userClubRels)){
+            Asserts.fail(" 该新社长"+ cmsClubsChiefChangeParam.getNewChiefName()+ "不是社团成员 ");
+        }
         //验证是否存在PENDING状态的申请
-        CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
-        example.createCriteria().andClubIdEqualTo(cmsClubsChiefChangeParam.getClubId())
+        CmsChiefChangeApplyExample example2 = new CmsChiefChangeApplyExample();
+        example2.createCriteria().andClubIdEqualTo(cmsClubsChiefChangeParam.getClubId())
                 .andStateEqualTo(ApplyStateEnum.PENDING.getValue());
         List<CmsChiefChangeApply> cmsChiefChangeApplies = chiefChangeApplyMapper
-                .selectByExample(example);
+                .selectByExample(example2);
         if (!CollectionUtils.isEmpty(cmsChiefChangeApplies)) {
             Asserts.fail(" 该社团已经申请换届，请等待审核 ");
         }
-        //TODO:是不是要多验证一部有无新社长这个人？以及验证新社长是否是该社团成员？
+
 
 
 
         //形成申请
-        SysUserExample example1 = new SysUserExample();
-        example1.createCriteria().andUsernameEqualTo(cmsClubsChiefChangeParam.getNewChiefName());
-        SysUser newChief = sysUserMapper.selectByExample(example1).get(0);
+//        SysUserExample example3 = new SysUserExample();
+//        example3.createCriteria().andUsernameEqualTo(cmsClubsChiefChangeParam.getNewChiefName());
+
         CmsChiefChangeApply cmsChiefChangeApply = new CmsChiefChangeApply();
         cmsChiefChangeApply.setClubId(cmsClubsChiefChangeParam.getClubId());
         cmsChiefChangeApply.setOldChiefId(sysUserService.getCurrentUser().getId());
@@ -672,7 +694,6 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
-        // TODO: 等待api修改
         CmsOfficialChangeApply cmsOfficialChangeApply = officialChangeApplyMapper
                 .selectByPrimaryKey(cmsClubsAuditParam.getId());
         if (cmsOfficialChangeApply == null) {
