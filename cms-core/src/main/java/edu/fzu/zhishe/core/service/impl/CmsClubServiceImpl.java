@@ -811,7 +811,15 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public Integer deleteClubMember(Integer clubId, Integer userId){
+
+        SysUser user = getCurrentUser();
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId()).andRoleIdEqualTo(3);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("您没有该权限");
+        }
+
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         userClubRelMapper.deleteByExample(userClubRel);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
