@@ -94,7 +94,7 @@ public class SysUserServiceImpl implements SysUserService {
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(userRegisterParam, sysUser);
         sysUser.setPassword(passwordEncoder.encode(userRegisterParam.getPassword()));
-        sysUser.setIsAdmin(UserRoleEnum.NORMAL.getValue());
+        sysUser.setIsAdmin(0);
         userMapper.insert(sysUser);
         return sysUser;
     }
@@ -139,9 +139,9 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser getCurrentUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication auth = context.getAuthentication();
-        if (auth.getPrincipal() == ANON_USER) {
-            return null;
-        }
+//        if (auth.getPrincipal() == ANON_USER) {
+//            return null;
+//        }
         SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();
         return userDetails.getSysUser();
     }
