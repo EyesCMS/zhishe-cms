@@ -39,6 +39,7 @@
       club.id,
       club.name,
       u.nickname,
+      club.type,
       club.avatar_url
     FROM
       cms_club club,
@@ -55,6 +56,7 @@
       club.id,
       club.name,
       u.nickname,
+      club.type,
       club.avatar_url
     FROM
       cms_club club,
@@ -93,6 +95,7 @@
       club.id,
       club.name,
       u.nickname,
+      club.type,
       club.avatar_url
     FROM
       cms_club club,
@@ -115,6 +118,7 @@
       club.id,
       club.name,
       u.nickname,
+      club.type,
       club.avatar_url
     FROM
       cms_club club,
@@ -186,6 +190,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
 

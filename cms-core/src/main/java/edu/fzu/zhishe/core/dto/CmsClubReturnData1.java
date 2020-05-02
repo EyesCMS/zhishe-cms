@@ -11,6 +11,9 @@ public class CmsClubReturnData1 {
     @ApiModelProperty(value = "社长 name")
     private String chiefName;
 
+    @ApiModelProperty(value = "类型")
+    private String type;
+
     @ApiModelProperty(value = "头像链接")
     private String avatarUrl;
 
@@ -36,6 +39,14 @@ public class CmsClubReturnData1 {
 
     public void setChiefName(String chiefName) {
         this.chiefName = chiefName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getAvatarUrl() {

@@ -777,6 +777,14 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId) {
 
+        SysUser user = getCurrentUser();
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId());
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社团成员，请重新查看");
+        }
+
         PageHelper.startPage(page, limit);
         return clubDAO.listClubMember(page,limit,sort,order, clubId);
     }
@@ -798,17 +806,13 @@ public class CmsClubServiceImpl implements CmsClubService {
         //将用户字段和data字段相同的，复制到data里面
         BeanUtils.copyProperties(user, data);
 
-        //还差role、honor、credit
         CmsUserClubRel userClub = userClubList.get(0);
 
         CmsMemberHonor honor = honorMapper.selectByPrimaryKey(userClub.getHonorId());
         data.setHonor(honor.getName());
-
         SysRole role = roleMapper.selectByPrimaryKey(userClub.getRoleId());
         data.setRole(role.getDescription());
-
         data.setCredit(userClub.getCredit());
-
         return data;
     }
 
