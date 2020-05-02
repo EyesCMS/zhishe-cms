@@ -176,6 +176,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsCreationsDTO> listClubCreationApply(CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,QueryParam queryParam) {
+        if(sysUserService.getCurrentUser().getIsAdmin()==0){
+            Asserts.fail(" 您不是社团管理员无权查看 ");
+        }
         PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
         return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQueryParam);
     }
@@ -292,6 +295,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,QueryParam queryParam) {
+        if(sysUserService.getCurrentUser().getIsAdmin()==0){
+            Asserts.fail(" 您不是社团管理员无权查看 ");
+        }
         PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
         return cmsClubsDisbandDTOList;
@@ -410,8 +416,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam,QueryParam queryParam) {
         // 查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(clubId) == null) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
+        if ( cmsClub == null) {
             Asserts.fail(" 该社团不存在 ");
+        }
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.fail(" 您不是该社团社长无权查看 ");
         }
         PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(cmsClubsJoinQueryParam,clubId);
@@ -507,8 +517,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,CmsClubsQuitQueryParam cmsClubsQuitQueryParam,QueryParam queryParam) {
         // 查询是否已存在该社团
-        if (clubMapper.selectByPrimaryKey(clubId) == null) {
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
+        if ( cmsClub == null) {
             Asserts.fail(" 该社团不存在 ");
+        }
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.fail(" 您不是该社团社长无权查看 ");
         }
         PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQueryParam,clubId);
@@ -573,6 +587,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,QueryParam queryParam) {
+        if(sysUserService.getCurrentUser().getIsAdmin()==0){
+            Asserts.fail(" 您不是社团管理员无权查看 ");
+        }
         PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
         return cmsClubsChiefChangeDTOList;
@@ -656,6 +673,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsCertificationsDTO> listClubOfficialChange(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,QueryParam queryParam) {
+        if(sysUserService.getCurrentUser().getIsAdmin()==0){
+            Asserts.fail(" 您不是社团管理员无权查看 ");
+        }
         PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
         List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(cmsClubsCertificationsQueryParam);
         return cmsClubsCertificationsDTOList;
