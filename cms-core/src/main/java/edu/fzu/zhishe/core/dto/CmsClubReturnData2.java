@@ -7,6 +7,9 @@ public class CmsClubReturnData2 extends CmsClubReturnData1{
     @ApiModelProperty(value = "标语")
     private String slogan;
 
+    @ApiModelProperty(value = "类型")
+    private String type;
+
     @ApiModelProperty(value = "成员数量")
     private Integer memberCount;
 
@@ -35,5 +38,13 @@ public class CmsClubReturnData2 extends CmsClubReturnData1{
 
     public void setSlogan(String slogan) {
         this.slogan = slogan;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

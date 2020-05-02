@@ -716,13 +716,16 @@ public class CmsClubServiceImpl implements CmsClubService {
             CmsClub club = clubMapper.selectByPrimaryKey(id);
             SysUser user = sysUserMapper.selectByPrimaryKey(club.getChiefId());
             CmsClubReturnData2 data = new CmsClubReturnData2();
-            data.setId(club.getId());
-            data.setName(club.getName());
-            data.setChiefName(user.getNickname());
-            data.setAvatarUrl(club.getAvatarUrl());
-            data.setSlogan(club.getSlogan());
-            data.setMemberCount(club.getMemberCount());
-            data.setQqGroup(club.getQqGroup());
+            if(!club.getId().equals(null)) {
+                data.setId(club.getId());
+                data.setName(club.getName());
+                data.setChiefName(user.getNickname());
+                data.setAvatarUrl(club.getAvatarUrl());
+                data.setSlogan(club.getSlogan());
+                data.setType(club.getType());
+                data.setMemberCount(club.getMemberCount());
+                data.setQqGroup(club.getQqGroup());
+            }
             return data ;
     }
 
@@ -762,9 +765,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> addClubMember(Integer clubId, Integer userId){
+    public Integer addClubMember(Integer clubId, Integer userId){
         return clubDAO.addClubMember(clubId, userId);
     }
+
+    @Override
+    public Integer deleteClubMember(Integer clubId, Integer userId){ return clubDAO.deleteClubMember(clubId, userId); }
 
 
     /*

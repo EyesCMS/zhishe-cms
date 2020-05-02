@@ -235,6 +235,7 @@
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="member_count" jdbcType="INTEGER" property="memberCount" />
     <result column="qq_group" jdbcType="VARCHAR" property="qqGroup" />
   </resultMap>

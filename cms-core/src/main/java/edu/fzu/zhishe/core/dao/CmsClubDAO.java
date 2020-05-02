@@ -75,6 +75,11 @@ public interface CmsClubDAO {
     /**
      * 添加社员
      */
-    List<CmsClub> addClubMember(Integer clubId, Integer userId);
+    Integer addClubMember(Integer clubId, Integer userId);
 
+
+    /**
+     * 删除社员
+     */
+    Integer deleteClubMember(Integer clubId, Integer userId);
 }

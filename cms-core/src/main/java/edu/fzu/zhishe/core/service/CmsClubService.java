@@ -71,7 +71,9 @@ public interface CmsClubService {
 
     CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId);
 
-    List<CmsClub> addClubMember(Integer clubId, Integer userId);
+    Integer addClubMember(Integer clubId, Integer userId);
+
+    Integer deleteClubMember(Integer clubId, Integer userId);
 
     /**
      * @author PSF

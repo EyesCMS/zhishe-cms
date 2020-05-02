@@ -126,13 +126,27 @@ public class CmsClubController {
         return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
     }
 
+    /*
+
     //没写完没写完没写完 只写了个壳
 
     @ApiOperation(" 3.9添加社团成员 ")
-    public ResponseEntity<CmsClub> addClubMember(@PathVariable("clubId") Integer clubId,
+    public ResponseEntity<Integer> addClubMember(@PathVariable("clubId") Integer clubId,
                                                  @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(clubService.addClubMember(clubId, userId).get(0));
+        return ResponseEntity.ok(clubService.addClubMember(clubId, userId));
     }
 
 
+    //没写完没写完没写完 只写了个壳
+
+    @ApiOperation(" 3.10删除社团成员 ")
+    @DeleteMapping("/{clubId}/members/{userId}")
+    public ResponseEntity<Integer> deleteClubMember(@PathVariable("clubId") Integer clubId,
+                                                      @PathVariable("userId") Integer userId) {
+        clubService.deleteClubMember(clubId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
+
+     */
 }
