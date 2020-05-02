@@ -783,7 +783,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         data.setHonor(honor.getName());
 
         SysRole role = roleMapper.selectByPrimaryKey(userClub.getRoleId());
-        data.setRole(role.getName());
+        data.setRole(role.getDescription());
 
         data.setCredit(userClub.getCredit());
 
