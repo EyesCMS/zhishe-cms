@@ -97,6 +97,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Autowired
     private CmsActivityDAO activityDAO;
 
+    @Autowired
+    CmsMemberHonorMapper honorMapper;
+
+    @Autowired
+    SysRoleMapper roleMapper;
+
     @Override
     public boolean isClubMember(Integer clubId) {
         ClubStatueEnum clubStatue = getClubStatue(clubId);
@@ -694,11 +700,6 @@ public class CmsClubServiceImpl implements CmsClubService {
         return cmsOfficialChangeApply;
     }
 
-
-
-
-
-
     @Override
     public List<CmsClubReturnData1> listHotClub(Integer page, Integer limit, String sort, String order) {
         PageHelper.startPage(page, limit);
@@ -759,11 +760,6 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClubMember(page,limit,sort,order, clubId);
     }
 
-    @Autowired
-    CmsMemberHonorMapper honorMapper;
-
-    @Autowired
-    SysRoleMapper roleMapper;
     @Override
     public CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId) {
         //先判断社团里面是否有这个成员
