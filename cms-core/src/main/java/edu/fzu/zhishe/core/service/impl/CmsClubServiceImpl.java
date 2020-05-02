@@ -759,9 +759,39 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClubMember(page,limit,sort,order, clubId);
     }
 
+    @Autowired
+    CmsMemberHonorMapper honorMapper;
+
+    @Autowired
+    SysRoleMapper roleMapper;
     @Override
     public CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId) {
-        return clubDAO.showClubMemberInfo(clubId, userId);
+        //先判断社团里面是否有这个成员
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社团成员，请重新查看");
+        }
+
+        SysUser user = sysUserMapper.selectByPrimaryKey(userId);
+        CmsClubReturnData6 data = new CmsClubReturnData6();
+        //将用户字段和data字段相同的，复制到data里面
+        BeanUtils.copyProperties(user, data);
+
+        //还差role、honor、credit
+        CmsUserClubRel userClub = userClubList.get(0);
+
+        CmsMemberHonor honor = honorMapper.selectByPrimaryKey(userClub.getHonorId());
+        data.setHonor(honor.getName());
+
+        SysRole role = roleMapper.selectByPrimaryKey(userClub.getRoleId());
+        data.setRole(role.getName());
+
+        data.setCredit(userClub.getCredit());
+
+        return data;
     }
 
     @Override

@@ -11,6 +11,9 @@ public class CmsUserClubRel implements Serializable {
 
     private Integer clubId;
 
+    @ApiModelProperty(value = "角色id(默认为2社员)")
+    private Integer roleId;
+
     @ApiModelProperty(value = "积分")
     private Integer credit;
 
@@ -46,6 +49,14 @@ public class CmsUserClubRel implements Serializable {
         this.clubId = clubId;
     }
 
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
     public Integer getCredit() {
         return credit;
     }
@@ -79,6 +90,7 @@ public class CmsUserClubRel implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", clubId=").append(clubId);
+        sb.append(", roleId=").append(roleId);
         sb.append(", credit=").append(credit);
         sb.append(", honorId=").append(honorId);
         sb.append(", joinDate=").append(joinDate);

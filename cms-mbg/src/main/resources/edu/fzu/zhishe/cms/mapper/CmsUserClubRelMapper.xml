@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="club_id" jdbcType="INTEGER" property="clubId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="credit" jdbcType="INTEGER" property="credit" />
     <result column="honor_id" jdbcType="INTEGER" property="honorId" />
     <result column="join_date" jdbcType="TIMESTAMP" property="joinDate" />
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, club_id, credit, honor_id, join_date
+    id, user_id, club_id, role_id, credit, honor_id, join_date
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsUserClubRelExample" resultMap="BaseResultMap">
     select
@@ -104,10 +105,12 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cms_user_club_rel (user_id, club_id, credit, 
-      honor_id, join_date)
-    values (#{userId,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{credit,jdbcType=INTEGER}, 
-      #{honorId,jdbcType=INTEGER}, #{joinDate,jdbcType=TIMESTAMP})
+    insert into cms_user_club_rel (user_id, club_id, role_id, 
+      credit, honor_id, join_date
+      )
+    values (#{userId,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, 
+      #{credit,jdbcType=INTEGER}, #{honorId,jdbcType=INTEGER}, #{joinDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsUserClubRel">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -120,6 +123,9 @@
       </if>
       <if test="clubId != null">
         club_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
       </if>
       <if test="credit != null">
         credit,
@@ -137,6 +143,9 @@
       </if>
       <if test="clubId != null">
         #{clubId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
       </if>
       <if test="credit != null">
         #{credit,jdbcType=INTEGER},
@@ -167,6 +176,9 @@
       <if test="record.clubId != null">
         club_id = #{record.clubId,jdbcType=INTEGER},
       </if>
+      <if test="record.roleId != null">
+        role_id = #{record.roleId,jdbcType=INTEGER},
+      </if>
       <if test="record.credit != null">
         credit = #{record.credit,jdbcType=INTEGER},
       </if>
@@ -186,6 +198,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       club_id = #{record.clubId,jdbcType=INTEGER},
+      role_id = #{record.roleId,jdbcType=INTEGER},
       credit = #{record.credit,jdbcType=INTEGER},
       honor_id = #{record.honorId,jdbcType=INTEGER},
       join_date = #{record.joinDate,jdbcType=TIMESTAMP}
@@ -201,6 +214,9 @@
       </if>
       <if test="clubId != null">
         club_id = #{clubId,jdbcType=INTEGER},
+      </if>
+      <if test="roleId != null">
+        role_id = #{roleId,jdbcType=INTEGER},
       </if>
       <if test="credit != null">
         credit = #{credit,jdbcType=INTEGER},
@@ -218,6 +234,7 @@
     update cms_user_club_rel
     set user_id = #{userId,jdbcType=INTEGER},
       club_id = #{clubId,jdbcType=INTEGER},
+      role_id = #{roleId,jdbcType=INTEGER},
       credit = #{credit,jdbcType=INTEGER},
       honor_id = #{honorId,jdbcType=INTEGER},
       join_date = #{joinDate,jdbcType=TIMESTAMP}
