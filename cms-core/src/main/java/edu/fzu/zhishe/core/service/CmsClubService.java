@@ -71,7 +71,7 @@ public interface CmsClubService {
 
     List<CmsClubReturnData4> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
 
-    List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
+    List<CmsClubReturnData5> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
 
     CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId);
 

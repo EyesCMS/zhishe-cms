@@ -775,18 +775,36 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId) {
+    public List<CmsClubReturnData5> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId) {
 
         SysUser user = getCurrentUser();
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId());
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
         if (CollectionUtils.isEmpty(userClubList)) {
-            Asserts.fail("非社团成员，请重新查看");
+            Asserts.fail("非社团成员，您没有该权限");
         }
 
+        List<CmsClubReturnData5> dataList = new LinkedList<>();
+        userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId);
+        userClubList = userClubRelMapper.selectByExample(userClubRel);
+
+        for(CmsUserClubRel rel : userClubList)
+        {
+            CmsClubReturnData5 data = new CmsClubReturnData5();
+            SysUser u = sysUserMapper.selectByPrimaryKey(rel.getUserId());
+            BeanUtils.copyProperties(u, data);
+            data.setUserId(u.getId());
+            CmsMemberHonor honor = honorMapper.selectByPrimaryKey(rel.getHonorId());
+            data.setHonor(honor.getName());
+            SysRole role = roleMapper.selectByPrimaryKey(rel.getRoleId());
+            data.setRole(role.getDescription());
+            data.setCredit(rel.getCredit());
+            dataList.add(data);
+        }
         PageHelper.startPage(page, limit);
-        return clubDAO.listClubMember(page,limit,sort,order, clubId);
+        return dataList;
     }
 
     @Override
@@ -798,7 +816,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
 
         if (CollectionUtils.isEmpty(userClubList)) {
-            Asserts.fail("非社团成员，请重新查看");
+            Asserts.fail("非社团成员，您没有该权限");
         }
 
         SysUser user = sysUserMapper.selectByPrimaryKey(userId);

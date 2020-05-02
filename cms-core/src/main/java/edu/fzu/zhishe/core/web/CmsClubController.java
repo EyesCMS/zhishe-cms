@@ -89,11 +89,9 @@ public class CmsClubController {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(page, limit, sort, order, userId)));
     }
 
-    //待完善
-
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
-    public ResponseEntity<CommonPage<CmsClub>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubReturnData5>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                               @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                               @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                               @RequestParam(value = "order", defaultValue = "asc") String order,
