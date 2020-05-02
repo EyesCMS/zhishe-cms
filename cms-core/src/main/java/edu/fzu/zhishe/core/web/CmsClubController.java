@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  *社团管理
@@ -90,19 +89,17 @@ public class CmsClubController {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(page, limit, sort, order, userId)));
     }
 
-    //SQL待完善
+    //待完善
 
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
     public ResponseEntity<CommonPage<CmsClub>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                                   @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                                   @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                                   @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                                   @PathVariable(value = "clubId", required = false) Integer clubId) {
+                                                              @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+                                                              @RequestParam(value = "sort", defaultValue = "id") String sort,
+                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
+                                                              @PathVariable(value = "clubId", required = false) Integer clubId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(page, limit, sort, order, clubId)));
     }
-
-    //SQL需调试
 
     @ApiOperation(" 3.8查看某个社员详情 ")
     @GetMapping("/{clubId}/members/{userId}")
@@ -111,27 +108,20 @@ public class CmsClubController {
         return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
     }
 
-    /*
-
-    //没写完没写完没写完 只写了个壳
-
+/*    见：CmsClubServiceImpl       public Integer addClubMember(Integer clubId, Integer userId)
     @ApiOperation(" 3.9添加社团成员 ")
     public ResponseEntity<Integer> addClubMember(@PathVariable("clubId") Integer clubId,
                                                  @PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(clubService.addClubMember(clubId, userId));
     }
-
-
-    //没写完没写完没写完 只写了个壳
+*/
 
     @ApiOperation(" 3.10删除社团成员 ")
     @DeleteMapping("/{clubId}/members/{userId}")
     public ResponseEntity<Integer> deleteClubMember(@PathVariable("clubId") Integer clubId,
-                                                      @PathVariable("userId") Integer userId) {
+                                                    @PathVariable("userId") Integer userId) {
         clubService.deleteClubMember(clubId, userId);
         return ResponseEntity.noContent().build();
     }
 
-
-     */
 }

@@ -66,20 +66,4 @@ public interface CmsClubDAO {
                                       @Param("sort") String sort, @Param("order") String order,
                                       @Param("clubId") Integer clubId);
 
-    /**
-     * 查看社员详情
-     */
-    CmsClubReturnData6 showClubMemberInfo(@Param("clubId") Integer clubId, @Param("userId") Integer userId);
-
-
-    /**
-     * 添加社员
-     */
-    Integer addClubMember(Integer clubId, Integer userId);
-
-
-    /**
-     * 删除社员
-     */
-    Integer deleteClubMember(Integer clubId, Integer userId);
 }

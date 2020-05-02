@@ -160,6 +160,8 @@
     user_id = #{userId,jdbcType=INTEGER}
   </select>
 
+
+  <!--
   <select id="listClubMember" parameterType="java.lang.Integer"
           resultMap="ClubMap5">
     SELECT
@@ -178,49 +180,7 @@
     WHERE
       rel.club_id = #{clubId,jdbcType=INTEGER}
 </select>
-
-  <select id="showClubMemberInfo" parameterType="java.lang.Integer"
-          resultMap="ClubMap6">
-    SELECT
-      u.username,
-      u.nickname,
-      u.slogan,
-      r.description,
-      u.major,
-      u.phone,
-      u.email,
-      u.address,
-      h.name,
-      rel.credit,
-      u.avatar_url
-    FROM
-      sys_user u,
-      cms_member_honor h,
-      sys_role r,
-      cms_user_club_rel rel
-    WHERE
-      rel.club_id = #{clubId,jdbcType=INTEGER} AND rel.user_id = #{userId,jdbcType=INTEGER}
-    AND u.id = #{userId,jdbcType=INTEGER}
-    AND h.id IN
-    (
-      SELECT
-      id
-      FROM
-      cms_member_honor
-      WHERE
-      id = rel.honor_id
-    )
-    AND r.id IN
-    (
-        SELECT
-        role_id
-        FROM
-        sys_user_role_rel
-        WHERE
-        user_id = #{userId,jdbcType=INTEGER} AND club_id = #{clubId,jdbcType=INTEGER}
-    )
-
-</select>
+  -->
 
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
     <id column="id" jdbcType="INTEGER" property="id" />

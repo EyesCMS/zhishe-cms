@@ -53,6 +53,10 @@ public interface CmsClubService {
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
 
+    /**
+     * @author wjh674
+     */
+
     List<CmsClubReturnData1> listHotClub(Integer page, Integer limit, String sort, String order);
 
     List<CmsClubReturnData1> listClub(Integer page, Integer limit, String sort, String order, String keyword);

@@ -756,6 +756,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClub> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId) {
+
         PageHelper.startPage(page, limit);
         return clubDAO.listClubMember(page,limit,sort,order, clubId);
     }
@@ -763,6 +764,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public CmsClubReturnData6 showClubMemberInfo(Integer clubId, Integer userId) {
         //先判断社团里面是否有这个成员
+
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
@@ -792,11 +794,31 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public Integer addClubMember(Integer clubId, Integer userId){
-        return clubDAO.addClubMember(clubId, userId);
+        CmsUserClubRel clubRel = new CmsUserClubRel();
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        Date date = new Date();
+        clubRel.setClubId(clubId);
+        clubRel.setUserId(userId);
+        clubRel.setCredit(0);
+        clubRel.setHonorId(1);
+        clubRel.setRoleId(2);
+        clubRel.setJoinDate(date);
+        userClubRelMapper.insert(clubRel);
+        club.setMemberCount(club.getMemberCount()+1);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
     }
 
     @Override
-    public Integer deleteClubMember(Integer clubId, Integer userId){ return clubDAO.deleteClubMember(clubId, userId); }
+    public Integer deleteClubMember(Integer clubId, Integer userId){
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
+        userClubRelMapper.deleteByExample(userClubRel);
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        club.setMemberCount(club.getMemberCount()-1);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
+    }
 
 
     /*
