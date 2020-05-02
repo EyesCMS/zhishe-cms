@@ -15,4 +15,9 @@ public interface SysRoleService {
      * switch current role based on club
      */
     void switchCurrentRole(Integer clubId);
+
+    /**
+     * reset current role
+     */
+    void resetCurrentRole();
 }

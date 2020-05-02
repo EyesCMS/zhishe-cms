@@ -67,6 +67,7 @@ secure:
       - /test/**
       - /clubs/recommended
       - /forum/**
+      - /roles/**
 
 logging:
   level:

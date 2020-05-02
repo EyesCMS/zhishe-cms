@@ -56,11 +56,11 @@ public class CmsClubController {
                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
                                                              @PathVariable(value = "userId", required = false) Integer userId,
                                                              @RequestParam(value = "status", required = false) String status){
-        if(status.equals("member")){
+        if("member".equals(status)){
             return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(page, limit, sort, order, userId)));
+        } else {
+            return ResponseEntity.ok(CommonPage.restPage(clubService.listManagedClub(page, limit, sort, order, userId)));
         }
-        else
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listManagedClub(page, limit, sort, order, userId)));
     }
 
     @ApiOperation(" 3.4查看某个社团详情 ")

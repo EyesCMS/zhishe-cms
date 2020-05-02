@@ -38,8 +38,7 @@ public class BindingResultAspect {
                     if (fieldError != null) {
                         Error error = new Error("default", fieldError.getField(),
                             UnprocessableCode.INVALID.getCode());
-                        return ResponseEntity.unprocessableEntity()
-                            .body(new AjaxResponse().errors(error));
+                        return ResponseEntity.unprocessableEntity().body(new AjaxResponse().errors(error));
                     } else {
                         return ResponseEntity.unprocessableEntity();
                     }

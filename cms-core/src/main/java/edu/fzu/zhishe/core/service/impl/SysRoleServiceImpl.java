@@ -8,6 +8,7 @@ import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
 import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.cms.model.SysUser;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author liang on 4/25/2020.
@@ -37,9 +39,6 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Autowired
     private CmsUserClubRelMapper userClubRelMapper;
-
-    @Autowired
-    private CmsClubMapper clubMapper;
 
     @Autowired
     private SysUserService userService;
@@ -65,32 +64,39 @@ public class SysRoleServiceImpl implements SysRoleService {
         LOGGER.info("old user role is {} ", currentUser.getCurrentRole());
         Integer oldUserRole = currentUser.getCurrentRole();
 
-        Integer userId = currentUser.getId();
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if (userId.equals(cmsClub.getChiefId())) {
-            // #1 current user is chief in club
-            currentUser.setCurrentRole(UserRoleEnum.CHIEF.getValue());
-        } else {
-            CmsUserClubRelExample userClubRelExample = new CmsUserClubRelExample();
-            userClubRelExample.createCriteria().andClubIdEqualTo(clubId);
-            Set<Integer> memberIds = userClubRelMapper.selectByExample(userClubRelExample)
-                .stream().map(CmsUserClubRel::getUserId).collect(Collectors.toSet());
-            if (memberIds.contains(userId)) {
-                // #2 current user is member in club
-                currentUser.setCurrentRole(UserRoleEnum.MEMBER.getValue());
-            } else {
-                // #3 has no relation with club
-                return ;
-            }
+        CmsUserClubRelExample example = new CmsUserClubRelExample();
+        example.createCriteria()
+            .andUserIdEqualTo(currentUser.getId())
+            .andClubIdEqualTo(clubId);
+        List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(userClubRels)) {
+            // TODO: check whether this case is OK
+            Asserts.fail("switch role failed");
         }
+
+        CmsUserClubRel userClubRel = userClubRels.get(0);
+        currentUser.setCurrentRole(userClubRel.getRoleId());
 
         LOGGER.info("new user role is {} ", currentUser.getCurrentRole());
         if (oldUserRole.equals(currentUser.getCurrentRole())) {
             // no need for updating
+            // TODO: need this?
             return ;
         }
 
         userService.updateUserSelective(currentUser);
         userCacheService.delUser(currentUser.getId());
+    }
+
+    @Override
+    public void resetCurrentRole() {
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser.getIsAdmin() != 1) {
+            SysUser user = new SysUser() {{
+                setId(currentUser.getId());
+                setCurrentRole(UserRoleEnum.NORMAL.getValue());
+            }};
+            userService.updateUserSelective(user);
+        }
     }
 }

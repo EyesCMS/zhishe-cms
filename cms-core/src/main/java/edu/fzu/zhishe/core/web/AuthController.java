@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,8 @@ public class AuthController {
 
     @ApiOperation(" 用户注册 ")
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody SysUserRegisterParam userRegisterParam) {
+    public ResponseEntity<Object> register(
+            @Validated @RequestBody SysUserRegisterParam userRegisterParam, BindingResult bindingResult) {
         userService.register(userRegisterParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
