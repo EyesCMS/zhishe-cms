@@ -111,6 +111,11 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public UpdatePasswordResultEnum updatePassword(UpdateUserPasswordParam param) {
+        // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
+        if (param.getNewPassword().length() < 6 || param.getNewPassword().length() > 20) {
+            return UpdatePasswordResultEnum.UPDATE_ERROR;
+        }
+
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(param.getUsername());
         List<SysUser> users = userMapper.selectByExample(example);
@@ -186,16 +191,20 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public int updateUserByParam(SysUserUpdateParam updateParam) {
+    public void updateUserByParam(SysUserUpdateParam updateParam) {
         SysUser user = getCurrentUser();
+        if (user == null) {
+            Asserts.fail("请登录后修改信息");
+        }
         SysUser updatedUser = new SysUser() {{
             setId(user.getId());
         }};
         BeanUtils.copyProperties(updateParam, updatedUser);
 
-        int result = userMapper.updateByPrimaryKeySelective(updatedUser);
+        if (userMapper.updateByPrimaryKeySelective(updatedUser) == 0) {
+            Asserts.fail("修改信息更新数据库出现错误");
+        }
         userCacheService.delUser(updatedUser.getId());
-        return result;
     }
 
     @Override
@@ -209,6 +218,10 @@ public class SysUserServiceImpl implements SysUserService {
     public UpdatePasswordResultEnum updateUserPasswordAfterAnswer(SysUserUpdatePwdByAnswer param) {
         SysUser user = getByUsername(param.getUsername());
         if (user.getLoginAnswer().equals(param.getAnswer())) {
+            // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
+            if (param.getPassword().length() < 6 || param.getPassword().length() > 20) {
+                return UpdatePasswordResultEnum.UPDATE_ERROR;
+            }
             user.setPassword(passwordEncoder.encode(param.getPassword()));
 
             if (userMapper.updateByPrimaryKeySelective(user) != 0) {

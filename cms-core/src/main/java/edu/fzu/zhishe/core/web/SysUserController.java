@@ -67,9 +67,7 @@ public class SysUserController {
     @ApiOperation(value = " 用户修改个人信息 ")
     @PutMapping(value = "/info")
     public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
-        if (userService.updateUserByParam(updateParam) == 0) {
-            Asserts.fail(" 修改失败 ");
-        }
+        userService.updateUserByParam(updateParam);
         return noContent().build();
     }
 

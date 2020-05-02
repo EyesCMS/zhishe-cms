@@ -80,7 +80,7 @@ public interface SysUserService {
      * 修改用户信息
      */
     @Transactional
-    int updateUserByParam(SysUserUpdateParam updateParam);
+    void updateUserByParam(SysUserUpdateParam updateParam);
 
     /**
      * 选择性更新非空字段
