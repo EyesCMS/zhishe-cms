@@ -857,13 +857,71 @@ public class CmsClubServiceImpl implements CmsClubService {
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId()).andRoleIdEqualTo(3);
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
         if (CollectionUtils.isEmpty(userClubList)) {
-            Asserts.fail("您没有该权限");
+            Asserts.fail("非社长，您没有该权限");
         }
 
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         userClubRelMapper.deleteByExample(userClubRel);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setMemberCount(club.getMemberCount()-1);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
+    }
+
+    //修改社团信息接口
+
+    public Integer alterClubSlogan(Integer clubId, Integer userId, String slogan){
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社长，您没有该权限");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        club.setSlogan(slogan);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
+    }
+
+    public Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup){
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社长，您没有该权限");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        club.setQqGroup(qqGroup);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
+    }
+
+    public Integer alterClubType(Integer clubId, Integer userId, String type){
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社长，您没有该权限");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        club.setType(type);
+        clubMapper.updateByPrimaryKey(club);
+        return 1;
+    }
+
+    public Integer alterClubAvatarUrl(Integer clubId, Integer userId, String avatarUrl){
+        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollectionUtils.isEmpty(userClubList)) {
+            Asserts.fail("非社长，您没有该权限");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        club.setAvatarUrl(avatarUrl);
         clubMapper.updateByPrimaryKey(club);
         return 1;
     }
