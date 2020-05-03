@@ -27,7 +27,8 @@ public interface CmsClubDAO {
      * 模糊搜索社团
      */
     List<CmsClubBriefDTO> listClub(@Param("sort") String sort, @Param("order") String order,
-                                      @Param("keyword") String keyword);
+                                   @Param("keyword") String keyword,@Param("type") String type,
+                                   @Param("state") Integer state);
 
 
     /**

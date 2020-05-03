@@ -43,8 +43,10 @@ public class CmsClubController {
                                                                         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                                         @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                                         @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                                        @RequestParam(value = "keyword", required = false) String keyword) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClub(page, limit, sort, order, keyword)));
+                                                                           @RequestParam(value = "keyword", required = false) String keyword,
+                                                                           @RequestParam(value = "type", required = false) String type,
+                                                                           @RequestParam(value = "state", required = false) Integer state){
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listClub(page, limit, sort, order, keyword, type, state)));
     }
 
     @ApiOperation(" 3.3查看学生加入/管理的社团列表 ")

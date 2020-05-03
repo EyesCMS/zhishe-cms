@@ -80,7 +80,7 @@ public interface CmsClubService {
 
     List<CmsClubBriefDTO> listHotClub(Integer page, Integer limit, String sort, String order);
 
-    List<CmsClubBriefDTO> listClub(Integer page, Integer limit, String sort, String order, String keyword);
+    List<CmsClubBriefDTO> listClub(Integer page, Integer limit, String sort, String order, String keyword,String type, Integer state);
 
     CmsClubDetailDTO getClubById(Integer id);
 

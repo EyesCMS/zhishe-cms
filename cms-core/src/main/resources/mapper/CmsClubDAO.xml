@@ -63,9 +63,17 @@
       sys_user u
     WHERE
       club.chief_id = u.id AND club.delete_status = 0
-      <if test="keyword != null and keyword != ''">
-        AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
-      </if>
+    <if test="keyword != null and keyword != ''">
+      AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
+    </if>
+
+    <if test="type != null and type != ''">
+      AND club.type LIKE concat("%",#{type,jdbcType=VARCHAR},"%")
+    </if>
+
+    <if test="state == 1 or state == 0">
+      AND club.official_state = #{state,jdbcType=INTEGER}
+    </if>
   </select>
 
   <!--
