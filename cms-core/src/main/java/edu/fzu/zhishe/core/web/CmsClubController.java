@@ -3,10 +3,13 @@ package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.OrderByParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,12 +32,9 @@ public class CmsClubController {
     @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
     // @PreAuthorize("hasAuthority('cms:club:read')")
-    public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                                    @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                                    @RequestParam(value = "sort", defaultValue = "grade") String sort,
-                                                                    @RequestParam(value = "order", defaultValue = "desc") String order
-                                                                    ) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listHotClub(page, limit,sort,order)));
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(
+            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listHotClub(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.2 查看社团列表 ")
@@ -51,16 +51,13 @@ public class CmsClubController {
 
     @ApiOperation(" 3.3查看学生加入/管理的社团列表 ")
     @GetMapping("/user/{userId}/clubs")
-    public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                             @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                             @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                             @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                             @PathVariable(value = "userId", required = false) Integer userId,
-                                                             @RequestParam(value = "status", required = false) String status){
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
+                                                                    @PathVariable(value = "userId", required = false) Integer userId,
+                                                                    @RequestParam(value = "status", required = false) String status){
         if("member".equals(status)){
-            return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(page, limit, sort, order, userId)));
+            return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
-            return ResponseEntity.ok(CommonPage.restPage(clubService.listManagedClub(page, limit, sort, order, userId)));
+            return ResponseEntity.ok(CommonPage.restPage(clubService.listManagedClub(paginationParam, orderByParam, userId)));
         }
     }
 
@@ -72,38 +69,29 @@ public class CmsClubController {
 
     @ApiOperation(" 3.5查看学生加入社团申请列表 ")
     @GetMapping("/join/{userId}")
-    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                                    @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                                    @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                                    @RequestParam(value = "order", defaultValue = "asc") String order,
+    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                     @PathVariable(value = "userId", required = false) Integer userId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(page, limit, sort, order, userId)));
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam, userId)));
     }
 
     @ApiOperation(" 3.6查看学生创建社团申请列表 ")
     @GetMapping("/creations/{userId}")
-    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                                        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                                        @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                                        @RequestParam(value = "order", defaultValue = "asc") String order,
+    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                         @PathVariable(value = "userId", required = false) Integer userId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(page, limit, sort, order, userId)));
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam, userId)));
     }
 
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
-    public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                              @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                              @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                              @PathVariable(value = "clubId", required = false) Integer clubId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(page, limit, sort, order, clubId)));
+    public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
+                                                                            @PathVariable(value = "clubId", required = false) Integer clubId) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, orderByParam, clubId)));
     }
 
     @ApiOperation(" 3.8查看某个社员详情 ")
     @GetMapping("/{clubId}/members/{userId}")
     public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
-                                                                 @PathVariable("userId") Integer userId) {
+                                                                    @PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
     }
 

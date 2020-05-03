@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.param;
 
-public class CmsClubsCertificationsQueryParam {
+public class CmsClubsCertificationsQuery {
     /**
      * id:1
      * clubName : 羽毛球社

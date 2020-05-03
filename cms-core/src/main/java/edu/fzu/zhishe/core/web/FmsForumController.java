@@ -6,6 +6,7 @@ import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import io.swagger.annotations.Api;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,13 +42,11 @@ public class FmsForumController {
     //@PreAuthorize("hasAuthority('fms:post:read')")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listPosts(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "order", defaultValue = "asc") String order,
+            @Validated PaginationParam paginationParam,
             @RequestParam(value = "type") Integer type,
             @RequestParam(value = "keyword", required = false) String title) {
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, title);
+        QueryParam queryParam = new QueryParam(
+            paginationParam.getPage(), paginationParam.getLimit(), null, null, title);
         List<FmsPostDTO> postList = null;
         if (type == 0) {
              postList = forumService.listPersonalPost(null, queryParam);
@@ -112,12 +113,9 @@ public class FmsForumController {
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam(value = "type") Integer type,
-                                                @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                @RequestParam(value = "order", defaultValue = "asc") String order) {
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, null);
+                                                @Validated PaginationParam paginationParam) {
         List<FmsPostDTO> postList = null;
+        QueryParam queryParam = new QueryParam(paginationParam, null);
         if (type == 0) {
             postList = forumService.listPersonalPost(clubId, queryParam);
         } else if (type == 1) {
@@ -143,8 +141,7 @@ public class FmsForumController {
     //@PreAuthorize("hasAuthority('fms:remark:read')")
     @RequestMapping(value = "/posts/{id}/remarks", method = RequestMethod.GET)
     public ResponseEntity<Object> getRemarksByPostId(@PathVariable("id") Long postId,
-                                                     @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                     @RequestParam(value = "limit", defaultValue = "3") Integer limit) {
-        return ResponseEntity.ok().body(CommonPage.restPage(forumService.listRemarkByPostId(postId, page, limit)));
+                                                     @Validated PaginationParam paginationParam) {
+        return ResponseEntity.ok().body(CommonPage.restPage(forumService.listRemarkByPostId(postId, paginationParam)));
     }
 }

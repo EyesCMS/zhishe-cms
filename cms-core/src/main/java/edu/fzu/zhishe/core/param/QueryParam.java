@@ -14,6 +14,30 @@ public class QueryParam {
         this.keyword = keyword;
     }
 
+    public QueryParam(PaginationParam paginationParam, OrderByParam orderByParam, String  keyword) {
+        this.page = paginationParam.getPage();
+        this.limit = paginationParam.getLimit();
+        this.sort = orderByParam.getSort();
+        this.order = orderByParam.getOrder();
+        this.keyword = keyword;
+    }
+
+    public QueryParam(PaginationParam paginationParam, String  keyword) {
+        this.page = paginationParam.getPage();
+        this.limit = paginationParam.getLimit();
+        this.sort = "id";
+        this.order = "asc";
+        this.keyword = keyword;
+    }
+
+    public QueryParam(OrderByParam orderByParam, String  keyword) {
+        this.page = 1;
+        this.limit = 10;
+        this.sort = orderByParam.getSort();
+        this.order = orderByParam.getOrder();
+        this.keyword = keyword;
+    }
+
     /**
      * 分页: 起始页
      */

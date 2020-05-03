@@ -4,17 +4,18 @@ import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQuery;
 import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
 import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
 import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.param.CmsClubsQuitQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
@@ -61,14 +62,9 @@ public class CmsApplyAuditController {
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
     public ResponseEntity<Object> clubCreateList(
-        CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,
-                                                 @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                 @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                 @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                 @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                 @RequestParam(value = "keyword", required = false) String keyword) {
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        List<CmsClubsCreationsDTO> cmsClubsCreationsDTOList = clubService.listClubCreationApply(cmsClubsCreationsQueryParam,queryParam);
+            CmsClubsCreationsQuery cmsClubsCreationsQuery, @Validated PaginationParam paginationParam) {
+        List<CmsClubsCreationsDTO> cmsClubsCreationsDTOList = clubService.listClubCreationApply(
+            cmsClubsCreationsQuery, paginationParam);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsCreationsDTOList));
     }
@@ -89,16 +85,10 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
-    public ResponseEntity<Object> clubDisbandList(
-        CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,
-        @RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-        @RequestParam(value = "sort", defaultValue = "id") String sort,
-        @RequestParam(value = "order", defaultValue = "asc") String order,
-        @RequestParam(value = "keyword", required = false) String keyword){
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
+    public ResponseEntity<Object> clubDisbandList(CmsClubsDisbandQuery cmsClubsDisbandQuery, @Validated PaginationParam paginationParam) {
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
-        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = clubService.listClubDisbandApply(cmsClubsDisbandQueryParam,queryParam);
+        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = clubService.listClubDisbandApply(
+            cmsClubsDisbandQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsDisbandDTOList));
     }
 
@@ -118,15 +108,10 @@ public class CmsApplyAuditController {
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(CmsClubsJoinQueryParam cmsClubsJoinQueryParam,
-                                            @PathVariable("clubId") Integer clubId,
-                                            @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                            @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                            @RequestParam(value = "order", defaultValue = "asc") String order,
-                                            @RequestParam(value = "keyword", required = false) String keyword) {
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = clubService.listJoinClubApply(clubId, cmsClubsJoinQueryParam,queryParam);
+    public ResponseEntity<Object> joinsList(CmsClubsJoinQuery cmsClubsJoinQuery, @PathVariable("clubId") Integer clubId,
+            @Validated PaginationParam paginationParam) {
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = clubService.listJoinClubApply(clubId,
+            cmsClubsJoinQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsJoinDTOList));
     }
 
@@ -146,15 +131,11 @@ public class CmsApplyAuditController {
 
     @ApiOperation(value = " 4.11根据社团 ID 获取退社申请列表 ")
     @GetMapping("/{clubId}/quit")
-    public ResponseEntity<Object> quitList(CmsClubsQuitQueryParam cmsClubsQuitQueryParam,
+    public ResponseEntity<Object> quitList(CmsClubsQuitQuery cmsClubsQuitQuery,
                                            @PathVariable("clubId") Integer clubId,
-                                           @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                           @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                           @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                           @RequestParam(value = "order", defaultValue = "asc") String order,
-                                           @RequestParam(value = "keyword", required = false) String keyword) {
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = clubService.listClubQuit(clubId, cmsClubsQuitQueryParam,queryParam);
+                                           @Validated PaginationParam paginationParam) {
+        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = clubService.listClubQuit(clubId,
+            cmsClubsQuitQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsQuitDTOList));
     }
 
@@ -169,14 +150,9 @@ public class CmsApplyAuditController {
     @ApiOperation(" 4.13社团换届申请列表 ")
     @GetMapping("/leader/changes")
     public ResponseEntity<Object> clubChiefChangeList(
-        CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,
-                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                      @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                      @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                      @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                      @RequestParam(value = "keyword", required = false) String keyword){
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = clubService.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam,queryParam);
+            CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, @Validated PaginationParam paginationParam){
+        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = clubService.listClubChiefChangeApply(
+            cmsClubsChiefChangeQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsChiefChangeDTOList));
     }
 
@@ -198,14 +174,9 @@ public class CmsApplyAuditController {
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
     public ResponseEntity<Object> clubOfficialChangeList(
-        CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,
-                                                         @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-                                                         @RequestParam(value = "sort", defaultValue = "id") String sort,
-                                                         @RequestParam(value = "order", defaultValue = "asc") String order,
-                                                         @RequestParam(value = "keyword", required = false) String keyword){
-        QueryParam queryParam = new QueryParam(page, limit, sort, order, keyword);
-        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = clubService.listClubOfficialChange(cmsClubsCertificationsQueryParam,queryParam);
+            CmsClubsCertificationsQuery cmsClubsCertificationsQuery, @Validated PaginationParam paginationParam) {
+        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = clubService.listClubOfficialChange(
+            cmsClubsCertificationsQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsCertificationsDTOList));
     }
 

@@ -4,6 +4,7 @@ import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 
@@ -31,5 +32,5 @@ public interface FmsForumService {
 
     int deleteRemark(Long id);
 
-    List<FmsRemarkDTO> listRemarkByPostId(Long postId, int page, int limit);
+    List<FmsRemarkDTO> listRemarkByPostId(Long postId, PaginationParam paginationParam);
 }

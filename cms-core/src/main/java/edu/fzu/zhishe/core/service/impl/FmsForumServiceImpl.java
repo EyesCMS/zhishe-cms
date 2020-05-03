@@ -15,6 +15,7 @@ import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -142,8 +143,8 @@ public class FmsForumServiceImpl implements FmsForumService {
     }
 
     @Override
-    public List<FmsRemarkDTO> listRemarkByPostId(Long postId, int page, int limit) {
-        PageHelper.startPage(page, limit);
+    public List<FmsRemarkDTO> listRemarkByPostId(Long postId, PaginationParam paginationParam) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return remarkDAO.listRemarkByPostId(postId);
     }
 }

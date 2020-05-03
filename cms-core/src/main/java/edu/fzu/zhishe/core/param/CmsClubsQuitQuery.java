@@ -2,7 +2,7 @@ package edu.fzu.zhishe.core.param;
 
 import java.util.Date;
 
-public class CmsClubsQuitQueryParam {
+public class CmsClubsQuitQuery {
     /**
      * id : 1
      * username : wangs

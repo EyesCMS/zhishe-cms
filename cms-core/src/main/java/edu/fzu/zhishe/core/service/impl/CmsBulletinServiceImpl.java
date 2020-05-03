@@ -9,6 +9,7 @@ import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -44,11 +45,11 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public List<CmsBulletin> listClubBulletin(int clubId, int page, int limit) {
+    public List<CmsBulletin> listClubBulletin(int clubId, PaginationParam paginationParam) {
         CmsBulletinExample bulletinExample = new CmsBulletinExample();
         bulletinExample.createCriteria().andClubIdEqualTo(clubId);
 
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return bulletinMapper.selectByExample(bulletinExample);
     }
 

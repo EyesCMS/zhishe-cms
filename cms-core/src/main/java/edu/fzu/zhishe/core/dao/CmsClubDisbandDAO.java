@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.dao;
 
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
 import java.util.List;
 
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandDTO;
@@ -10,5 +10,5 @@ import org.apache.ibatis.annotations.Param;
  * @version 1.0
  */
 public interface CmsClubDisbandDAO {
-    List<CmsClubsDisbandDTO> listClubDisbandApply(@Param("queryParam") CmsClubsDisbandQueryParam queryParam);
+    List<CmsClubsDisbandDTO> listClubDisbandApply(@Param("queryParam") CmsClubsDisbandQuery queryParam);
 }

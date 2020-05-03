@@ -80,11 +80,8 @@
           t1.club_id = #{clubId}
       )
     </if>
-    <if test="queryParam.keyword != null and queryParam.keyword != ''">
-      AND title LIKE concat("%",#{queryParam.keyword},"%")
-    </if>
     ORDER BY
-    #{queryParam.sort} DESC
+      create_at DESC
   </select>
 
   <select id="getPersonalPostById" parameterType="java.lang.Integer" resultMap="PostResultMap">

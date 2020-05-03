@@ -1,7 +1,7 @@
 package edu.fzu.zhishe.core.dao;
 
 import edu.fzu.zhishe.core.dto.CmsClubsJoinDTO;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -10,6 +10,6 @@ import java.util.List;
  * @version 1.0
  */
 public interface CmsClubJoinDAO {
-    List<CmsClubsJoinDTO> listClubJoinApply(@Param("queryParam")CmsClubsJoinQueryParam queryParam,
+    List<CmsClubsJoinDTO> listClubJoinApply(@Param("queryParam") CmsClubsJoinQuery queryParam,
                                             @Param("clubId") Integer clubId);
 }

@@ -4,7 +4,7 @@ package edu.fzu.zhishe.core.param;
  * @author PSF(52260506 @ qq.com)
  * @
  */
-public class CmsActivitySearchParam {
+public class CmsActivityQuery {
     private String clubName;
 
     private Integer state;

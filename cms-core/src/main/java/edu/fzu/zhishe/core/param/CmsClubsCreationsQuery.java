@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 创建社团申请查询参数
  * @author liang on 4/28/2020.
  */
-public class CmsClubsCreationsQueryParam {
+public class CmsClubsCreationsQuery {
 
     @ApiModelProperty(value = "申请id")
     private Integer id;

@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.param;
 
-public class CmsClubsChiefChangeQueryParam {
+public class CmsClubsChiefChangeQuery {
     /**
      * id : 1
      * clubName : wangs

@@ -1,13 +1,17 @@
 package edu.fzu.zhishe.core.web;
 
 import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
-import edu.fzu.zhishe.core.param.CmsActivitySearchParam;
+import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
+import edu.fzu.zhishe.core.param.OrderByParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,17 +42,10 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.2 管理员获取社团活动申请 ")
     @GetMapping("/activities")
-    public ResponseEntity<Object> listActivitiesApply(@RequestBody CmsActivitySearchParam param,
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "order", defaultValue = "asc") String order,
+    public ResponseEntity<Object> listActivitiesApply(@RequestBody CmsActivityQuery param,
+            @Validated PaginationParam paginationParam, OrderByParam orderByParam,
             @RequestParam(value = "keyword", required = false) String keyword){
-        List<CmsActivityApplyListDTO> activities = clubService.listActivitiesApply(param, page, limit, sort, order);
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalCount", activities.size());
-        result.put("items", activities);
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(param, paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.3 活动申请审核 ")
@@ -85,17 +82,9 @@ public class CmsActivityController {
     @ApiOperation(" 6.7 社长可以获取自己社团申请的活动列表 ")
     @GetMapping("/{clubId}/activities/apply")
     public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "order", defaultValue = "asc") String order,
+            @Validated PaginationParam paginationParam, OrderByParam orderByParam,
             @RequestParam(value = "keyword", required = false) String keyword) {
-        List<CmsActivityApplyDTO> activities = clubService.listActivitiesApply(clubId, page, limit, sort, order);
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalCount", activities.size());
-        result.put("items", activities);
-
-        return ResponseEntity.ok().body(result);
+        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")

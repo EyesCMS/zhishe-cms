@@ -7,6 +7,7 @@ import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -51,12 +52,11 @@ public class BulletinController {
     @ApiOperation(" 5.2查看某个社团所有公告 ")
     @GetMapping("/{club}/bulletins")
     public ResponseEntity<Object> listClubBulletin(
-        @RequestParam(value = "page", defaultValue = "0") Integer page,
-        @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+        @Validated PaginationParam paginationParam,
         @PathVariable("club") Integer clubId) {
 
         return ok()
-            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, page, limit)));
+            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, paginationParam)));
     }
 
 

@@ -16,22 +16,24 @@ import edu.fzu.zhishe.core.dao.*;
 
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
-import edu.fzu.zhishe.core.param.CmsActivitySearchParam;
+import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQuery;
 import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
 import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
 import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.param.CmsClubsQuitQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
+import edu.fzu.zhishe.core.param.OrderByParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -188,12 +190,12 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsCreationsDTO> listClubCreationApply(
-        CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam, QueryParam queryParam) {
+        CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam paginationParam) {
         if(sysUserService.getCurrentUser().getIsAdmin()==0){
             Asserts.fail(" 您不是社团管理员无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQueryParam);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQuery);
     }
 
     // @Override
@@ -308,12 +310,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsDisbandDTO> listClubDisbandApply(
-        CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,QueryParam queryParam) {
+        CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam paginationParam) {
         if(sysUserService.getCurrentUser().getIsAdmin()==0){
             Asserts.fail(" 您不是社团管理员无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
-        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQueryParam);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = cmsClubDisbandDAO.listClubDisbandApply(
+            cmsClubsDisbandQuery);
         return cmsClubsDisbandDTOList;
     }
 
@@ -428,7 +431,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam,QueryParam queryParam) {
+    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
         if ( cmsClub == null) {
@@ -437,8 +440,9 @@ public class CmsClubServiceImpl implements CmsClubService {
         if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
             Asserts.fail(" 您不是该社团社长无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
-        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(cmsClubsJoinQueryParam,clubId);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(
+            cmsClubsJoinQuery,clubId);
         return cmsClubsJoinDTOList;
     }
 
@@ -530,7 +534,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,
-        CmsClubsQuitQueryParam cmsClubsQuitQueryParam,QueryParam queryParam) {
+        CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
         if ( cmsClub == null) {
@@ -539,8 +543,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
             Asserts.fail(" 您不是该社团社长无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
-        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQueryParam,clubId);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQuery,clubId);
         return cmsClubsQuitDTOList;
     }
 
@@ -602,12 +606,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(
-        CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,QueryParam queryParam) {
+        CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, PaginationParam paginationParam) {
         if(sysUserService.getCurrentUser().getIsAdmin()==0){
             Asserts.fail(" 您不是社团管理员无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
-        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(cmsClubsChiefChangeQueryParam);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(
+            cmsClubsChiefChangeQuery);
         return cmsClubsChiefChangeDTOList;
     }
 
@@ -690,12 +695,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubsCertificationsDTO> listClubOfficialChange(
-        CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,QueryParam queryParam) {
+        CmsClubsCertificationsQuery cmsClubsCertificationsQuery, PaginationParam paginationParam) {
         if(sysUserService.getCurrentUser().getIsAdmin()==0){
             Asserts.fail(" 您不是社团管理员无权查看 ");
         }
-        PageHelper.startPage(queryParam.getPage(),queryParam.getLimit());
-        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(cmsClubsCertificationsQueryParam);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(
+            cmsClubsCertificationsQuery);
         return cmsClubsCertificationsDTOList;
     }
 
@@ -739,9 +745,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubBriefDTO> listHotClub(Integer page, Integer limit, String sort, String order) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listHotClub(page, limit, sort, order);
+    public List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listHotClub(orderByParam);
     }
 
     @Override
@@ -769,32 +775,35 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubBriefDTO> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listJoinedClub(page,limit,sort,order, userId);
+    public List<CmsClubBriefDTO> listJoinedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listJoinedClub(orderByParam, userId);
     }
 
     @Override
-    public List<CmsClubBriefDTO> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listManagedClub(page,limit,sort,order, userId);
+    public List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listManagedClub(orderByParam, userId);
     }
 
     @Override
-    public List<CmsClubJoinApplyDTO> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listJoinClubApply(page,limit,sort,order, userId);
+    public List<CmsClubJoinApplyDTO> listJoinClubApply(
+            PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listJoinClubApply(orderByParam, userId);
     }
 
     @Override
-    public List<CmsClubCreateApplyDTO> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listCreateClubApply(page,limit,sort,order, userId);
+    public List<CmsClubCreateApplyDTO> listCreateClubApply(
+            PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listCreateClubApply(orderByParam, userId);
     }
 
     @Override
-    public List<CmsClubMemberBriefDTO> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId) {
-
+    public List<CmsClubMemberBriefDTO> listClubMember(
+            PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId) {
         SysUser user = getCurrentUser();
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId());
@@ -821,7 +830,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             data.setCredit(rel.getCredit());
             dataList.add(data);
         }
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return dataList;
     }
 
@@ -889,7 +898,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     //修改社团信息接口
-
+    @Override
     public Integer alterClubSlogan(Integer clubId, Integer userId, String slogan){
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
@@ -904,6 +913,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return 1;
     }
 
+    @Override
     public Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup){
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
@@ -918,6 +928,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return 1;
     }
 
+    @Override
     public Integer alterClubType(Integer clubId, Integer userId, String type){
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
@@ -932,6 +943,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return 1;
     }
 
+    @Override
     public Integer alterClubAvatarUrl(Integer clubId, Integer userId, String avatarUrl){
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
@@ -1015,7 +1027,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
-            Integer page, Integer limit, String sort, String order) {
+        PaginationParam paginationParam, OrderByParam orderByParam) {
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         SysUser user = getCurrentUser();
 
@@ -1028,10 +1040,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         CmsActivityExample example = new CmsActivityExample();
         example.createCriteria().andClubIdEqualTo(clubId);
-        example.setOrderByClause(sort + " " + order);
+        example.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
 
         List<CmsActivityApplyDTO> applyData = new ArrayList<>();
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsActivity> activities = activityMapper.selectByExample(example);
 
         for (CmsActivity ac : activities) {
@@ -1089,8 +1101,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivitySearchParam param,
-            Integer page, Integer limit, String sort, String order) {
+    public List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
+            PaginationParam paginationParam, OrderByParam orderByParam) {
         SysUser user = getCurrentUser();
         if (user == null || user.getIsAdmin() == 0) {
             Asserts.fail("非管理员无法查询");
@@ -1114,12 +1126,12 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (param.getState() != null) {
             acExample.createCriteria().andStateEqualTo(param.getState());
         }
-        acExample.setOrderByClause(sort + " " + order);
+        acExample.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
 
 
         List<CmsActivityApplyListDTO> list = new ArrayList<>();
 
-        PageHelper.startPage(page, limit);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsActivity> activity = activityMapper.selectByExample(acExample);
         for (CmsActivity ac : activity) {
             CmsActivityApplyListDTO dto = new CmsActivityApplyListDTO();

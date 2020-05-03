@@ -3,7 +3,7 @@ package edu.fzu.zhishe.core.param;
  * @author Yang on 4/29/2020.
  * @version 1.0
  */
-public class CmsClubsJoinQueryParam {
+public class CmsClubsJoinQuery {
     /**
      * id : 1
      * applicant : wangs

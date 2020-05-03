@@ -5,23 +5,24 @@ import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 
-import edu.fzu.zhishe.core.param.CmsActivitySearchParam;
+import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQuery;
 import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsQuery;
 import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
 import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
 import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.param.CmsClubsQuitQueryParam;
-import edu.fzu.zhishe.core.param.QueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
+import edu.fzu.zhishe.core.param.OrderByParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import java.util.List;
 
 /**
@@ -38,14 +39,13 @@ public interface CmsClubService {
     CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
 
     List<CmsClubsCreationsDTO> listClubCreationApply(
-        CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam, QueryParam queryParam);
+        CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam queryParam);
 
     CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubsDisbandDTO> listClubDisbandApply(
-        CmsClubsDisbandQueryParam cmsClubsDisbandQueryParam,QueryParam queryParam);
+    List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
@@ -57,19 +57,20 @@ public interface CmsClubService {
 
     CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
 
-    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQueryParam cmsClubsQuitQueryParam,QueryParam queryParam);
+    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery,
+        PaginationParam queryParam);
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
     List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(
-        CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,QueryParam queryParam);
+        CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, PaginationParam queryParam);
 
     CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam certificationsParam);
 
     List<CmsClubsCertificationsDTO> listClubOfficialChange(
-        CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,QueryParam queryParam);
+        CmsClubsCertificationsQuery cmsClubsCertificationsQuery, PaginationParam queryParam);
 
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
@@ -78,21 +79,21 @@ public interface CmsClubService {
      * @author wjh674
      */
 
-    List<CmsClubBriefDTO> listHotClub(Integer page, Integer limit, String sort, String order);
+    List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam);
 
     List<CmsClubBriefDTO> listClub(Integer page, Integer limit, String sort, String order, String keyword,String type, Integer state);
 
     CmsClubDetailDTO getClubById(Integer id);
 
-    List<CmsClubBriefDTO> listJoinedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubBriefDTO> listJoinedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
 
-    List<CmsClubBriefDTO> listManagedClub(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
 
-    List<CmsClubJoinApplyDTO> listJoinClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubJoinApplyDTO> listJoinClubApply(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
 
-    List<CmsClubCreateApplyDTO> listCreateClubApply(Integer page, Integer limit, String sort, String order, Integer userId);
+    List<CmsClubCreateApplyDTO> listCreateClubApply(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
 
-    List<CmsClubMemberBriefDTO> listClubMember(Integer page, Integer limit, String sort, String order, Integer clubId);
+    List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId);
 
     CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId);
 
@@ -118,12 +119,12 @@ public interface CmsClubService {
     void delActivity(Integer id);
 
     List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
-            Integer page, Integer limit, String sort, String order);
+        PaginationParam paginationParam, OrderByParam orderByParam);
 
     CmsActivity getActivityApplyItem(Integer id);
 
     void updateActivity(Integer id, CmsActivityUpdateParam param);
 
-    List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivitySearchParam param,
-        Integer page, Integer limit, String sort, String order);
+    List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
+        PaginationParam paginationParam, OrderByParam orderByParam);
 }

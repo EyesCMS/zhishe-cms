@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * @author Yang on 4/29/2020.
  * @version 1.0
  */
-public class CmsClubsDisbandQueryParam {
+public class CmsClubsDisbandQuery {
     /**
      * id:1
      * clubName : 羽毛球社
