@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.common.exception;
 
 import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import java.awt.MediaTracker;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,20 @@ public class GlobalExceptionHandler {
         }
         jsonObject.put("message", e.getMessage());
         return ResponseEntity.badRequest().body(jsonObject);
+    }
+
+    @ExceptionHandler(value = AuthException.class)
+    public ResponseEntity<Object> handle(AuthException e) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonObject);
+    }
+
+    @ExceptionHandler(value = AccessException.class)
+    public ResponseEntity<Object> handle(AccessException e) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonObject);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

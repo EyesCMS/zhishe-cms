@@ -2,6 +2,9 @@ package edu.fzu.zhishe.core.web;
 
 
 import edu.fzu.zhishe.common.api.CommonPage;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
+import edu.fzu.zhishe.core.annotation.IsAdmin;
+import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
@@ -50,7 +53,7 @@ public class CmsClubController {
     @ApiOperation(" 3.3查看学生加入/管理的社团列表 ")
     @GetMapping("/user/{userId}/clubs")
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                    @PathVariable(value = "userId", required = false) Integer userId,
+                                                                    @PathVariable(value = "userId") Integer userId,
                                                                     @RequestParam(value = "status", required = false) String status){
         if("member".equals(status)){
             return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
@@ -67,27 +70,31 @@ public class CmsClubController {
 
     @ApiOperation(" 3.5查看学生加入社团申请列表 ")
     @GetMapping("/join/{userId}")
+    @IsAdmin
     public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                    @PathVariable(value = "userId", required = false) Integer userId) {
+                                                                    @PathVariable(value = "userId") Integer userId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam, userId)));
     }
 
     @ApiOperation(" 3.6查看学生创建社团申请列表 ")
     @GetMapping("/creations/{userId}")
+    @IsAdmin
     public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                        @PathVariable(value = "userId", required = false) Integer userId) {
+                                                                        @PathVariable(value = "userId") Integer userId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam, userId)));
     }
 
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
+    @IsClubMember
     public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                            @PathVariable(value = "clubId", required = false) Integer clubId) {
+                                                                            @PathVariable(value = "clubId") Integer clubId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, orderByParam, clubId)));
     }
 
     @ApiOperation(" 3.8查看某个社员详情 ")
     @GetMapping("/{clubId}/members/{userId}")
+    @IsClubMember
     public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
                                                                     @PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
@@ -103,6 +110,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.10删除社团成员 ")
     @DeleteMapping("/{clubId}/members/{userId}")
+    @CheckClubAuth("3")
     public ResponseEntity<Integer> deleteClubMember(@PathVariable("clubId") Integer clubId,
                                                     @PathVariable("userId") Integer userId) {
         clubService.deleteClubMember(clubId, userId);

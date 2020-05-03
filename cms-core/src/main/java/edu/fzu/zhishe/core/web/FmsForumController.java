@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.web;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -143,5 +143,29 @@ public class FmsForumController {
     public ResponseEntity<Object> getRemarksByPostId(@PathVariable("id") Long postId,
                                                      @Validated PaginationParam paginationParam) {
         return ResponseEntity.ok().body(CommonPage.restPage(forumService.listRemarkByPostId(postId, paginationParam)));
+    }
+
+    // @CheckAuthorization("1")
+    @RequestMapping(value = "/check/none", method = RequestMethod.GET)
+    public ResponseEntity<Object> checkNone(Integer clubId) {
+        return ResponseEntity.ok().body(" Student is allowed access ");
+    }
+
+    @CheckClubAuth("2")
+    @RequestMapping(value = "/check/member", method = RequestMethod.GET)
+    public ResponseEntity<Object> checkMember(Integer clubId) {
+        return ResponseEntity.ok().body(" Member is allowed access ");
+    }
+
+    @CheckClubAuth("3")
+    @RequestMapping(value = "/check/chief", method = RequestMethod.GET)
+    public ResponseEntity<Object> checkChief(Integer clubId) {
+        return ResponseEntity.ok().body(" Chief  is allowed access to club " + clubId);
+    }
+
+    @CheckClubAuth("4")
+    @RequestMapping(value = "/check/admin", method = RequestMethod.GET)
+    public ResponseEntity<Object> checkAdmin(Integer clubId) {
+        return ResponseEntity.ok().body(" Admin is allowed access to club " + clubId);
     }
 }

@@ -18,8 +18,20 @@ public class Asserts {
         }
     }
 
-    public static void notAuthorized() {
-        throw new AuthException("you have no authority!");
+    public static void unAuthorized(String message) {
+        throw new AuthException(message);
+    }
+
+    public static void unAuthorized() {
+        throw new AuthException("Full authentication is required to access this resource");
+    }
+
+    public static void forbidden(String message) {
+        throw new AccessException(message);
+    }
+
+    public static void forbidden() {
+        throw new AccessException("Access is denied");
     }
 
     public static void fail() {
