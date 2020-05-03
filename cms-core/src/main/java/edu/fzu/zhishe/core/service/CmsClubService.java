@@ -90,7 +90,8 @@ public interface CmsClubService {
 
     void delActivity(Integer id);
 
-    List<CmsActivityApplyDTO> getActivitiesApply(Integer clubId);
+    List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
+            Integer page, Integer limit, String sort, String order);
 
     CmsActivity getActivityApplyItem(Integer id);
 

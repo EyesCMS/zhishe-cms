@@ -3,10 +3,7 @@ package edu.fzu.zhishe.core.web;
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
-import edu.fzu.zhishe.core.dto.CmsActivitySearchParam;
-import edu.fzu.zhishe.core.dto.CmsActivityUpdateParam;
-import edu.fzu.zhishe.core.dto.CmsAtivityApplyListDTO;
-import edu.fzu.zhishe.core.dto.CmsClubActivityParam;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +82,18 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.7 社长可以获取自己社团申请的活动列表 ")
     @GetMapping("/{clubId}/activities/apply")
-    public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId) {
-        return ResponseEntity.ok().body(clubService.getActivitiesApply(clubId));
+    public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
+            @RequestParam(value = "order", defaultValue = "asc") String order,
+            @RequestParam(value = "keyword", required = false) String keyword) {
+        List<CmsActivityApplyDTO> activities = clubService.listActivitiesApply(clubId, page, limit, sort, order);
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalCount", activities.size());
+        result.put("items", activities);
+
+        return ResponseEntity.ok().body(result);
     }
 
     @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")

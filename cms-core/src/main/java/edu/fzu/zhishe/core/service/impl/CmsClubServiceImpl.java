@@ -96,9 +96,6 @@ public class CmsClubServiceImpl implements CmsClubService {
     private CmsActivityMapper activityMapper;
 
     @Autowired
-    private CmsActivityDAO activityDAO;
-
-    @Autowired
     CmsMemberHonorMapper honorMapper;
 
     @Autowired
@@ -939,7 +936,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsActivityApplyDTO> getActivitiesApply(Integer clubId) {
+    public List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
+            Integer page, Integer limit, String sort, String order) {
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         SysUser user = getCurrentUser();
 
@@ -950,7 +948,23 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (user == null || !user.getId().equals(club.getChiefId())) {
             Asserts.fail("非社长无法查看申请活动");
         }
-        return activityDAO.selectActivitiesApply(clubId);
+        CmsActivityExample example = new CmsActivityExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        example.setOrderByClause(sort + " " + order);
+
+        List<CmsActivityApplyDTO> applyData = new ArrayList<>();
+        PageHelper.startPage(page, limit);
+        List<CmsActivity> activities = activityMapper.selectByExample(example);
+
+        for (CmsActivity ac : activities) {
+            CmsActivityApplyDTO dto = new CmsActivityApplyDTO();
+            BeanUtils.copyProperties(ac, dto);
+            dto.setContent(ac.getBody());
+            dto.setEndDate(ac.getEndData());
+            dto.setStartDate(ac.getStarDate());
+            applyData.add(dto);
+        }
+        return applyData;
     }
 
     @Override

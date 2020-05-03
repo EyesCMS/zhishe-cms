@@ -27,7 +27,7 @@ public class CmsActivityApplyDTO {
     private String name;
     private String location;
     private String content;
-    private String memberCount;
+    private Integer memberCount;
     private Date startDate;
     private Date endDate;
     private int state;
@@ -88,11 +88,11 @@ public class CmsActivityApplyDTO {
         this.state = state;
     }
 
-    public String getMemberCount() {
+    public Integer getMemberCount() {
         return memberCount;
     }
 
-    public void setMemberCount(String memberCount) {
+    public void setMemberCount(Integer memberCount) {
         this.memberCount = memberCount;
     }
 
