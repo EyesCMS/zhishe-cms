@@ -27,12 +27,12 @@ public class CmsActivityUpdateParam {
 
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
     @NotNull(message = " 活动开始时间不为空 ")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date starDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
     @NotNull(message = " 活动结束时间不为空 ")
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date endDate;
 
     @ApiModelProperty(value = " 活动地点 ", required = true)

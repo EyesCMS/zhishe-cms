@@ -1,6 +1,9 @@
 package edu.fzu.zhishe.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
 
 /**
  * @author PSF(52260506 @ qq.com)
@@ -25,8 +28,8 @@ public class CmsActivityApplyDTO {
     private String location;
     private String content;
     private String memberCount;
-    private String startDate;
-    private String endDate;
+    private Date startDate;
+    private Date endDate;
     private int state;
 
     public int getId() {
@@ -61,12 +64,20 @@ public class CmsActivityApplyDTO {
         this.content = content;
     }
 
-    public String getStart_date() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStart_date(String start_date) {
-        this.startDate = start_date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public int getState() {
@@ -85,11 +96,4 @@ public class CmsActivityApplyDTO {
         this.memberCount = memberCount;
     }
 
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
 }

@@ -880,15 +880,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     public void activityApply(CmsClubActivityParam param) {
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
-        SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            activity.setStarDate(sDF.parse(param.getStartDate()));
-            activity.setEndData(sDF.parse(param.getEndDate()));
-            activity.setCreateAt(new Date());
-        }
-        catch (ParseException e) {
-            Asserts.fail("申请时间格式不正确");
-        }
+        activity.setStarDate(param.getStartDate());
+        activity.setEndData(param.getEndDate());
+        activity.setCreateAt(new Date());
+
         activity.setState(0);
         if (activityMapper.insert(activity) == 0) {
             Asserts.fail("创建申请活动失败");
@@ -1001,9 +996,6 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
     }
 
-    /**
-     * @label: TODO
-     */
     @Override
     public List<CmsAtivityApplyListDTO> listActivitiesApply(CmsActivitySearchParam param,
             Integer page, Integer limit, String sort, String order) {

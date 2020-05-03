@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
@@ -28,11 +29,13 @@ public class CmsClubActivityParam {
 
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
     @NotEmpty(message = " 活动开始时间不能为空 ")
-    private String startDate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date startDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
     @NotEmpty(message = " 活动结束时间不能为空 ")
-    private String endDate;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date endDate;
 
     @ApiModelProperty(value = " 活动地点 ")
     private String location;
@@ -59,11 +62,11 @@ public class CmsClubActivityParam {
         return content;
     }
 
-    public String getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
