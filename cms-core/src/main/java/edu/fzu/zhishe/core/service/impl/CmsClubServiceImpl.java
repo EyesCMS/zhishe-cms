@@ -431,7 +431,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
+    public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId,
+        CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
         if ( cmsClub == null) {
@@ -751,9 +752,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubBriefDTO> listClub(Integer page, Integer limit, String sort, String order, String keyword,String type, Integer state) {
-        PageHelper.startPage(page, limit);
-        return clubDAO.listClub(sort, order, keyword,type,state);
+    public List<CmsClubBriefDTO> listClub(PaginationParam paginationParam, OrderByParam orderByParam, String keyword,String type, Integer state) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return clubDAO.listClub(keyword,type,state);
     }
 
     @Override

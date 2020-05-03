@@ -23,6 +23,7 @@ import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
 import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
+import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 
 /**
@@ -51,14 +52,13 @@ public interface CmsClubService {
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQueryParam cmsClubsJoinQueryParam,QueryParam queryParam);
+    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
 
-    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery,
-        PaginationParam queryParam);
+    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam);
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
@@ -81,7 +81,7 @@ public interface CmsClubService {
 
     List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam);
 
-    List<CmsClubBriefDTO> listClub(Integer page, Integer limit, String sort, String order, String keyword,String type, Integer state);
+    List<CmsClubBriefDTO> listClub(PaginationParam paginationParam, OrderByParam orderByParam, String keyword, String type, Integer state);
 
     CmsClubDetailDTO getClubById(Integer id);
 

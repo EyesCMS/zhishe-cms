@@ -110,8 +110,7 @@ public class CmsApplyAuditController {
     @GetMapping("/{clubId}/joins")
     public ResponseEntity<Object> joinsList(CmsClubsJoinQuery cmsClubsJoinQuery, @PathVariable("clubId") Integer clubId,
             @Validated PaginationParam paginationParam) {
-        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = clubService.listJoinClubApply(clubId,
-            cmsClubsJoinQuery, paginationParam);
+        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = clubService.listJoinClubApply(clubId, cmsClubsJoinQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsJoinDTOList));
     }
 
