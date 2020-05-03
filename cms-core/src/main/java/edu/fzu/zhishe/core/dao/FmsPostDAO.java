@@ -1,7 +1,7 @@
 package edu.fzu.zhishe.core.dao;
 
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
-import edu.fzu.zhishe.core.dto.QueryParam;
+import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

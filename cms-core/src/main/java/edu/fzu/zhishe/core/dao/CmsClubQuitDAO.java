@@ -1,8 +1,7 @@
 package edu.fzu.zhishe.core.dao;
 
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.core.dto.CmsClubsQuitDTO;
-import edu.fzu.zhishe.core.dto.CmsClubsQuitQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitQueryParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

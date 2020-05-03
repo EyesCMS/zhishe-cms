@@ -1,7 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
 
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -30,7 +29,7 @@ public class CmsClubController {
     @ApiOperation(" 3.1推荐社团列表 ")
     @GetMapping("/recommended")
     // @PreAuthorize("hasAuthority('cms:club:read')")
-    public ResponseEntity<CommonPage<CmsClubReturnData1>> recommendedClub(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                     @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                                     @RequestParam(value = "sort", defaultValue = "grade") String sort,
                                                                     @RequestParam(value = "order", defaultValue = "desc") String order
@@ -40,7 +39,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.2 查看社团列表 ")
     @GetMapping("")
-    public ResponseEntity<CommonPage<CmsClubReturnData1>> searchClubByKeyword(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> searchClubByKeyword(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                                         @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                                         @RequestParam(value = "order", defaultValue = "asc") String order,
@@ -50,7 +49,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.3查看学生加入/管理的社团列表 ")
     @GetMapping("/user/{userId}/clubs")
-    public ResponseEntity<CommonPage<CmsClubReturnData1>> joinedClubList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                              @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                              @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                              @RequestParam(value = "order", defaultValue = "asc") String order,
@@ -65,13 +64,13 @@ public class CmsClubController {
 
     @ApiOperation(" 3.4查看某个社团详情 ")
     @GetMapping("/{id}")
-    public ResponseEntity<CmsClubReturnData2> searchClubById(@PathVariable("id") Integer id) {
+    public ResponseEntity<CmsClubDetailDTO> searchClubById(@PathVariable("id") Integer id) {
         return ResponseEntity.ok(clubService.getClubById(id));
     }
 
     @ApiOperation(" 3.5查看学生加入社团申请列表 ")
     @GetMapping("/join/{userId}")
-    public ResponseEntity<CommonPage<CmsClubReturnData3>> joinedApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                     @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                                     @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                                     @RequestParam(value = "order", defaultValue = "asc") String order,
@@ -81,7 +80,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.6查看学生创建社团申请列表 ")
     @GetMapping("/creations/{userId}")
-    public ResponseEntity<CommonPage<CmsClubReturnData4>> createClubApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                         @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                                         @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                                         @RequestParam(value = "order", defaultValue = "asc") String order,
@@ -91,7 +90,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
-    public ResponseEntity<CommonPage<CmsClubReturnData5>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                                               @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                               @RequestParam(value = "sort", defaultValue = "id") String sort,
                                                               @RequestParam(value = "order", defaultValue = "asc") String order,
@@ -101,7 +100,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.8查看某个社员详情 ")
     @GetMapping("/{clubId}/members/{userId}")
-    public ResponseEntity<CmsClubReturnData6> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
+    public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
                                                                  @PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
     }

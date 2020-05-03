@@ -6,7 +6,7 @@ import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
-import edu.fzu.zhishe.core.dto.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.CmsBulletinParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;

@@ -5,6 +5,9 @@ import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.cms.model.SysUser;
 //import org.springframework.security.core.userdetails.UserDetails;
+import edu.fzu.zhishe.core.param.SysUserRegisterParam;
+import edu.fzu.zhishe.core.param.SysUserUpdateParam;
+import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
 import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;

@@ -165,7 +165,7 @@
   </select>
 
 
-  <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubReturnData1">
+  <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubBriefDTO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
@@ -173,7 +173,7 @@
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
 
-  <resultMap id="ClubMap2" type="edu.fzu.zhishe.core.dto.CmsClubReturnData2">
+  <resultMap id="ClubMap2" type="edu.fzu.zhishe.core.dto.CmsClubDetailDTO">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
@@ -184,7 +184,7 @@
     <result column="qq_group" jdbcType="VARCHAR" property="qqGroup" />
   </resultMap>
 
-  <resultMap id="ClubMap3" type="edu.fzu.zhishe.core.dto.CmsClubReturnData3">
+  <resultMap id="ClubMap3" type="edu.fzu.zhishe.core.dto.CmsClubJoinApplyDTO">
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="club_id" jdbcType="INTEGER" property="clubId" />
     <result column="name" jdbcType="VARCHAR" property="clubName" />
@@ -192,7 +192,7 @@
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
 
-  <resultMap id="ClubMap4" type="edu.fzu.zhishe.core.dto.CmsClubReturnData4">
+  <resultMap id="ClubMap4" type="edu.fzu.zhishe.core.dto.CmsClubCreateApplyDTO">
     <id column="club_name" jdbcType="VARCHAR" property="clubName" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="applicant" jdbcType="VARCHAR" property="applicant" />
@@ -200,7 +200,7 @@
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
 
-  <resultMap id="ClubMap5" type="edu.fzu.zhishe.core.dto.CmsClubReturnData5">
+  <resultMap id="ClubMap5" type="edu.fzu.zhishe.core.dto.CmsClubMemberBriefDTO">
     <id column="id" jdbcType="INTEGER" property="userId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
@@ -210,7 +210,7 @@
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
 
-  <resultMap id="ClubMap6" type="edu.fzu.zhishe.core.dto.CmsClubReturnData6">
+  <resultMap id="ClubMap6" type="edu.fzu.zhishe.core.dto.CmsClubMemberDetailDTO">
     <id column="username" jdbcType="VARCHAR" property="username" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="slogan" jdbcType="VARCHAR" property="slogan" />

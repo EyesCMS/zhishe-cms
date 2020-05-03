@@ -1,8 +1,7 @@
 package edu.fzu.zhishe.core.dao;
 
-import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.core.dto.CmsClubsCreationsDTO;
-import edu.fzu.zhishe.core.dto.CmsClubsCreationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsQueryParam;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

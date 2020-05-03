@@ -1,11 +1,9 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.sun.corba.se.impl.ior.NewObjectKeyTemplateBase;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostRemarkMapper;
 import edu.fzu.zhishe.cms.model.FmsPost;
-import edu.fzu.zhishe.cms.model.FmsPostExample;
 import edu.fzu.zhishe.cms.model.FmsPostRemark;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
@@ -14,10 +12,10 @@ import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
 import edu.fzu.zhishe.core.dao.FmsRemarkDAO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
-import edu.fzu.zhishe.core.dto.FmsPostParam;
+import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
-import edu.fzu.zhishe.core.dto.FmsRemarkParam;
-import edu.fzu.zhishe.core.dto.QueryParam;
+import edu.fzu.zhishe.core.param.FmsRemarkParam;
+import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;

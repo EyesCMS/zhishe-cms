@@ -1,8 +1,21 @@
 package edu.fzu.zhishe.core.web;
 
-import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
+import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
+import edu.fzu.zhishe.core.param.CmsClubsCertificationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
+import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
+import edu.fzu.zhishe.core.param.CmsClubsCreationsQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
+import edu.fzu.zhishe.core.param.CmsClubsJoinQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
+import edu.fzu.zhishe.core.param.CmsClubsQuitQueryParam;
+import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -47,7 +60,8 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
-    public ResponseEntity<Object> clubCreateList(CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,
+    public ResponseEntity<Object> clubCreateList(
+        CmsClubsCreationsQueryParam cmsClubsCreationsQueryParam,
                                                  @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                  @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -154,7 +168,8 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.13社团换届申请列表 ")
     @GetMapping("/leader/changes")
-    public ResponseEntity<Object> clubChiefChangeList(CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,
+    public ResponseEntity<Object> clubChiefChangeList(
+        CmsClubsChiefChangeQueryParam cmsClubsChiefChangeQueryParam,
                                                       @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                       @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                       @RequestParam(value = "sort", defaultValue = "id") String sort,
@@ -182,7 +197,8 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
-    public ResponseEntity<Object> clubOfficialChangeList(CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,
+    public ResponseEntity<Object> clubOfficialChangeList(
+        CmsClubsCertificationsQueryParam cmsClubsCertificationsQueryParam,
                                                          @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                          @RequestParam(value = "limit", defaultValue = "3") Integer limit,
                                                          @RequestParam(value = "sort", defaultValue = "id") String sort,

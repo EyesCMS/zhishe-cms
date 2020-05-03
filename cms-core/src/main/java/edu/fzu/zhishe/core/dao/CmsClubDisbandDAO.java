@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.dao;
 
-import edu.fzu.zhishe.core.dto.CmsClubsDisbandQueryParam;
+import edu.fzu.zhishe.core.param.CmsClubsDisbandQueryParam;
 import java.util.List;
 
 import edu.fzu.zhishe.core.dto.CmsClubsDisbandDTO;

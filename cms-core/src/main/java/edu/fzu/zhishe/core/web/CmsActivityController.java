@@ -1,9 +1,11 @@
 package edu.fzu.zhishe.core.web;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.CmsActivitySearchParam;
+import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
+import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,7 @@ public class CmsActivityController {
             @RequestParam(value = "sort", defaultValue = "id") String sort,
             @RequestParam(value = "order", defaultValue = "asc") String order,
             @RequestParam(value = "keyword", required = false) String keyword){
-        List<CmsAtivityApplyListDTO> activities = clubService.listActivitiesApply(param, page, limit, sort, order);
+        List<CmsActivityApplyListDTO> activities = clubService.listActivitiesApply(param, page, limit, sort, order);
         Map<String, Object> result = new HashMap<>();
         result.put("totalCount", activities.size());
         result.put("items", activities);

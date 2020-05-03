@@ -1,10 +1,10 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.core.dto.FmsPostParam;
+import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
-import edu.fzu.zhishe.core.dto.FmsRemarkParam;
-import edu.fzu.zhishe.core.dto.QueryParam;
+import edu.fzu.zhishe.core.param.FmsRemarkParam;
+import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 
 /**

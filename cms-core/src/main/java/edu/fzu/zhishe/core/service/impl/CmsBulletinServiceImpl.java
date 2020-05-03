@@ -1,7 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsBulletinMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.CmsBulletin;
@@ -9,7 +8,7 @@ import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
-import edu.fzu.zhishe.core.dto.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.CmsBulletinParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 
 import edu.fzu.zhishe.core.service.CmsClubService;
