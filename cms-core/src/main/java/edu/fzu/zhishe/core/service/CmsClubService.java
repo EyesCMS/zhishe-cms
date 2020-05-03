@@ -1,9 +1,11 @@
 package edu.fzu.zhishe.core.service;
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -93,4 +95,7 @@ public interface CmsClubService {
     CmsActivity getActivityApplyItem(Integer id);
 
     void updateActivity(Integer id, CmsActivityUpdateParam param);
+
+    List<CmsAtivityApplyListDTO> listActivitiesApply(CmsActivitySearchParam param,
+        Integer page, Integer limit, String sort, String order);
 }

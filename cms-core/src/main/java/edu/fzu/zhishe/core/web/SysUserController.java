@@ -9,9 +9,7 @@ import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.dto.SysUserLoginParam;
-import edu.fzu.zhishe.core.dto.SysUserUpdateParam;
-import edu.fzu.zhishe.core.dto.SysUserUpdatePwdByAnswer;
+import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -43,8 +41,8 @@ public class SysUserController {
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
-    public ResponseEntity<Object> question(@RequestBody JSONObject object) {
-        SysUser user = userService.getByUsername((String)object.get("username"));
+    public ResponseEntity<Object> question(@RequestBody SysUserQuestionParam info) {
+        SysUser user = userService.getByUsername(info.getUsername());
         if (user == null || user.getLoginQuestion() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

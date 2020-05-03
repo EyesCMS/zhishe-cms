@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.json.JSONObject;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
@@ -998,5 +999,55 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (activityMapper.updateByPrimaryKey(activity) == 0) {
             Asserts.fail("更新失败");
         }
+    }
+
+    /**
+     * @label: TODO
+     */
+    @Override
+    public List<CmsAtivityApplyListDTO> listActivitiesApply(CmsActivitySearchParam param,
+            Integer page, Integer limit, String sort, String order) {
+        SysUser user = getCurrentUser();
+        if (user == null || user.getIsAdmin() == 0) {
+            Asserts.fail("非管理员无法查询");
+        }
+
+        CmsActivityExample acExample = new CmsActivityExample();
+        // 进行模糊查询社团名字
+        if (param.getClubName() != null) {
+            CmsClubExample cce = new CmsClubExample();
+            cce.createCriteria().andNameLike("%" + param.getClubName() + "%");
+            List<CmsClub> clubs = clubMapper.selectByExample(cce);
+            if (clubs.isEmpty()) {
+                Asserts.fail("查找不到该社团名字，请重新查找");
+            }
+            List<Integer> clubIds = new ArrayList<>();
+            for (CmsClub club : clubs) {
+                clubIds.add(club.getId());
+            }
+            acExample.createCriteria().andClubIdIn(clubIds);
+        }
+        if (param.getState() != null) {
+            acExample.createCriteria().andStateEqualTo(param.getState());
+        }
+        acExample.setOrderByClause(sort + " " + order);
+
+
+        List<CmsAtivityApplyListDTO> list = new ArrayList<>();
+
+        PageHelper.startPage(page, limit);
+        List<CmsActivity> activity = activityMapper.selectByExample(acExample);
+        for (CmsActivity ac : activity) {
+            CmsAtivityApplyListDTO dto = new CmsAtivityApplyListDTO();
+            BeanUtils.copyProperties(ac, dto);
+
+            dto.setContent(ac.getBody());
+            dto.setStartDate(ac.getStarDate());
+            dto.setEndDate(ac.getEndData());
+            dto.setClubName(clubMapper.selectByPrimaryKey(ac.getClubId()).getName());
+            list.add(dto);
+        }
+
+        return list;
     }
 }

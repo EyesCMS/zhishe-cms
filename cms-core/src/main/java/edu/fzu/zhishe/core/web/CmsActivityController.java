@@ -1,8 +1,11 @@
 package edu.fzu.zhishe.core.web;
 
 import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dto.CmsActivitySearchParam;
 import edu.fzu.zhishe.core.dto.CmsActivityUpdateParam;
+import edu.fzu.zhishe.core.dto.CmsAtivityApplyListDTO;
 import edu.fzu.zhishe.core.dto.CmsClubActivityParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
@@ -10,14 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author PSF
@@ -35,6 +35,21 @@ public class CmsActivityController {
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
         clubService.activityApply(param);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation(" 6.2 管理员获取社团活动申请 ")
+    @GetMapping("/activities")
+    public ResponseEntity<Object> listActivitiesApply(@RequestBody CmsActivitySearchParam param,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "limit", defaultValue = "3") Integer limit,
+            @RequestParam(value = "sort", defaultValue = "id") String sort,
+            @RequestParam(value = "order", defaultValue = "asc") String order,
+            @RequestParam(value = "keyword", required = false) String keyword){
+        List<CmsAtivityApplyListDTO> activities = clubService.listActivitiesApply(param, page, limit, sort, order);
+        Map<String, Object> result = new HashMap<>();
+        result.put("totalCount", activities.size());
+        result.put("items", activities);
+        return ResponseEntity.ok().body(result);
     }
 
     @ApiOperation(" 6.3 活动申请审核 ")

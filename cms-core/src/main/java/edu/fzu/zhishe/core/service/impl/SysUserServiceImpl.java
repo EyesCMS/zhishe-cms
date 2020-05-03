@@ -216,7 +216,13 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public UpdatePasswordResultEnum updateUserPasswordAfterAnswer(SysUserUpdatePwdByAnswer param) {
-        SysUser user = getByUsername(param.getUsername());
+        SysUserExample userExample = new SysUserExample();
+        userExample.createCriteria().andUsernameEqualTo(param.getUsername());
+
+        SysUser user = userMapper.selectByExample(userExample).get(0);
+        if (user == null || user.getLoginAnswer() == null) {
+            return UpdatePasswordResultEnum.UPDATE_ERROR;
+        }
         if (user.getLoginAnswer().equals(param.getAnswer())) {
             // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
             if (param.getPassword().length() < 6 || param.getPassword().length() > 20) {
