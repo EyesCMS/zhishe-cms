@@ -42,6 +42,9 @@ public class SysUserController {
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
     public ResponseEntity<Object> question(@RequestBody SysUserQuestionParam info) {
+        if (info.getUsername() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         SysUser user = userService.getByUsername(info.getUsername());
         if (user == null || user.getLoginQuestion() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -54,6 +57,9 @@ public class SysUserController {
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
     @PostMapping(value = "/answer")
     public ResponseEntity<Object> answer(@RequestBody SysUserUpdatePwdByAnswer param) {
+        if (param.getUsername() == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         SysUser user = userService.getByUsername(param.getUsername());
         if (user != null && user.getLoginAnswer() != null && user.getLoginAnswer().equals(param.getAnswer())) {
             return noContent().build();

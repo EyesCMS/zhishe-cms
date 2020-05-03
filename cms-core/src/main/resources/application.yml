@@ -60,7 +60,7 @@ secure:
       - /auth/register
       - /auth/info
       - /auth/logout
-      - /users/anwser
+      - /users/answer
       - /users/question
       - /users/password
       - /home/**

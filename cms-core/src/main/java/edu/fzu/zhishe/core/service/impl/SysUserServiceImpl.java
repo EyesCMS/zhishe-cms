@@ -219,14 +219,18 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserExample userExample = new SysUserExample();
         userExample.createCriteria().andUsernameEqualTo(param.getUsername());
 
-        SysUser user = userMapper.selectByExample(userExample).get(0);
+        List<SysUser> users = userMapper.selectByExample(userExample);
+        if (users.isEmpty()) {
+            Asserts.fail("没有该用户，更新失败");
+        }
+        SysUser user = users.get(0);
         if (user == null || user.getLoginAnswer() == null) {
-            return UpdatePasswordResultEnum.UPDATE_ERROR;
+            Asserts.fail("没有该用户或未设置密保答案, 更新失败");
         }
         if (user.getLoginAnswer().equals(param.getAnswer())) {
             // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
             if (param.getPassword().length() < 6 || param.getPassword().length() > 20) {
-                return UpdatePasswordResultEnum.UPDATE_ERROR;
+                Asserts.fail("新密码长度大于等于6，小于等于20，更新失败");
             }
             user.setPassword(passwordEncoder.encode(param.getPassword()));
 
