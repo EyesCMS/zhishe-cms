@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 /**
- *社团管理
- *
- * @author
+ * 社团管理
+ * @author wjh674
  */
 @RestController
 @Api(tags = "CmsClubController")

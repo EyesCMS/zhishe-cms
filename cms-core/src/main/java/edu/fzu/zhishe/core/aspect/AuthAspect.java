@@ -125,8 +125,8 @@ public class AuthAspect {
             }
 
             CmsUserClubRel userClubRel = userClubRels.get(0);
-            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            IsClubMember annotation = signature.getMethod().getAnnotation(IsClubMember.class);
+            //MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+            //IsClubMember annotation = signature.getMethod().getAnnotation(IsClubMember.class);
             Set<String> values = new HashSet<>(Arrays.asList("2", "3"));
             if (!values.contains(userClubRel.getRoleId().toString())) {
                 Asserts.fail("CheckAuth failed, current role: " + userClubRel.getRoleId()

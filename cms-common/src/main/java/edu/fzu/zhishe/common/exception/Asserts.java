@@ -2,7 +2,6 @@ package edu.fzu.zhishe.common.exception;
 
 import edu.fzu.zhishe.common.api.IErrorCode;
 import io.micrometer.core.lang.Nullable;
-import javax.naming.AuthenticationException;
 
 /**
  * 断言处理类，用于抛出各种 API 异常
@@ -33,6 +32,10 @@ public class Asserts {
     public static void forbidden() {
         throw new AccessException("Access is denied");
     }
+
+    public static void notFound() { throw new EntityNotFoundException("not found"); }
+
+    public static void notFound(String message) { throw new EntityNotFoundException(message); }
 
     public static void fail() {
         throw new ApiException("操作失败");
