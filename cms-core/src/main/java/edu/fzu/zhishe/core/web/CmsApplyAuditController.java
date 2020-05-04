@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.web;
 
 import edu.fzu.zhishe.common.api.CommonPage;
+import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
@@ -59,6 +60,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
+    @IsAdmin
     public ResponseEntity<Object> clubCreateList(
             CmsClubsCreationsQuery cmsClubsCreationsQuery, @Validated PaginationParam paginationParam) {
         List<CmsClubsCreationsDTO> cmsClubsCreationsDTOList = applyAuditService.listClubCreationApply(
@@ -83,6 +85,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
+    @IsAdmin
     public ResponseEntity<Object> clubDisbandList(CmsClubsDisbandQuery cmsClubsDisbandQuery, @Validated PaginationParam paginationParam) {
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
         List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = applyAuditService.listClubDisbandApply(
@@ -147,6 +150,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.13社团换届申请列表 ")
     @GetMapping("/leader/changes")
+    @IsAdmin
     public ResponseEntity<Object> clubChiefChangeList(
             CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, @Validated PaginationParam paginationParam){
         List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = applyAuditService.listClubChiefChangeApply(
@@ -171,6 +175,7 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
+    @IsAdmin
     public ResponseEntity<Object> clubOfficialChangeList(
             CmsClubsCertificationsQuery cmsClubsCertificationsQuery, @Validated PaginationParam paginationParam) {
         List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = applyAuditService.listClubOfficialChange(
