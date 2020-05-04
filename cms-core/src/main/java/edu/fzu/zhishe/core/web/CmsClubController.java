@@ -50,7 +50,7 @@ public class CmsClubController {
     }
 
     @ApiOperation(" 3.3查看学生加入/管理的社团列表 ")
-    @GetMapping("/user/{userId}/clubs")
+    @GetMapping("/users/{userId}/clubs")
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                     @PathVariable(value = "userId") Integer userId,
                                                                     @RequestParam(value = "status") String status){
