@@ -184,18 +184,18 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
-            PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+            PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listJoinClubApply(orderByParam, userId);
+        return clubDAO.listJoinClubApply(orderByParam, sysUserService.getCurrentUser().getId());
     }
 
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
-            PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+            PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listCreateClubApply(orderByParam, userId);
+        return clubDAO.listCreateClubApply(orderByParam, sysUserService.getCurrentUser().getId());
     }
 
     @Override

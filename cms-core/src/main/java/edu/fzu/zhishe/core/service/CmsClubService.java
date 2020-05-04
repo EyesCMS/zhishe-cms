@@ -47,9 +47,9 @@ public interface CmsClubService {
 
     List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
 
-    List<CmsClubJoinApplyDTO> listJoinClubApply(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
+    List<CmsClubJoinApplyDTO> listJoinClubApply(PaginationParam paginationParam, OrderByParam orderByParam);
 
-    List<CmsClubCreateApplyDTO> listCreateClubApply(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId);
+    List<CmsClubCreateApplyDTO> listCreateClubApply(PaginationParam paginationParam, OrderByParam orderByParam);
 
     List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId);
 

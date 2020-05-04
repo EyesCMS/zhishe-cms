@@ -68,17 +68,15 @@ public class CmsClubController {
     }
 
     @ApiOperation(" 3.5查看学生加入社团申请列表 ")
-    @GetMapping("/join/{userId}")
-    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                    @PathVariable(value = "userId") Integer userId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam, userId)));
+    @GetMapping("/users/joins")
+    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.6查看学生创建社团申请列表 ")
-    @GetMapping("/creations/{userId}")
-    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                        @PathVariable(value = "userId") Integer userId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam, userId)));
+    @GetMapping("/users/creations")
+    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.7查看社团成员列表 ")

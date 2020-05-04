@@ -12,22 +12,11 @@ public class CmsClubCreateApplyDTO {
     @ApiModelProperty(value = "申请时间")
     private Date createAt;
 
-    @ApiModelProperty(value = "申请人")
-    private String applicant;
-
     @ApiModelProperty(value = "申请原因")
     private String reason;
 
     @ApiModelProperty(value = "申请状态：0 -> 未审核; 1 -> 审核通过; 2 -> 审核未通过;")
     private Integer state;
-
-    public String getApplicant() {
-        return applicant;
-    }
-
-    public void setApplicant(String applicant) {
-        this.applicant = applicant;
-    }
 
     public String getClubName() {
         return clubName;

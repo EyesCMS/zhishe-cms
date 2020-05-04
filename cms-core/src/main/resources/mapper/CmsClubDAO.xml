@@ -146,9 +146,8 @@
   <select id="listJoinClubApply" parameterType="java.lang.Integer"
           resultMap="ClubMap3">
     SELECT
-      a.user_id,
-      a.club_id,
       club.name,
+      a.create_at,
       a.reason,
       a.state
     FROM
@@ -163,7 +162,6 @@
     SELECT
       club_name,
       create_at,
-      applicant,
       reason,
       state
     FROM
@@ -193,17 +191,15 @@
   </resultMap>
 
   <resultMap id="ClubMap3" type="edu.fzu.zhishe.core.dto.CmsClubJoinApplyDTO">
-    <id column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="club_id" jdbcType="INTEGER" property="clubId" />
     <result column="name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="VARCHAR" property="createAt" />
     <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
 
   <resultMap id="ClubMap4" type="edu.fzu.zhishe.core.dto.CmsClubCreateApplyDTO">
-    <id column="club_name" jdbcType="VARCHAR" property="clubName" />
-    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
-    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="club_name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="VARCHAR" property="createAt" />
     <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
