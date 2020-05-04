@@ -186,6 +186,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        orderByParam.setOrder("desc");
         return clubDAO.listJoinClubApply(orderByParam, userId);
     }
 
@@ -193,6 +194,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        orderByParam.setOrder("desc");
         return clubDAO.listCreateClubApply(orderByParam, userId);
     }
 

@@ -69,7 +69,6 @@ public class CmsClubController {
 
     @ApiOperation(" 3.5查看学生加入社团申请列表 ")
     @GetMapping("/join/{userId}")
-    @IsAdmin
     public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                     @PathVariable(value = "userId") Integer userId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam, userId)));
@@ -77,7 +76,6 @@ public class CmsClubController {
 
     @ApiOperation(" 3.6查看学生创建社团申请列表 ")
     @GetMapping("/creations/{userId}")
-    @IsAdmin
     public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                         @PathVariable(value = "userId") Integer userId) {
         return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam, userId)));
