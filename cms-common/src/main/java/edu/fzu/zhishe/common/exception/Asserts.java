@@ -33,6 +33,12 @@ public class Asserts {
         throw new AccessException("Access is denied");
     }
 
+    public static void notFound(boolean condition) {
+        if (!condition) {
+            throw new EntityNotFoundException("not found");
+        }
+    }
+
     public static void notFound() { throw new EntityNotFoundException("not found"); }
 
     public static void notFound(String message) { throw new EntityNotFoundException(message); }

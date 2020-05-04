@@ -7,6 +7,7 @@ import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsPostRemark;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
@@ -21,6 +22,7 @@ import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
 import java.util.List;
+import javax.swing.text.html.parser.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -85,12 +87,10 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Override
     public int updatePost(Long id, FmsPostParam postParam) {
         FmsPost oldPost = postMapper.selectByPrimaryKey(id);
-        Asserts.notNull(oldPost);
-        if (oldPost.getDeleteState() == 1) {
-            Asserts.notNull(null);
-        }
+        Asserts.notFound(oldPost == null || oldPost.getDeleteState() == 1);
+
         if (oldPost.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
-            Asserts.fail("社团活动帖无法更新");
+            Asserts.fail("can't update activity post");
         }
         SysUser currentUser = userService.getCurrentUser();
         if (!oldPost.getPosterId().equals(currentUser.getId())) {
@@ -107,10 +107,19 @@ public class FmsForumServiceImpl implements FmsForumService {
 
     @Override
     public int deletePost(Long id) {
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+
         FmsPost post = postMapper.selectByPrimaryKey(id);
-        Asserts.notNull(post);
-        if (post.getDeleteState() == 1) {
-            Asserts.notNull(null);
+        Asserts.notFound(post == null || post.getDeleteState() == 1);
+
+        if (post.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
+            Asserts.fail("can't delete activity post");
+        }
+        if (!currentUser.getId().equals(post.getPosterId())) {
+            Asserts.forbidden();
         }
 
         FmsPost newPost = new FmsPost() {{
@@ -122,9 +131,16 @@ public class FmsForumServiceImpl implements FmsForumService {
 
     @Override
     public int saveRemark(FmsRemarkParam remarkParam) {
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        Asserts.notNull(post);
+        if (post == null || post.getDeleteState() == 1) {
+            Asserts.notFound();
+        }
 
         SysUser user = userService.getCurrentUser();
         FmsPostRemark remark = new FmsPostRemark() {{

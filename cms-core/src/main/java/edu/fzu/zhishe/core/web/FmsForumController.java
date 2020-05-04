@@ -39,14 +39,12 @@ public class FmsForumController {
     private FmsForumService forumService;
 
     @ApiOperation(" 7.1 帖子列表(个人/活动) ")
-    //@PreAuthorize("hasAuthority('fms:post:read')")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listPosts(
             @Validated PaginationParam paginationParam,
             @RequestParam(value = "type") Integer type,
             @RequestParam(value = "keyword", required = false) String title) {
-        QueryParam queryParam = new QueryParam(
-            paginationParam.getPage(), paginationParam.getLimit(), null, null, title);
+        QueryParam queryParam = new QueryParam(paginationParam, title);
         List<FmsPostDTO> postList = null;
         if (type == 0) {
              postList = forumService.listPersonalPost(null, queryParam);
@@ -59,7 +57,6 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.2 查看某一帖子 ")
-    //@PreAuthorize("hasAuthority('fms:remark:read')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
     public ResponseEntity<FmsPostDTO> getPost(
             @PathVariable("id") Integer id, @RequestParam(value = "type") Integer type) {
@@ -78,7 +75,6 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.3 删除一条帖子 ")
-    @PreAuthorize("hasAuthority('fms:remark:delete')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
         if (forumService.deletePost(id) == 0) {
@@ -88,7 +84,6 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.4 发布个人帖 ")
-    @PreAuthorize("hasAuthority('fms:remark:create')")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public ResponseEntity<Object> savePost(@RequestBody FmsPostParam postParam) {
         if (forumService.savePost(postParam) == 0) {
@@ -98,7 +93,6 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.5 修改个人帖 ")
-    @PreAuthorize("hasAuthority('fms:post:update')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @RequestBody FmsPostParam postParam) {
         if (forumService.updatePost(id, postParam) == 0) {
@@ -108,7 +102,6 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 7.6 某个社团的活动帖子列表 ")
-    //@PreAuthorize("hasAuthority('fms:post:read')")
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam(value = "type") Integer type,
@@ -137,34 +130,9 @@ public class FmsForumController {
     }
 
     @ApiOperation(" 8.2 获取某一帖子的评论列表 ")
-    //@PreAuthorize("hasAuthority('fms:remark:read')")
     @RequestMapping(value = "/posts/{id}/remarks", method = RequestMethod.GET)
     public ResponseEntity<Object> getRemarksByPostId(@PathVariable("id") Long postId,
                                                      @Validated PaginationParam paginationParam) {
         return ResponseEntity.ok().body(CommonPage.restPage(forumService.listRemarkByPostId(postId, paginationParam)));
-    }
-
-    // @CheckAuthorization("1")
-    @RequestMapping(value = "/check/none", method = RequestMethod.GET)
-    public ResponseEntity<Object> checkNone(Integer clubId) {
-        return ResponseEntity.ok().body(" Student is allowed access ");
-    }
-
-    @CheckClubAuth("2")
-    @RequestMapping(value = "/check/member", method = RequestMethod.GET)
-    public ResponseEntity<Object> checkMember(Integer clubId) {
-        return ResponseEntity.ok().body(" Member is allowed access ");
-    }
-
-    @CheckClubAuth("3")
-    @RequestMapping(value = "/check/chief", method = RequestMethod.GET)
-    public ResponseEntity<Object> checkChief(Integer clubId) {
-        return ResponseEntity.ok().body(" Chief  is allowed access to club " + clubId);
-    }
-
-    @CheckClubAuth("4")
-    @RequestMapping(value = "/check/admin", method = RequestMethod.GET)
-    public ResponseEntity<Object> checkAdmin(Integer clubId) {
-        return ResponseEntity.ok().body(" Admin is allowed access to club " + clubId);
     }
 }

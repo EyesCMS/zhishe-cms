@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseBody
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<Object> handle(ApiException e) {
         JSONObject jsonObject = new JSONObject();
