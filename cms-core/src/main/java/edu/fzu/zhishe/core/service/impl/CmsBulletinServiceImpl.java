@@ -97,7 +97,23 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public int deleteBulletin(Integer id) {
-        return bulletinMapper.deleteByPrimaryKey(id);
+    public int deleteBulletin(Integer bulletinId) {
+
+        CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
+        if (bulletin == null) {
+            Asserts.fail( "找不到 id 为 " + bulletinId + " 的公告 " );
+        }
+
+        Integer clubId = bulletin.getClubId();
+        //CmsClub club = clubService.getClubById(clubId);
+        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        if (club.getDeleteStatus() == 1) {
+            Asserts.fail(" 找不到该社团 ");
+        }
+
+        if (clubService.getClubStatue(clubId) != ClubStatueEnum.CHIEF) {
+            Asserts.fail( " 权限不足 " );
+        }
+        return bulletinMapper.deleteByPrimaryKey(bulletinId);
     }
 }

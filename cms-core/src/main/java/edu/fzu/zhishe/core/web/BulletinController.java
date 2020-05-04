@@ -104,7 +104,6 @@ public class BulletinController {
     @ApiOperation("5.5删除公告")
     //@PreAuthorize("hasAuthority('cms:bulletin:delete')")
     @DeleteMapping("/bulletins/{bulletinId}")
-    @CheckClubAuth("3")
     public ResponseEntity<Object> deleteBulletin(@PathVariable("bulletinId") Integer bulletinId) {
         if (bulletinService.deleteBulletin(bulletinId) == 0) {
             Asserts.fail("操作失败！");

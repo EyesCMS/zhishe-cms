@@ -19,7 +19,7 @@ public interface CmsBulletinService {
 
     int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam);
 
-    int deleteBulletin(Integer id);
+    int deleteBulletin(Integer bulletinId);
 
     List<CmsBulletin> listClubBulletin(int clubId, PaginationParam paginationParam);
 }
