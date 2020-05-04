@@ -44,9 +44,8 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.2 管理员获取社团活动申请 ")
     @GetMapping("/activities")
-    public ResponseEntity<Object> listActivitiesApply(@RequestBody CmsActivityQuery param,
-            @Validated PaginationParam paginationParam, OrderByParam orderByParam,
-            @RequestParam(value = "keyword", required = false) String keyword){
+    public ResponseEntity<Object> listActivitiesApply(CmsActivityQuery param,
+            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
         return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(param, paginationParam, orderByParam)));
     }
 

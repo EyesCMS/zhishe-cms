@@ -16,4 +16,12 @@ public class CmsActivityQuery {
     public Integer getState() {
         return state;
     }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 }
