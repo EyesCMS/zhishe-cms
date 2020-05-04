@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
+import edu.fzu.zhishe.core.annotation.IsAdmin;
+import edu.fzu.zhishe.core.annotation.IsClubMember;
 
 /**
  * @author zou
@@ -38,7 +42,9 @@ public class BulletinController {
     private CmsBulletinService bulletinService;
 
     @ApiOperation(" 5.1发布公告 ")
+    //@PreAuthorize("hasAuthority('cms:bulletin:create')")
     @PostMapping("/{club}/bulletins")
+    @CheckClubAuth("3")
     public ResponseEntity<Object> createBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
         @PathVariable("club") Integer clubId) {
@@ -50,7 +56,9 @@ public class BulletinController {
     }
 
     @ApiOperation(" 5.2查看某个社团所有公告 ")
+    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins")
+    @IsClubMember
     public ResponseEntity<Object> listClubBulletin(
         @Validated PaginationParam paginationParam,
         @PathVariable("club") Integer clubId) {
@@ -61,7 +69,9 @@ public class BulletinController {
 
 
     @ApiOperation("5.3查看公告详情")
+    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins/{bulletinId}")
+    @IsClubMember
     public ResponseEntity<CmsBulletinDTO> getBulletin(
             @PathVariable("club") Integer clubId,
             @PathVariable("bulletinId") Integer bulletinId) {
@@ -77,7 +87,9 @@ public class BulletinController {
     }
 
     @ApiOperation("5.4修改公告内容")
+    //@PreAuthorize("hasAuthority('cms:bulletin:update')")
     @PutMapping("/{club}/bulletins/{bulletinId}")
+    @CheckClubAuth("3")
     public ResponseEntity<Object> updateBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
         @PathVariable("club") Integer clubId,
@@ -90,7 +102,9 @@ public class BulletinController {
     }
 
     @ApiOperation("5.5删除公告")
+    //@PreAuthorize("hasAuthority('cms:bulletin:delete')")
     @DeleteMapping("/bulletins/{bulletinId}")
+    @CheckClubAuth("3")
     public ResponseEntity<Object> deleteBulletin(@PathVariable("bulletinId") Integer bulletinId) {
         if (bulletinService.deleteBulletin(bulletinId) == 0) {
             Asserts.fail("操作失败！");
