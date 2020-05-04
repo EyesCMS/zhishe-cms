@@ -6,7 +6,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="applicant" jdbcType="VARCHAR" property="applicant" />
     <result column="club_name" jdbcType="VARCHAR" property="clubName" />
-    <result column="official_state" jdbcType="BIT" property="officialState" />
+    <result column="official_state" jdbcType="INTEGER" property="officialState" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
@@ -114,7 +114,7 @@
       create_at, handle_at, state
       )
     values (#{userId,jdbcType=INTEGER}, #{applicant,jdbcType=VARCHAR}, #{clubName,jdbcType=VARCHAR}, 
-      #{officialState,jdbcType=BIT}, #{type,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, 
+      #{officialState,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, 
       #{createAt,jdbcType=TIMESTAMP}, #{handleAt,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}
       )
   </insert>
@@ -163,7 +163,7 @@
         #{clubName,jdbcType=VARCHAR},
       </if>
       <if test="officialState != null">
-        #{officialState,jdbcType=BIT},
+        #{officialState,jdbcType=INTEGER},
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
@@ -204,7 +204,7 @@
         club_name = #{record.clubName,jdbcType=VARCHAR},
       </if>
       <if test="record.officialState != null">
-        official_state = #{record.officialState,jdbcType=BIT},
+        official_state = #{record.officialState,jdbcType=INTEGER},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
@@ -232,7 +232,7 @@
       user_id = #{record.userId,jdbcType=INTEGER},
       applicant = #{record.applicant,jdbcType=VARCHAR},
       club_name = #{record.clubName,jdbcType=VARCHAR},
-      official_state = #{record.officialState,jdbcType=BIT},
+      official_state = #{record.officialState,jdbcType=INTEGER},
       type = #{record.type,jdbcType=VARCHAR},
       reason = #{record.reason,jdbcType=VARCHAR},
       create_at = #{record.createAt,jdbcType=TIMESTAMP},
@@ -255,7 +255,7 @@
         club_name = #{clubName,jdbcType=VARCHAR},
       </if>
       <if test="officialState != null">
-        official_state = #{officialState,jdbcType=BIT},
+        official_state = #{officialState,jdbcType=INTEGER},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
@@ -280,7 +280,7 @@
     set user_id = #{userId,jdbcType=INTEGER},
       applicant = #{applicant,jdbcType=VARCHAR},
       club_name = #{clubName,jdbcType=VARCHAR},
-      official_state = #{officialState,jdbcType=BIT},
+      official_state = #{officialState,jdbcType=INTEGER},
       type = #{type,jdbcType=VARCHAR},
       reason = #{reason,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},

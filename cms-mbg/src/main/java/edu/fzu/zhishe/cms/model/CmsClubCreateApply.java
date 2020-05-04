@@ -16,7 +16,7 @@ public class CmsClubCreateApply implements Serializable {
     private String clubName;
 
     @ApiModelProperty(value = "官方状态: 0 -> 非正式; 1 -> 正式;")
-    private Boolean officialState;
+    private Integer officialState;
 
     @ApiModelProperty(value = "社团类别")
     private String type;
@@ -67,11 +67,11 @@ public class CmsClubCreateApply implements Serializable {
         this.clubName = clubName;
     }
 
-    public Boolean getOfficialState() {
+    public Integer getOfficialState() {
         return officialState;
     }
 
-    public void setOfficialState(Boolean officialState) {
+    public void setOfficialState(Integer officialState) {
         this.officialState = officialState;
     }
 
