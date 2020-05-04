@@ -31,9 +31,9 @@ public class WebLogAspect {
 
 
 
-    @Before("webLog()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
-    }
+//    @Before("webLog()")
+//    public void doBefore(JoinPoint joinPoint) throws Throwable {
+//    }
 
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {

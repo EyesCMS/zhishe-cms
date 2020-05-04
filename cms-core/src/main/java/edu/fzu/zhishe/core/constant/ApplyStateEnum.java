@@ -43,19 +43,4 @@ public enum ApplyStateEnum {
             return true;
         }
     }
-
-
-    public static String toString(int value){
-        if(value==PENDING.getValue()){
-            return "PENDING";
-        }else if(value==ACTIVE.getValue()){
-            return "ACTIVE";
-        }else if(value==REJECTED.getValue()){
-            return "REJECTED";
-        }
-        else {
-            return null;
-        }
-
-    }
 }

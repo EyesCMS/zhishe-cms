@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.param;
 
+import edu.fzu.zhishe.core.validator.FlagValidator;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
@@ -19,7 +20,7 @@ public class CmsClubsAuditParam {
     @NotNull(message = " 申请id不能为空 ")
     private Integer id;
     @ApiModelProperty(value = " 审核状态 ", required = true)
-    @NotNull(message = " 审核状态不能为空 ")
+    @FlagValidator(value = {"0", "1", "2"}, message = " 审核状态范围错误 ")
     private Integer state;
 
     public int getId() {

@@ -89,6 +89,13 @@ public class FmsForumServiceImpl implements FmsForumService {
         if (oldPost.getDeleteState() == 1) {
             Asserts.notNull(null);
         }
+        if (oldPost.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
+            Asserts.fail("社团活动帖无法更新");
+        }
+        SysUser currentUser = userService.getCurrentUser();
+        if (!oldPost.getPosterId().equals(currentUser.getId())) {
+            Asserts.forbidden();
+        }
 
         FmsPost post = new FmsPost() {{
             setId(id);

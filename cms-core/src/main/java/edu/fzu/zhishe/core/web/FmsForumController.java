@@ -101,7 +101,6 @@ public class FmsForumController {
     @PreAuthorize("hasAuthority('fms:post:update')")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @RequestBody FmsPostParam postParam) {
-        // TODO: 校验身份
         if (forumService.updatePost(id, postParam) == 0) {
             Asserts.fail();
         }
