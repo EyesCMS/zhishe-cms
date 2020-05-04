@@ -29,7 +29,8 @@ public class CmsClubsCreationsParam {
     @ApiModelProperty(value = " 社团类型 ", required = true)
     @NotBlank(message = " 社团类型不能为空 ")
     private String type;
-
+    @ApiModelProperty(value = " 社团官方状态 ", required = true)
+    @NotBlank(message = " 社团官方状态不能为空 ")
     private boolean officialState;
 
 
