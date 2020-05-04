@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class SysUserInfoDTO {
 
-    private Integer userid;
+    private Integer userId;
     private String avatar;
     private String username;
     private String nickname;
@@ -16,14 +16,15 @@ public class SysUserInfoDTO {
     private String email;
     private String slogan;
     private String phone;
+    private String address;
     private List<String> roles;
 
-    public Integer getUserid() {
-        return userid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getAvatar() {
@@ -80,6 +81,14 @@ public class SysUserInfoDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public List<String> getRoles() {

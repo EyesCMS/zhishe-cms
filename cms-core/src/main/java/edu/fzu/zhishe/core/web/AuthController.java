@@ -104,16 +104,10 @@ public class AuthController {
         user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
         userService.updateUserSelective(user);
 
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("username", user.getUsername());
-//        data.put("avatar", user.getAvatarUrl());
-//        data.put("roles", new String[]{"admin"});
-//        data.put("roles", new String[]{"normal"});
-
         SysUserInfoDTO userInfoDTO = new SysUserInfoDTO();
         BeanUtils.copyProperties(user, userInfoDTO);
         userInfoDTO.setAvatar(user.getAvatarUrl());
-        userInfoDTO.setUserid(user.getId());
+        userInfoDTO.setUserId(user.getId());
         if (user.getIsAdmin() == 1) {
             userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("admin")));
         } else {
