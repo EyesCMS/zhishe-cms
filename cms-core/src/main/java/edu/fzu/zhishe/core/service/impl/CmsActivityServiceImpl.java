@@ -109,7 +109,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             Asserts.fail("非社长无法查看申请活动");
         }
         CmsActivityExample example = new CmsActivityExample();
-        example.createCriteria().andClubIdEqualTo(clubId);
+        example.createCriteria().andClubIdEqualTo(clubId).andStateNotEqualTo(5);
         example.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
 
         List<CmsActivityApplyDTO> applyData = new ArrayList<>();
@@ -130,7 +130,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (activity == null) {
+        if (activity == null || activity.getState() == 5) {
             Asserts.fail("申请ID错误，获取申请活动失败");
         }
 
@@ -150,7 +150,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (user == null) {
             Asserts.fail("请登录");
         }
-        if (activity == null) {
+        if (activity == null || activity.getState() == 5) {
             Asserts.fail("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
@@ -188,7 +188,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 Asserts.fail("查找不到该社团名字，请重新查找");
             }
             List<Integer> clubIds = clubs.stream().map(CmsClub::getId).collect(Collectors.toList());
-            acExample.createCriteria().andClubIdIn(clubIds);
+            acExample.createCriteria().andClubIdIn(clubIds).andStateNotEqualTo(5);
         }
         if (param.getState() != null) {
             acExample.createCriteria().andStateEqualTo(param.getState());

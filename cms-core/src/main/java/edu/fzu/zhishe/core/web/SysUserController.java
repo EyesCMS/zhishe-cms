@@ -47,7 +47,7 @@ public class SysUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         Map<String, String> myMap = new HashMap<>();
-        myMap.put("login_problem", user.getLoginQuestion());
+        myMap.put("loginProblem", user.getLoginQuestion());
         return ok(myMap);
     }
 
