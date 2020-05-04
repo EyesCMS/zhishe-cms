@@ -34,6 +34,7 @@ import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubCertificationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubChiefChangeDAO;
 import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
@@ -228,6 +229,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             List<CmsClub> cmsClubs = clubMapper.selectByExample(example);
             cmsUserClubRel.setClubId(cmsClubs.get(0).getId());
             cmsUserClubRel.setUserId(cmsClubCreateApply.getUserId());
+            cmsUserClubRel.setRoleId(UserRoleEnum.CHIEF.getValue());
+            cmsUserClubRel.setCredit(0);
+            cmsUserClubRel.setHonorId(1);
             cmsUserClubRel.setJoinDate(handleAt);
             userClubRelMapper.insert(cmsUserClubRel);
 
@@ -457,6 +461,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
             cmsUserClubRel.setUserId(cmsClubJoinApply.getUserId());
             cmsUserClubRel.setClubId(cmsClubJoinApply.getClubId());
+            cmsUserClubRel.setRoleId(UserRoleEnum.MEMBER.getValue());
+            cmsUserClubRel.setCredit(0);
+            cmsUserClubRel.setHonorId(1);
             cmsUserClubRel.setJoinDate(handleAt);
             userClubRelMapper.insert(cmsUserClubRel);
 
@@ -614,6 +621,22 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsClub.setChiefId(cmsChiefChangeApply.getNewChiefId());
             clubMapper.updateByPrimaryKeySelective(cmsClub);
             //老社长要不要退社有待讨论
+
+            //更新user_club表的roleId
+            //修改老社长roleId
+            CmsUserClubRelExample example = new CmsUserClubRelExample();
+            example.createCriteria().andClubIdEqualTo(cmsChiefChangeApply.getClubId())
+                    .andUserIdEqualTo(cmsChiefChangeApply.getOldChiefId());
+            List<CmsUserClubRel> userClubRelOld = userClubRelMapper.selectByExample(example);
+            userClubRelOld.get(0).setRoleId(UserRoleEnum.MEMBER.getValue());
+            userClubRelMapper.updateByPrimaryKeySelective(userClubRelOld.get(0));
+            //修改新社长社长roleId
+            CmsUserClubRelExample example1 = new CmsUserClubRelExample();
+            example1.createCriteria().andClubIdEqualTo(cmsChiefChangeApply.getClubId())
+                    .andUserIdEqualTo(cmsChiefChangeApply.getNewChiefId());
+            List<CmsUserClubRel> userClubRelNew = userClubRelMapper.selectByExample(example1);
+            userClubRelNew.get(0).setRoleId(UserRoleEnum.CHIEF.getValue());
+            userClubRelMapper.updateByPrimaryKeySelective(userClubRelNew.get(0));
 
             //更新申请记录
             cmsChiefChangeApply.setState(ApplyStateEnum.ACTIVE.getValue());
