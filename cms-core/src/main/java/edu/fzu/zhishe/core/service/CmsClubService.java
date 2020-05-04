@@ -29,55 +29,13 @@ import java.util.List;
 /**
  *社团管理服务层
  *
- * @author yang
+ * @author wjh674
  */
 public interface CmsClubService {
 
     boolean isClubMember(Integer clubId);
 
     ClubStatueEnum getClubStatue(Integer clubId);
-
-    CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
-
-    List<CmsClubsCreationsDTO> listClubCreationApply(
-        CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam queryParam);
-
-    CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam);
-
-    CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
-
-    List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
-
-    CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
-
-    CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
-
-    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
-
-    CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
-
-    CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
-
-    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam);
-
-    CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
-
-    List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(
-        CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, PaginationParam queryParam);
-
-    CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
-
-    CmsOfficialChangeApply clubOfficialChange(CmsClubsCertificationsParam certificationsParam);
-
-    List<CmsClubsCertificationsDTO> listClubOfficialChange(
-        CmsClubsCertificationsQuery cmsClubsCertificationsQuery, PaginationParam queryParam);
-
-    CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
-
-
-    /**
-     * @author wjh674
-     */
 
     List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam);
 
@@ -109,22 +67,4 @@ public interface CmsClubService {
 
     Integer alterClubAvatarUrl(Integer clubId, Integer userId, String avatarUrl);
 
-    /**
-     * @author PSF
-     */
-    void activityApply(CmsClubActivityParam param);
-
-    void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role);
-
-    void delActivity(Integer id);
-
-    List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
-        PaginationParam paginationParam, OrderByParam orderByParam);
-
-    CmsActivity getActivityApplyItem(Integer id);
-
-    void updateActivity(Integer id, CmsActivityUpdateParam param);
-
-    List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
-        PaginationParam paginationParam, OrderByParam orderByParam);
 }

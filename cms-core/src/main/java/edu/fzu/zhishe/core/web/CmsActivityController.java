@@ -9,6 +9,7 @@ import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
+import edu.fzu.zhishe.core.service.CmsActivityService;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import io.swagger.annotations.ApiOperation;
 import org.aspectj.weaver.ast.Or;
@@ -31,12 +32,12 @@ import java.util.Map;
 public class CmsActivityController {
 
     @Autowired
-    private CmsClubService clubService;
+    private CmsActivityService activityService;
 
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
     public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
-        clubService.activityApply(param);
+        activityService.activityApply(param);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -45,13 +46,13 @@ public class CmsActivityController {
     public ResponseEntity<Object> listActivitiesApply(@RequestBody CmsActivityQuery param,
             @Validated PaginationParam paginationParam, OrderByParam orderByParam,
             @RequestParam(value = "keyword", required = false) String keyword){
-        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(param, paginationParam, orderByParam)));
+        return ResponseEntity.ok().body(CommonPage.restPage(activityService.listActivitiesApply(param, paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.3 活动申请审核 ")
     @PutMapping("/activities/audit")
     public ResponseEntity<Object> activityAudit(@RequestBody JSONObject object){
-        clubService.activityStateChange((Integer) object.get("id"),
+        activityService.activityStateChange((Integer) object.get("id"),
             (Integer) object.get("state_id"), UserRoleEnum.ADMIN);
         return ResponseEntity.noContent().build();
     }
@@ -59,7 +60,7 @@ public class CmsActivityController {
     @ApiOperation(" 6.4 修改社团活动状态 ")
     @PutMapping("/activities/state")
     public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object){
-        clubService.activityStateChange((Integer) object.get("id"),
+        activityService.activityStateChange((Integer) object.get("id"),
             (Integer) object.get("state_id"), UserRoleEnum.CHIEF);
         return ResponseEntity.noContent().build();
     }
@@ -68,14 +69,14 @@ public class CmsActivityController {
     @PutMapping("/activities/{id}")
     public ResponseEntity<Object> updateActivity(@PathVariable(value = "id") Integer id,
                                                  @Validated @RequestBody CmsActivityUpdateParam param) {
-        clubService.updateActivity(id, param);
+        activityService.updateActivity(id, param);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 6.6 根据活动id删除活动 ")
     @DeleteMapping("/activities/{id}")
     public ResponseEntity<Object> delActivity(@PathVariable(value = "id") Integer id) {
-        clubService.delActivity(id);
+        activityService.delActivity(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -84,12 +85,12 @@ public class CmsActivityController {
     public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
             @Validated PaginationParam paginationParam, OrderByParam orderByParam,
             @RequestParam(value = "keyword", required = false) String keyword) {
-        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, paginationParam, orderByParam)));
+        return ResponseEntity.ok().body(CommonPage.restPage(activityService.listActivitiesApply(clubId, paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")
     @GetMapping("/activities/apply/{id}")
     public ResponseEntity<Object> getApplyItem(@PathVariable(value = "id") Integer id) {
-        return ResponseEntity.ok().body(clubService.getActivityApplyItem(id));
+        return ResponseEntity.ok().body(activityService.getActivityApplyItem(id));
     }
 }
