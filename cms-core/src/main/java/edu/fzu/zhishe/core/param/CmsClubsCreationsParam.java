@@ -1,9 +1,11 @@
 package edu.fzu.zhishe.core.param;
 
+import edu.fzu.zhishe.core.validator.FlagValidator;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  *社团创建申请表单数据
@@ -30,8 +32,9 @@ public class CmsClubsCreationsParam {
     @NotBlank(message = " 社团类型不能为空 ")
     private String type;
     @ApiModelProperty(value = " 社团官方状态 ", required = true)
-    @NotBlank(message = " 社团官方状态不能为空 ")
-    private boolean officialState;
+    @FlagValidator(value = {"0","1"},message = "社团官方状态不正确")
+    @NotNull(message = " 官方状态不能为空 ")
+    private Integer officialState;
 
 
 
@@ -61,13 +64,11 @@ public class CmsClubsCreationsParam {
         this.type = type;
     }
 
-    public boolean isOfficialState() {
+    public Integer getOfficialState() {
         return officialState;
     }
 
-    public void setOfficialState(boolean officialState) {
+    public void setOfficialState(Integer officialState) {
         this.officialState = officialState;
     }
-
-
 }

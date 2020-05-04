@@ -154,7 +154,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsClubCreateApply.setApplicant(sysUser.getUsername());
         cmsClubCreateApply.setClubName(clubsCreationsParam.getClubName());
         cmsClubCreateApply.setType(clubsCreationsParam.getType());
-        cmsClubCreateApply.setOfficialState(clubsCreationsParam.isOfficialState());
+        cmsClubCreateApply.setOfficialState(clubsCreationsParam.getOfficialState());
         cmsClubCreateApply.setReason(clubsCreationsParam.getReason());
         cmsClubCreateApply.setCreateAt(new Date());
         cmsClubCreateApply.setHandleAt(null);
@@ -207,9 +207,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsClub.setName(cmsClubCreateApply.getClubName());
             cmsClub.setChiefId(cmsClubCreateApply.getUserId());
             cmsClub.setMemberCount(1);
-            cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState() ?
-                ClubOfficialStateEnum.OFFICIAL.getValue()
-                : ClubOfficialStateEnum.UNOFFICIAL.getValue());
+            cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState());
             cmsClub.setType(cmsClubCreateApply.getType());
             cmsClub.setCreateAt(new Date());
             cmsClub.setDeleteStatus(DeleteStateEnum.Existence.getValue());

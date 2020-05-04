@@ -21,21 +21,22 @@ public class CmsClubsAuditParam {
     private Integer id;
     @ApiModelProperty(value = " 审核状态 ", required = true)
     @FlagValidator(value = {"0", "1", "2"}, message = " 审核状态范围错误 ")
+    @NotNull(message = " 审核不能为空 ")
     private Integer state;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(Integer state) {
         this.state = state;
     }
 }
