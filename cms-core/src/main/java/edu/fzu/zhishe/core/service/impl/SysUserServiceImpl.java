@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.util.FieldUtil;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
@@ -198,6 +199,15 @@ public class SysUserServiceImpl implements SysUserService {
         if (user == null) {
             Asserts.fail("请登录后修改信息");
         }
+
+        try {
+            if (!FieldUtil.hasNotNullFiled(updateParam)) {
+                Asserts.fail("all fields is empty");
+            }
+        } catch (IllegalAccessException e) {
+            Asserts.fail("check field failed");
+        }
+
         SysUser updatedUser = new SysUser() {{
             setId(user.getId());
         }};

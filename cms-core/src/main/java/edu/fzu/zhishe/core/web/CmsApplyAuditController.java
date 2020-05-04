@@ -51,13 +51,6 @@ public class CmsApplyAuditController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @ApiOperation(" 测试更新权限 ")
-    @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('cms:club:update')")
-    public ResponseEntity<Object> deleteClub(@PathVariable Integer id){
-        return ResponseEntity.noContent().build();
-    }
-
     @ApiOperation(" 4.2社团创建申请列表 ")
     @GetMapping("/creations")
     @IsAdmin

@@ -34,7 +34,8 @@ public class SysUserRegisterParam {
     private String major;
 
     @ApiModelProperty(value = " 电话 ")
-    @Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$", message = " 电话格式不合法 ")
+    // FIXME: this does not work!
+    //@Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$", message = " 电话格式不合法 ")
     private String phone;
 
     @ApiModelProperty(value = " 密保问题 ")
