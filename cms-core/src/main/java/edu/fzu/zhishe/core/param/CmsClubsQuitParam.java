@@ -25,11 +25,11 @@ public class CmsClubsQuitParam {
 
 
 
-    public int getClubId() {
+    public Integer getClubId() {
         return clubId;
     }
 
-    public void setClubId(int clubId) {
+    public void setClubId(Integer clubId) {
         this.clubId = clubId;
     }
 

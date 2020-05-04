@@ -24,11 +24,11 @@ public class CmsClubsChiefChangeParam {
     @NotBlank(message = " 理由不能为空 ")
     private String reason;
 
-    public int getClubId() {
+    public Integer getClubId() {
         return clubId;
     }
 
-    public void setClubId(int clubId) {
+    public void setClubId(Integer clubId) {
         this.clubId = clubId;
     }
 
