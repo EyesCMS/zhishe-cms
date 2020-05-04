@@ -3,23 +3,10 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-  datasource:
-    url: jdbc:mysql://101.200.193.180:3306/zhishedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: # 使用启动参数覆盖此设置
-    druid:
-      initial-size: 5 #连接池初始化大小
-      min-idle: 10 #最小空闲连接数
-      max-active: 20 #最大连接数
-      web-stat-filter:
-        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
-      stat-view-servlet: #访问监控网页的登录用户名和密码
-        login-username: druid
-        login-password: druid
 
 redis:
   database: zhishe

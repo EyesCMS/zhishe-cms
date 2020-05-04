@@ -6,7 +6,7 @@ spring:
     password:  # Redis 服务器连接密码（默认为空），使用启动参数覆盖此设置
     timeout: 300ms # 连接超时时间（毫秒）
   datasource:
-    url: jdbc:mysql://localhost:3306/zhishedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://101.200.193.180:3306/zhishedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: # 使用启动参数覆盖此设置
     druid:
@@ -16,5 +16,5 @@ spring:
       web-stat-filter:
         exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*" #不统计这些请求数据
       stat-view-servlet: #访问监控网页的登录用户名和密码
-        login-username: druid
-        login-password: druid
+        login-username: # 需要重新设置
+        login-password: # 需要重新设置
