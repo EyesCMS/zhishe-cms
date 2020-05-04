@@ -1,5 +1,10 @@
 package edu.fzu.zhishe.core.param;
 
+import io.swagger.annotations.ApiModelProperty;
+/**
+ * @author Yang on 4/29/2020.
+ * @version 1.0
+ */
 public class CmsClubsCertificationsQuery {
     /**
      * id:1
@@ -9,11 +14,15 @@ public class CmsClubsCertificationsQuery {
      * reason : 认证牛逼一点
      * state : 0
      */
-
+    @ApiModelProperty(value = "申请id")
     private Integer id;
+    @ApiModelProperty(value = "社团名")
     private String clubName;
+    @ApiModelProperty(value = "创建时间")
     private String createAt;
+    @ApiModelProperty(value = "理由")
     private String reason;
+    @ApiModelProperty(value = "状态")
     private Integer state;
 
 

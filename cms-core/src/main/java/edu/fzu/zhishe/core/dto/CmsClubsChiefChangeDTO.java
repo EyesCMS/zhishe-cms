@@ -1,7 +1,10 @@
 package edu.fzu.zhishe.core.dto;
 
 import java.util.Date;
-
+/**
+ * @author Yang on 4/29/2020.
+ * @version 1.0
+ */
 public class CmsClubsChiefChangeDTO {
     /**
      * id : 1

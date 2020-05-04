@@ -1,5 +1,10 @@
 package edu.fzu.zhishe.core.param;
 
+import io.swagger.annotations.ApiModelProperty;
+/**
+ * @author Yang on 4/29/2020.
+ * @version 1.0
+ */
 public class CmsClubsChiefChangeQuery {
     /**
      * id : 1
@@ -9,12 +14,17 @@ public class CmsClubsChiefChangeQuery {
      * createAt : 2018-04-19 18:14:12
      * state : 0
      */
-
+    @ApiModelProperty(value = "申请id")
     private Integer id;
+    @ApiModelProperty(value = "社团名")
     private String clubName;
+    @ApiModelProperty(value = "老社长名")
     private String oldChiefName;
+    @ApiModelProperty(value = "新社长名")
     private String newChiefName;
+    @ApiModelProperty(value = "创建时间")
     private String createAt;
+    @ApiModelProperty(value = "状态")
     private Integer state;
 
     public Integer getId() {

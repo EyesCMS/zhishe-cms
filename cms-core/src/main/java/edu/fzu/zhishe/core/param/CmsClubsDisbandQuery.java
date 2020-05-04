@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.param;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 
 /**
@@ -17,11 +18,15 @@ public class CmsClubsDisbandQuery {
      * reason : 本社团没有存在意义
      * state : 0
      */
-
+    @ApiModelProperty(value = "申请id")
     private Integer id;
+    @ApiModelProperty(value = "社团名")
     private String clubName;
+    @ApiModelProperty(value = "创建时间")
     private String createAt;
+    @ApiModelProperty(value = "理由")
     private String reason;
+    @ApiModelProperty(value = "状态")
     private Integer state;
 
 

@@ -14,11 +14,11 @@ public class CmsClubsCreationsParam {
 
     /**
      * clubName : test
-     * applicant : 张三
+
      * reason : make friends
      * type : 运动类
      * officialState : true
-     * accessoryUrl : https://xxx/xxx/xx.doc
+
      */
     @ApiModelProperty(value = " 社团名 ", required = true)
     @NotBlank(message = " 社团名不能为空 ")
