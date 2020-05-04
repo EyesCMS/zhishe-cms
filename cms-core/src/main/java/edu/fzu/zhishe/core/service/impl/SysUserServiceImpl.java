@@ -200,13 +200,7 @@ public class SysUserServiceImpl implements SysUserService {
             Asserts.fail("请登录后修改信息");
         }
 
-        try {
-            if (!FieldUtil.hasNotNullFiled(updateParam)) {
-                Asserts.fail("all fields is empty");
-            }
-        } catch (IllegalAccessException e) {
-            Asserts.fail("check field failed");
-        }
+        Asserts.hasFiled(updateParam);
 
         SysUser updatedUser = new SysUser() {{
             setId(user.getId());

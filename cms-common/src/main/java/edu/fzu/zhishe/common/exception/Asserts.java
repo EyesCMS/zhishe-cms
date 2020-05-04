@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.common.exception;
 
 import edu.fzu.zhishe.common.api.IErrorCode;
+import edu.fzu.zhishe.common.util.FieldUtil;
 import io.micrometer.core.lang.Nullable;
 
 /**
@@ -10,6 +11,19 @@ import io.micrometer.core.lang.Nullable;
  * @date 2020/4/22
  */
 public class Asserts {
+
+    /**
+     * check if an object has at least one non-null filed
+     */
+    public static void hasFiled(Object object) {
+        try {
+            if (!FieldUtil.hasNotNullFiled(object)) {
+                Asserts.fail("all fields is empty");
+            }
+        } catch (IllegalAccessException e) {
+            Asserts.fail("check field failed");
+        }
+    }
 
     public static void notNull(@Nullable Object object) {
         if (object == null) {
