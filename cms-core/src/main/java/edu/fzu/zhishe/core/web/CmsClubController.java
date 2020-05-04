@@ -54,7 +54,7 @@ public class CmsClubController {
     @GetMapping("/user/{userId}/clubs")
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                     @PathVariable(value = "userId") Integer userId,
-                                                                    @RequestParam(value = "status", required = false) String status){
+                                                                    @RequestParam(value = "status") String status){
         if("member".equals(status)){
             return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
