@@ -180,7 +180,7 @@
       uc.credit,
       h.`name` AS honor_name
     FROM
-      ( SELECT * FROM cms_user_club_rel WHERE club_id = 5000 ) AS uc
+      ( SELECT * FROM cms_user_club_rel WHERE club_id = #{clubId} ) AS uc
       LEFT JOIN sys_user u ON uc.user_id = u.id
       LEFT JOIN sys_role r ON uc.role_id = r.id
       LEFT JOIN cms_member_honor h ON uc.honor_id = h.id
