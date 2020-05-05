@@ -6,7 +6,6 @@ import static org.springframework.http.ResponseEntity.ok;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
-import edu.fzu.zhishe.core.param.SysUserQuestionParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
@@ -38,11 +37,11 @@ public class SysUserController {
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
-    public ResponseEntity<Object> question(@RequestBody SysUserQuestionParam info) {
-        if (info.getUsername() == null) {
+    public ResponseEntity<Object> question(String username) {
+        if (username == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        SysUser user = userService.getByUsername(info.getUsername());
+        SysUser user = userService.getByUsername(username);
         if (user == null || user.getLoginQuestion() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
