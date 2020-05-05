@@ -3,52 +3,22 @@ package edu.fzu.zhishe.core.service.impl;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
-import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
-import edu.fzu.zhishe.core.annotation.IsAdmin;
-import edu.fzu.zhishe.core.annotation.IsClubMember;
-import edu.fzu.zhishe.core.constant.ActivityStateEnum;
-import edu.fzu.zhishe.core.constant.ApplyStateEnum;
-import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
-import edu.fzu.zhishe.core.constant.DeleteStateEnum;
-import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.*;
 
 
-import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
-import edu.fzu.zhishe.core.param.CmsActivityQuery;
-import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
-import edu.fzu.zhishe.core.param.CmsClubActivityParam;
-import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQuery;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsQuery;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
-import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
-import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
+import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
 
 import java.util.*;
 
-import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -199,77 +169,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public List<CmsClubMemberBriefDTO> listClubMember(
-            PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId,
-            String nickname, String username, Integer honorId, Integer roleId) {
-//        SysUser user = getCurrentUser();
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId());
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社团成员，您没有该权限");
-//        }
-
-        List<CmsClubMemberBriefDTO> dataList = new LinkedList<>();
-        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-        userClubRel.createCriteria().andClubIdEqualTo(clubId);
-
-
-        //----------------------------
-        //组合搜索
-        /*
-        if(nickname!=null && !nickname.equals("")) {
-            SysUserExample userExample = new SysUserExample();
-            userExample.createCriteria().andNicknameEqualTo(nickname);
-            List<SysUser> userList = sysUserMapper.selectByExample(userExample);
-            List<Integer> userIdList = new LinkedList<>();
-            for (SysUser u :userList) {
-                userIdList.add(u.getId());
-            }
-            userClubRel.createCriteria().andUserIdIn(userIdList);
-        }
-
-        if(username!=null && !username.equals("")) {
-            SysUserExample userExample = new SysUserExample();
-            userExample.createCriteria().andUsernameEqualTo(username);
-            List<SysUser> userList = sysUserMapper.selectByExample(userExample);
-            Integer uid;
-            if (userList.size() > 0) {
-                uid = userList.get(0).getId();
-            }
-            else{
-                uid = -1;
-            }
-            userClubRel.createCriteria().andUserIdEqualTo(uid);
-        }
-
-        if(honorId!= null) {
-            userClubRel.createCriteria().andHonorIdEqualTo(honorId);
-        }
-
-        if(roleId != null) {
-            userClubRel.createCriteria().andRoleIdEqualTo(roleId);
-        }
-        */
-        //-------------------------------------------
-
-
-        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-        for(CmsUserClubRel rel : userClubList)
-        {
-            CmsClubMemberBriefDTO data = new CmsClubMemberBriefDTO();
-            SysUser u = sysUserMapper.selectByPrimaryKey(rel.getUserId());
-            BeanUtils.copyProperties(u, data);
-            data.setUserId(u.getId());
-            CmsMemberHonor honor = honorMapper.selectByPrimaryKey(rel.getHonorId());
-            data.setHonor(honor.getName());
-            SysRole role = roleMapper.selectByPrimaryKey(rel.getRoleId());
-            data.setRole(role.getDescription());
-            data.setCredit(rel.getCredit());
-            dataList.add(data);
-        }
+    public List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId,
+            CmsClubMemberQuery clubMemberQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return dataList;
+        return clubDAO.listClubMember(clubId, clubMemberQuery);
     }
 
     @Override

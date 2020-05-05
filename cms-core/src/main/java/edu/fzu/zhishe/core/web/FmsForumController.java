@@ -117,9 +117,7 @@ public class FmsForumController {
         return ResponseEntity.ok().body(CommonPage.restPage(postList));
     }
 
-    // 登陆后才可
     @ApiOperation(" 8.1 对某一帖子发表评论 ")
-    @PreAuthorize("hasAuthority('fms:remark:create')")
     @RequestMapping(value = "/posts/remarks", method = RequestMethod.POST)
     public ResponseEntity<Object> createRemark(@RequestBody FmsRemarkParam remarkParam) {
         if (forumService.saveRemark(remarkParam) == 0) {

@@ -6,6 +6,7 @@ import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
@@ -41,7 +42,7 @@ public class CmsClubController {
     }
 
     @ApiOperation(" 3.2 查看社团列表 ")
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> searchClubByKeyword(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
                                                                            @RequestParam(value = "keyword", required = false) String keyword,
                                                                            @RequestParam(value = "type", required = false) String type,
@@ -82,13 +83,10 @@ public class CmsClubController {
     @ApiOperation(" 3.7查看社团成员列表 ")
     @GetMapping("/{clubId}/members")
     @IsClubMember
-    public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
+    public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam,
                                                                             @PathVariable(value = "clubId") Integer clubId,
-                                                                            @RequestParam(value = "nickname", required = false) String nickname,
-                                                                            @RequestParam(value = "username", required = false) String username,
-                                                                            @RequestParam(value = "honorId", required = false) Integer honorId,
-                                                                            @RequestParam(value = "roleId", required = false) Integer roleId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, orderByParam, clubId, nickname, username, honorId, roleId)));
+                                                                            CmsClubMemberQuery clubMemberQuery) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, clubId, clubMemberQuery)));
     }
 
     @ApiOperation(" 3.8查看某个社员详情 ")

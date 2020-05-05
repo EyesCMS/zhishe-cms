@@ -1,7 +1,6 @@
 package edu.fzu.zhishe.core.dao;
 
-import edu.fzu.zhishe.cms.model.SysUser;
-
+import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import java.util.List;
 
@@ -51,5 +50,5 @@ public interface CmsClubDAO {
      */
     List<CmsClubCreateApplyDTO> listCreateClubApply(@Param("orderBy") OrderByParam orderByParam, @Param("userId") Integer userId);
 
-
+    List<CmsClubMemberBriefDTO> listClubMember(@Param("clubId") Integer clubId, @Param("queryParam") CmsClubMemberQuery clubMemberQuery);
 }

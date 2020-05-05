@@ -51,8 +51,8 @@ secure:
       - /users/question
       - /users/password
       - /home/**
-      - /test/**
       - /clubs/recommended
+      - /clubs
       - /forum/**
       - /roles/**
 

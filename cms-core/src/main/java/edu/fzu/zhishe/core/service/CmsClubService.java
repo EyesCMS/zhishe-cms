@@ -1,29 +1,11 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
-import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
 
-import edu.fzu.zhishe.core.param.CmsActivityQuery;
-import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
-import edu.fzu.zhishe.core.param.CmsClubActivityParam;
-import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeParam;
-import edu.fzu.zhishe.core.param.CmsClubsChiefChangeQuery;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsQuery;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandParam;
-import edu.fzu.zhishe.core.param.CmsClubsDisbandQuery;
-import edu.fzu.zhishe.core.param.CmsClubsJoinParam;
-import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
-import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
-import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
+import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 
 /**
@@ -51,7 +33,7 @@ public interface CmsClubService {
 
     List<CmsClubCreateApplyDTO> listCreateClubApply(PaginationParam paginationParam, OrderByParam orderByParam);
 
-    List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId, String nickname, String username, Integer honorId, Integer roleId);
+    List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId, CmsClubMemberQuery clubMemberQuery);
 
     CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId);
 

@@ -170,6 +170,33 @@
     user_id = #{userId,jdbcType=INTEGER}
   </select>
 
+  <select id="listClubMember" resultMap="ClubMap5">
+    SELECT
+      u.id AS user_id,
+      u.username,
+      u.nickname,
+      u.avatar_url,
+      r.`name` AS role_name,
+      uc.credit,
+      h.`name` AS honor_name
+    FROM
+      ( SELECT * FROM cms_user_club_rel WHERE club_id = 5000 ) AS uc
+      LEFT JOIN sys_user u ON uc.user_id = u.id
+      LEFT JOIN sys_role r ON uc.role_id = r.id
+      LEFT JOIN cms_member_honor h ON uc.honor_id = h.id
+    <where>
+      <if test="queryParam.name!=null and queryParam.name!=''">
+        AND (username LIKE concat("%",#{queryParam.name},"%") OR
+            nickname LIKE concat("%",#{queryParam.name},"%"))
+      </if>
+      <if test="queryParam.honorId!=null and queryParam.honorId!=''">
+        AND uc.honor_id = #{queryParam.honorId, jdbcType=INTEGER}
+      </if>
+    </where>
+    ORDER BY
+      uc.join_date DESC
+  </select>
+
 
   <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubBriefDTO">
     <id column="id" jdbcType="INTEGER" property="id" />
@@ -205,11 +232,11 @@
   </resultMap>
 
   <resultMap id="ClubMap5" type="edu.fzu.zhishe.core.dto.CmsClubMemberBriefDTO">
-    <id column="id" jdbcType="INTEGER" property="userId" />
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="name" jdbcType="VARCHAR" property="honor" />
-    <result column="description" jdbcType="VARCHAR" property="role" />
+    <result column="role_name" jdbcType="VARCHAR" property="role" />
+    <result column="honor_name" jdbcType="VARCHAR" property="honor" />
     <result column="credit" jdbcType="INTEGER" property="credit" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
