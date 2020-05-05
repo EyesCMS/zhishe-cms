@@ -200,7 +200,8 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     public List<CmsClubMemberBriefDTO> listClubMember(
-            PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId) {
+            PaginationParam paginationParam, OrderByParam orderByParam, Integer clubId,
+            String nickname, String username, Integer honorId, Integer roleId) {
 //        SysUser user = getCurrentUser();
 //        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
 //        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId());
@@ -212,8 +213,48 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsClubMemberBriefDTO> dataList = new LinkedList<>();
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId);
-        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
 
+
+        //----------------------------
+        //组合搜索
+        /*
+        if(nickname!=null && !nickname.equals("")) {
+            SysUserExample userExample = new SysUserExample();
+            userExample.createCriteria().andNicknameEqualTo(nickname);
+            List<SysUser> userList = sysUserMapper.selectByExample(userExample);
+            List<Integer> userIdList = new LinkedList<>();
+            for (SysUser u :userList) {
+                userIdList.add(u.getId());
+            }
+            userClubRel.createCriteria().andUserIdIn(userIdList);
+        }
+
+        if(username!=null && !username.equals("")) {
+            SysUserExample userExample = new SysUserExample();
+            userExample.createCriteria().andUsernameEqualTo(username);
+            List<SysUser> userList = sysUserMapper.selectByExample(userExample);
+            Integer uid;
+            if (userList.size() > 0) {
+                uid = userList.get(0).getId();
+            }
+            else{
+                uid = -1;
+            }
+            userClubRel.createCriteria().andUserIdEqualTo(uid);
+        }
+
+        if(honorId!= null) {
+            userClubRel.createCriteria().andHonorIdEqualTo(honorId);
+        }
+
+        if(roleId != null) {
+            userClubRel.createCriteria().andRoleIdEqualTo(roleId);
+        }
+        */
+        //-------------------------------------------
+
+
+        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
         for(CmsUserClubRel rel : userClubList)
         {
             CmsClubMemberBriefDTO data = new CmsClubMemberBriefDTO();

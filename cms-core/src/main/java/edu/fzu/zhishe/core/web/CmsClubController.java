@@ -83,8 +83,12 @@ public class CmsClubController {
     @GetMapping("/{clubId}/members")
     @IsClubMember
     public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                            @PathVariable(value = "clubId") Integer clubId) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, orderByParam, clubId)));
+                                                                            @PathVariable(value = "clubId") Integer clubId,
+                                                                            @RequestParam(value = "nickname", required = false) String nickname,
+                                                                            @RequestParam(value = "username", required = false) String username,
+                                                                            @RequestParam(value = "honorId", required = false) Integer honorId,
+                                                                            @RequestParam(value = "roleId", required = false) Integer roleId) {
+        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, orderByParam, clubId, nickname, username, honorId, roleId)));
     }
 
     @ApiOperation(" 3.8查看某个社员详情 ")
