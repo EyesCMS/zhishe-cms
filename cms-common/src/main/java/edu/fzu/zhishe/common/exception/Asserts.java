@@ -48,7 +48,7 @@ public class Asserts {
     }
 
     public static void notFound(boolean condition) {
-        if (!condition) {
+        if (condition) {
             throw new EntityNotFoundException("not found");
         }
     }

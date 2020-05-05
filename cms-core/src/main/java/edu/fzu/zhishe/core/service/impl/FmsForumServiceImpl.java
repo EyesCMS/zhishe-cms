@@ -78,6 +78,7 @@ public class FmsForumServiceImpl implements FmsForumService {
             setType(PostTypeEnum.PERSONAL.getValue());
             setTitle(postParam.getTitle());
             setContent(postParam.getContent());
+            setImgUrl(postParam.getImgUrl());
             setCreateAt(new Date());
             setDeleteState(DeleteStateEnum.Existence.getValue());
         }};
@@ -101,6 +102,7 @@ public class FmsForumServiceImpl implements FmsForumService {
             setId(id);
             setTitle(postParam.getTitle());
             setContent(postParam.getContent());
+            setImgUrl(postParam.getImgUrl());
         }};
         return postMapper.updateByPrimaryKeySelective(post);
     }
