@@ -176,7 +176,7 @@
       u.username,
       u.nickname,
       u.avatar_url,
-      r.`name` AS role_name,
+      r.description,
       uc.credit,
       h.`name` AS honor_name
     FROM
@@ -235,7 +235,7 @@
     <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="role_name" jdbcType="VARCHAR" property="role" />
+    <result column="description" jdbcType="VARCHAR" property="role" />
     <result column="honor_name" jdbcType="VARCHAR" property="honor" />
     <result column="credit" jdbcType="INTEGER" property="credit" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
