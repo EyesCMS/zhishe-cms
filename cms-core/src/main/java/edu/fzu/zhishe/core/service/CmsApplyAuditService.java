@@ -70,4 +70,6 @@ public interface CmsApplyAuditService {
         CmsClubsCertificationsQuery cmsClubsCertificationsQuery, PaginationParam queryParam);
 
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
+
+    List<CmsOfficialChangeApply> listMyClubOfficialChange(Integer clubId, PaginationParam queryParam);
 }

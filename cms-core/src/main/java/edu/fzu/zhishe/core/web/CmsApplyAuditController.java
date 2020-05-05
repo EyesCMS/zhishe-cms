@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.cms.model.CmsOfficialChangeApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.dto.*;
@@ -182,5 +183,13 @@ public class CmsApplyAuditController {
         // TODO: 等待api修改
         applyAuditService.clubOfficialChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = " 4.18根据社团 ID 获取认证申请列表 ")
+    @GetMapping("/{clubId}/certifications")
+    public ResponseEntity<Object> myClubOfficialChangeList(@PathVariable("clubId") Integer clubId,
+                                            @Validated PaginationParam paginationParam) {
+        List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = applyAuditService.listMyClubOfficialChange(clubId,paginationParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsOfficialChangeApplyList));
     }
 }

@@ -411,7 +411,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null) {
+        if ( cmsClub == null||cmsClub.getDeleteStatus()==DeleteStateEnum.Deleted.getValue()) {
             Asserts.notFound(" 该社团不存在 ");
         }
         if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
@@ -517,7 +517,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null) {
+        if ( cmsClub == null||cmsClub.getDeleteStatus()==DeleteStateEnum.Deleted.getValue()) {
             Asserts.notFound(" 该社团不存在 ");
         }
         if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
@@ -738,5 +738,22 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             return cmsOfficialChangeApply;
         }
         return cmsOfficialChangeApply;
+    }
+
+    @Override
+    public List<CmsOfficialChangeApply> listMyClubOfficialChange(Integer clubId, PaginationParam paginationParam) {
+        // 查询是否已存在该社团
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
+        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(" 该社团不存在 ");
+        }
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.forbidden(" 您不是该社团社长无权查看 ");
+        }
+        CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = officialChangeApplyMapper.selectByExample(example);
+        return cmsOfficialChangeApplyList;
     }
 }
