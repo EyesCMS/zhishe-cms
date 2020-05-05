@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubActivityDAO">
+    <resultMap id="Apply" type="edu.fzu.zhishe.core.dto.CmsActivityApplyDTO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="location" jdbcType="VARCHAR" property="location" />
+        <result column="body" jdbcType="VARCHAR" property="content" />
+        <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+        <result column="star_date" jdbcType="TIMESTAMP" property="startDate" />
+        <result column="end_data" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+    </resultMap>
+
+    <resultMap id="ApplyList" type="edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="clubName" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="body" jdbcType="VARCHAR" property="content" />
+        <result column="star_date" jdbcType="TIMESTAMP" property="startDate" />
+        <result column="end_data" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="location" jdbcType="VARCHAR" property="location" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+    </resultMap>
+
+    <select id="listActivityApplyForChief" resultMap="Apply">
+        SELECT
+        a.id,
+        a.name,
+        a.location,
+        a.body,
+        a.member_count,
+        a.star_date,
+        a.end_data,
+        a.state
+        FROM
+        cms_activity a
+        WHERE
+        club_id = #{clubId}
+        AND a.state &lt; 5
+        <if test="queryParam.state!=null">
+            AND a.state = #{queryParam.state}
+        </if>
+        <if test="queryParam.title!=null">
+            AND a.body LIKE concat("%", #{queryParam.title},"%")
+        </if>
+        <if test="queryParam.location!=null">
+            AND a.location LIKE concat("%", #{queryParam.location},"%")
+        </if>
+        <if test="queryParam.startDate!=null">
+            AND a.star_date >= #{queryParam.startDate}
+        </if>
+        <if test="queryParam.endDate!=null">
+            AND a.end_data &lt; #{queryParam.endDate}
+        </if>
+
+        ORDER BY
+        id ASC
+    </select>
+
+    <select id="listActivityApplyForAdmin" resultMap="ApplyList">
+        SELECT
+        a.id,
+        c.name,
+        a.name,
+        a.title,
+        a.body,
+        a.star_date,
+        a.end_data,
+        a.location,
+        a.state
+        FROM
+        cms_activity a,
+        cms_club c
+        WHERE
+        a.club_id = c.id
+        AND a.state &lt; 5
+        <if test="state!=null">
+            AND a.state = #{state}
+        </if>
+        <if test="clubName!=null">
+            AND c.name LIKE concat("%", #{clubName},"%")
+        </if>
+
+        ORDER BY
+        id ASC
+    </select>
+
+</mapper>

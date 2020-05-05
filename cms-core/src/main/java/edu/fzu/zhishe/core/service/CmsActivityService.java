@@ -22,7 +22,7 @@ public interface CmsActivityService {
 
     void delActivity(Integer id);
 
-    List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
+    List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId, CmsActivityQuery param,
         PaginationParam paginationParam, OrderByParam orderByParam);
 
     CmsActivity getActivityApplyItem(Integer id);

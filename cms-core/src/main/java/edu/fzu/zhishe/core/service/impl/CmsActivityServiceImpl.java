@@ -1,6 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.CmsActivity;
@@ -11,6 +13,7 @@ import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.dao.CmsClubActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO;
 import edu.fzu.zhishe.core.param.CmsActivityQuery;
@@ -39,6 +42,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @Autowired
     private CmsClubMapper clubMapper;
+
+    @Autowired
+    private CmsClubActivityDAO activityDAO;
 
     @Autowired
     private SysUserService userService;
@@ -113,6 +119,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @Override
     public List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
+        CmsActivityQuery param,
         PaginationParam paginationParam, OrderByParam orderByParam) {
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         SysUser user = userService.getCurrentUser();
@@ -124,28 +131,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (user == null || !user.getId().equals(club.getChiefId())) {
             Asserts.fail("非社长无法查看申请活动");
         }
-        CmsActivityExample example = new CmsActivityExample();
-        CmsActivityExample.Criteria criteria = example.createCriteria();
 
-        criteria.andClubIdEqualTo(clubId).andStateNotEqualTo(ActivityStateEnum.DELETED.getValue());
-        if (orderByParam.getSort() != null && orderByParam.getOrder() != null &&
-                !orderByParam.getOrder().equals("") && !orderByParam.getSort().equals("")) {
-            example.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
-        }
-
-        List<CmsActivityApplyDTO> applyData = new ArrayList<>();
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsActivity> activities = activityMapper.selectByExample(example);
-
-        for (CmsActivity ac : activities) {
-            CmsActivityApplyDTO dto = new CmsActivityApplyDTO();
-            BeanUtils.copyProperties(ac, dto);
-            dto.setContent(ac.getBody());
-            dto.setEndDate(ac.getEndData());
-            dto.setStartDate(ac.getStarDate());
-            applyData.add(dto);
-        }
-        return applyData;
+        return activityDAO.listActivityApplyForChief(clubId, param);
     }
 
     @Override
@@ -199,45 +187,8 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             Asserts.fail("非管理员无法查询");
         }
 
-        CmsActivityExample acExample = new CmsActivityExample();
-        CmsActivityExample.Criteria criteria = acExample.createCriteria();
-
-        // 进行模糊查询社团名字
-        if (param.getClubName() != null) {
-            CmsClubExample cce = new CmsClubExample();
-            cce.createCriteria().andNameLike("%" + param.getClubName() + "%");
-            List<CmsClub> clubs = clubMapper.selectByExample(cce);
-            if (clubs.isEmpty()) {
-                Asserts.fail("查找不到该社团名字，请重新查找");
-            }
-            List<Integer> clubIds = clubs.stream().map(CmsClub::getId).collect(Collectors.toList());
-            criteria.andClubIdIn(clubIds);
-        }
-        if (param.getState() != null) {
-            criteria.andStateEqualTo(param.getState());
-        }
-        if (orderByParam.getSort() != null && orderByParam.getOrder() != null &&
-                !orderByParam.getOrder().equals("") && !orderByParam.getSort().equals("")) {
-            acExample.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
-        }
-        criteria.andStateNotEqualTo(ActivityStateEnum.DELETED.getValue());
-
-
-        List<CmsActivityApplyListDTO> list = new ArrayList<>();
-
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsActivity> activity = activityMapper.selectByExample(acExample);
-        for (CmsActivity ac : activity) {
-            CmsActivityApplyListDTO dto = new CmsActivityApplyListDTO();
-            BeanUtils.copyProperties(ac, dto);
 
-            dto.setContent(ac.getBody());
-            dto.setStartDate(ac.getStarDate());
-            dto.setEndDate(ac.getEndData());
-            dto.setClubName(clubMapper.selectByPrimaryKey(ac.getClubId()).getName());
-            list.add(dto);
-        }
-
-        return list;
+        return activityDAO.listActivityApplyForAdmin(param.getState(), param.getClubName());
     }
 }

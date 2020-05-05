@@ -89,9 +89,10 @@ public class CmsActivityController {
     @ApiOperation(" 6.7 社长可以获取自己社团申请的活动列表 ")
     @GetMapping("/{clubId}/activities/apply")
     public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
+                                           CmsActivityQuery param,
             @Validated PaginationParam paginationParam, OrderByParam orderByParam,
             @RequestParam(value = "keyword", required = false) String keyword) {
-        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, paginationParam, orderByParam)));
+        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, param,paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")
