@@ -40,8 +40,8 @@
     <if test="queryParam.officialState!=null">
       AND official_state = #{queryParam.officialState}
     </if>
-    <if test="queryParam.createAt!=null and queryParam.createAt!=''">
-      AND create_at LIKE concat(#{queryParam.createAt},"%")
+    <if test="queryParam.createAt!=null and  queryParam.createAt!=''">
+      AND create_at LIKE concat("%", #{queryParam.createAt},"%")
     </if>
     <if test="queryParam.state!=null">
       AND state = #{queryParam.state}
