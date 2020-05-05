@@ -60,15 +60,31 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
-        if (role.equals(UserRoleEnum.ADMIN) && activity.getState() == 0) {
-            if (stateId == 1 || stateId == 3) {
+        SysUser user = userService.getCurrentUser();
+        if (activity == null || user == null) {
+            Asserts.notFound("找不到活动");
+        }
+        if (user == null) {
+            Asserts.forbidden("权限不足");
+        }
+
+        if (role.equals(UserRoleEnum.ADMIN) && activity.getState().equals(ActivityStateEnum.PENDING)) {
+            if (user.getIsAdmin() == 0) {
+                Asserts.forbidden("非管理员，权限不足");
+            }
+            if (stateId.equals(ActivityStateEnum.ACTIVE) ||
+                    stateId.equals(ActivityStateEnum.REJECTED)) {
                 activity.setState(stateId);
                 activityMapper.updateByPrimaryKey(activity);
                 return;
             }
         }
-        else if (role.equals(UserRoleEnum.CHIEF) && activity.getState() == 1) {
-            if (stateId == 2 || stateId == 4) {
+        else if (role.equals(UserRoleEnum.CHIEF) && activity.getState().equals(ActivityStateEnum.ACTIVE)) {
+            CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+            if (club == null || !club.getChiefId().equals(user.getId())) {
+                Asserts.forbidden("非社长，权限不足");
+            }
+            if (stateId.equals(ActivityStateEnum.PUBLISHED) || stateId.equals(ActivityStateEnum.FINISHED)) {
                 activity.setState(stateId);
                 activityMapper.updateByPrimaryKey(activity);
                 return;
@@ -109,8 +125,13 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             Asserts.fail("非社长无法查看申请活动");
         }
         CmsActivityExample example = new CmsActivityExample();
-        example.createCriteria().andClubIdEqualTo(clubId).andStateNotEqualTo(5);
-        example.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
+        CmsActivityExample.Criteria criteria = example.createCriteria();
+
+        criteria.andClubIdEqualTo(clubId).andStateNotEqualTo(ActivityStateEnum.DELETED.getValue());
+        if (orderByParam.getSort() != null && orderByParam.getOrder() != null &&
+                !orderByParam.getOrder().equals("") && !orderByParam.getSort().equals("")) {
+            example.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
+        }
 
         List<CmsActivityApplyDTO> applyData = new ArrayList<>();
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
@@ -130,7 +151,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (activity == null || activity.getState() == 5) {
+        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED)) {
             Asserts.fail("申请ID错误，获取申请活动失败");
         }
 
@@ -150,7 +171,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (user == null) {
             Asserts.fail("请登录");
         }
-        if (activity == null || activity.getState() == 5) {
+        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED)) {
             Asserts.fail("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
@@ -179,6 +200,8 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         }
 
         CmsActivityExample acExample = new CmsActivityExample();
+        CmsActivityExample.Criteria criteria = acExample.createCriteria();
+
         // 进行模糊查询社团名字
         if (param.getClubName() != null) {
             CmsClubExample cce = new CmsClubExample();
@@ -188,12 +211,16 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 Asserts.fail("查找不到该社团名字，请重新查找");
             }
             List<Integer> clubIds = clubs.stream().map(CmsClub::getId).collect(Collectors.toList());
-            acExample.createCriteria().andClubIdIn(clubIds).andStateNotEqualTo(5);
+            criteria.andClubIdIn(clubIds);
         }
         if (param.getState() != null) {
-            acExample.createCriteria().andStateEqualTo(param.getState());
+            criteria.andStateEqualTo(param.getState());
         }
-        acExample.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
+        if (orderByParam.getSort() != null && orderByParam.getOrder() != null &&
+                !orderByParam.getOrder().equals("") && !orderByParam.getSort().equals("")) {
+            acExample.setOrderByClause(orderByParam.getSort() + " " + orderByParam.getOrder());
+        }
+        criteria.andStateNotEqualTo(ActivityStateEnum.DELETED.getValue());
 
 
         List<CmsActivityApplyListDTO> list = new ArrayList<>();
