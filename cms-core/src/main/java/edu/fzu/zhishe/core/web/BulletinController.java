@@ -84,7 +84,7 @@ public class BulletinController {
         }
         CmsBulletinDTO bulletinDTO = new CmsBulletinDTO();
         BeanUtils.copyProperties(bulletin, bulletinDTO);
-        bulletinDTO.setContent(bulletin.getBody());
+        bulletinDTO.setBody(bulletin.getBody());
         return ok().body(bulletinDTO);
     }
 

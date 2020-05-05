@@ -17,7 +17,7 @@ public class CmsBulletinDTO {
      */
 
     private String title;
-    private String content;
+    private String body;
     private Date createAt;
     private Date updateAt;
 
@@ -29,12 +29,12 @@ public class CmsBulletinDTO {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getBody() {
+        return body;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 
     public Date getCreateAt() {

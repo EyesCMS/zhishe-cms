@@ -24,7 +24,7 @@ public class CmsBulletinParam {
 
     @ApiModelProperty(value = "公告内容")
     @NotNull(message = "内容不能为空")
-    private String content;
+    private String body;
 
     public String getTitle() {
         return title;
@@ -34,11 +34,9 @@ public class CmsBulletinParam {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
-    }
+    public String getBody() { return body; }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 }

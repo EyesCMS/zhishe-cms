@@ -63,7 +63,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         CmsBulletin bulletin = new CmsBulletin(){{
             setClubId(clubId);//获取当前club_id 未实现，目前直接通过前端传递
             setTitle(cmsBulletinParam.getTitle());
-            setBody(cmsBulletinParam.getContent());
+            setBody(cmsBulletinParam.getBody());
             setCreateAt(new Date());
             setUpdateAt(new Date());
         }
@@ -89,7 +89,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         BeanUtils.copyProperties(cmsBulletinParam, bulletin);
-        bulletin.setBody(cmsBulletinParam.getContent());
+        bulletin.setBody(cmsBulletinParam.getBody());
         bulletin.setUpdateAt(new Date());
        return bulletinMapper.updateByPrimaryKey(bulletin);
     }
