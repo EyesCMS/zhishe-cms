@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
@@ -10,10 +11,12 @@ import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
+import edu.fzu.zhishe.core.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +40,9 @@ public class FmsForumController {
 
     @Autowired
     private FmsForumService forumService;
+
+    @Autowired
+    private SysUserService userService;
 
     @ApiOperation(" 7.1 帖子列表(个人/活动) ")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
@@ -115,6 +121,22 @@ public class FmsForumController {
             Asserts.fail("parameter 'originState' can only be assigned with 0 or 1");
         }
         return ResponseEntity.ok().body(CommonPage.restPage(postList));
+    }
+
+    @RequestMapping(value = "/posts/mine", method = RequestMethod.GET)
+    public ResponseEntity<CommonPage<FmsPostDTO>> listMyPosts(@Validated PaginationParam paginationParam,
+            FmsPostQuery postQuery) {
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+        String username = currentUser.getUsername();
+        postQuery.setPosterName(username);
+        List<FmsPostDTO> posts = forumService.listPersonalPost(null, paginationParam, postQuery);
+        List<FmsPostDTO> myPosts = posts.stream()
+            .filter(p -> p.getPosterName().equals(username))
+            .collect(Collectors.toList());
+        return ResponseEntity.ok().body(CommonPage.restPage(myPosts));
     }
 
     @ApiOperation(" 8.1 对某一帖子发表评论 ")

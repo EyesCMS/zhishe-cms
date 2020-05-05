@@ -18,8 +18,8 @@
      p.title,
      p.content,
      p.img_url,
-     c.`name` poster_name,
-     c.avatar_url poster_avatar_url,
+     c.`name` AS poster_name,
+     c.avatar_url AS poster_avatar_url,
      p.create_at
     FROM
      fms_post AS p
@@ -52,8 +52,8 @@
      p.title,
      p.content,
      p.img_url,
-     c.`name` poster_name,
-     c.avatar_url poster_avatar_url,
+     c.`name` AS poster_name,
+     c.avatar_url AS poster_avatar_url,
      p.create_at
     FROM
      fms_post AS p
@@ -70,8 +70,8 @@
      p.title,
      p.content,
      p.img_url,
-     u.username poster_name,
-     u.avatar_url poster_avatar_url,
+     u.username AS poster_name,
+     u.avatar_url AS poster_avatar_url,
      p.create_at
     FROM
      fms_post AS p
@@ -111,8 +111,8 @@
      p.title,
      p.content,
      p.img_url,
-     u.username poster_name,
-     u.avatar_url poster_avatar_url,
+     u.username AS poster_name,
+     u.avatar_url AS poster_avatar_url,
      p.create_at
     FROM
      fms_post AS p
