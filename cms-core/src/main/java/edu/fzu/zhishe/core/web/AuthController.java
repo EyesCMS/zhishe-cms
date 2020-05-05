@@ -82,11 +82,12 @@ public class AuthController {
     @PostMapping(value = "/logout")
     public ResponseEntity<Object> logout() {
         SysUser currentUser = userService.getCurrentUser();
+        // 不需要切换角色了
         // 不是管理员时，重置当前角色
-        if (currentUser.getIsAdmin() == 0) {
-            currentUser.setCurrentRole(UserRoleEnum.NORMAL.getValue());
-            userService.updateUserSelective(currentUser);
-        }
+//        if (currentUser != null && currentUser.getIsAdmin() == 0) {
+//            currentUser.setCurrentRole(UserRoleEnum.NORMAL.getValue());
+//            userService.updateUserSelective(currentUser);
+//        }
         return noContent().build();
     }
 
