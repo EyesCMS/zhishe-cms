@@ -3,9 +3,9 @@ package edu.fzu.zhishe.core.web;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
-import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
+import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
@@ -43,13 +43,12 @@ public class FmsForumController {
     public ResponseEntity<CommonPage<FmsPostDTO>> listPosts(
             @Validated PaginationParam paginationParam,
             @RequestParam(value = "type") Integer type,
-            @RequestParam(value = "keyword", required = false) String title) {
-        QueryParam queryParam = new QueryParam(paginationParam, title);
+            FmsPostQuery postQuery) {
         List<FmsPostDTO> postList = null;
         if (type == 0) {
-             postList = forumService.listPersonalPost(null, queryParam);
+             postList = forumService.listPersonalPost(null, paginationParam, postQuery);
         } else if (type == 1) {
-            postList = forumService.listActivityPost(null, queryParam);
+            postList = forumService.listActivityPost(null, paginationParam, postQuery);
         } else {
             Asserts.fail("parameter 'originState' can only be assigned with 0 or 1");
         }
@@ -101,17 +100,17 @@ public class FmsForumController {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(" 7.6 某个社团的活动帖子列表 ")
+    @ApiOperation(" 7.6 某个社团的帖子列表 ")
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
+                                                FmsPostQuery postQuery,
                                                 @RequestParam(value = "type") Integer type,
                                                 @Validated PaginationParam paginationParam) {
         List<FmsPostDTO> postList = null;
-        QueryParam queryParam = new QueryParam(paginationParam, null);
         if (type == 0) {
-            postList = forumService.listPersonalPost(clubId, queryParam);
+            postList = forumService.listPersonalPost(clubId, paginationParam, postQuery);
         } else if (type == 1) {
-            postList = forumService.listActivityPost(clubId, queryParam);
+            postList = forumService.listActivityPost(clubId, paginationParam, postQuery);
         } else {
             Asserts.fail("parameter 'originState' can only be assigned with 0 or 1");
         }

@@ -3,9 +3,9 @@ package edu.fzu.zhishe.core.service;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
+import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.param.QueryParam;
 import java.util.List;
 
 /**
@@ -14,11 +14,11 @@ import java.util.List;
  */
 public interface FmsForumService {
 
-    List<FmsPostDTO> listPersonalPost(Integer clubId, QueryParam queryParam);
+    List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery);
 
     FmsPostDTO getPersonalPostById(Integer id);
 
-    List<FmsPostDTO> listActivityPost(Integer clubId, QueryParam queryParam);
+    List<FmsPostDTO> listActivityPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery);
 
     FmsPostDTO getActivityPostById(Integer id);
 

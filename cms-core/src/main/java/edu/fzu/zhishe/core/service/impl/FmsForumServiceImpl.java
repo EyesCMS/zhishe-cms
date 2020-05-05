@@ -7,7 +7,6 @@ import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsPostRemark;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
@@ -15,14 +14,13 @@ import edu.fzu.zhishe.core.dao.FmsRemarkDAO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
+import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
 import java.util.List;
-import javax.swing.text.html.parser.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +47,9 @@ public class FmsForumServiceImpl implements FmsForumService {
     private SysUserService userService;
 
     @Override
-    public List<FmsPostDTO> listPersonalPost(Integer clubId, QueryParam queryParam) {
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return postDAO.listPersonalPost(clubId, queryParam);
+    public List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return postDAO.listPersonalPost(clubId, postQuery);
     }
 
     @Override
@@ -60,9 +58,9 @@ public class FmsForumServiceImpl implements FmsForumService {
     }
 
     @Override
-    public List<FmsPostDTO> listActivityPost(Integer clubId, QueryParam queryParam) {
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return postDAO.listActivityPost(clubId, queryParam);
+    public List<FmsPostDTO> listActivityPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return postDAO.listActivityPost(clubId, postQuery);
     }
 
     @Override

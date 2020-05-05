@@ -30,11 +30,20 @@
      <if test="clubId != null">
        AND p.poster_id = #{clubId}
      </if>
-    <if test="queryParam.keyword != null and queryParam.keyword != ''">
-      AND title LIKE concat("%",#{queryParam.keyword},"%")
+    <if test="queryParam.posterName != null and queryParam.posterName != ''">
+      AND `name` LIKE concat("%", #{queryParam.posterName},"%")
+    </if>
+    <if test="queryParam.title != null and queryParam.title != ''">
+      AND title LIKE concat("%", #{queryParam.title},"%")
+    </if>
+    <if test="queryParam.content != null and queryParam.content != ''">
+      AND content LIKE concat("%", #{queryParam.content},"%")
+    </if>
+    <if test="queryParam.createAt != null and queryParam.createAt != ''">
+      AND p.create_at LIKE concat("%", #{queryParam.createAt},"%")
     </if>
     ORDER BY
-     #{queryParam.sort} DESC
+     p.create_at DESC
   </select>
 
   <select id="getActivityPostById" parameterType="java.lang.Integer" resultMap="PostResultMap">
@@ -79,6 +88,18 @@
         WHERE
           t1.club_id = #{clubId}
       )
+    </if>
+    <if test="queryParam.posterName != null and queryParam.posterName != ''">
+      AND username LIKE concat("%", #{queryParam.posterName},"%")
+    </if>
+    <if test="queryParam.title != null and queryParam.title != ''">
+      AND title LIKE concat("%", #{queryParam.title},"%")
+    </if>
+    <if test="queryParam.content != null and queryParam.content != ''">
+      AND content LIKE concat("%", #{queryParam.content},"%")
+    </if>
+    <if test="queryParam.createAt != null and queryParam.createAt != ''">
+      AND create_at LIKE concat("%", #{queryParam.createAt},"%")
     </if>
     ORDER BY
       create_at DESC
