@@ -197,7 +197,7 @@ public class SysUserServiceImpl implements SysUserService {
     public void updateUserByParam(SysUserUpdateParam updateParam) {
         SysUser user = getCurrentUser();
         if (user == null) {
-            Asserts.fail("请登录后修改信息");
+            Asserts.unAuthorized("请登录后修改信息");
         }
 
         Asserts.hasFiled(updateParam);

@@ -38,9 +38,9 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
 
     @Override
     public CmsBulletin getBulletin(Integer clubId, Integer bulletinId) {
-        if (!clubService.isClubMember(clubId)) {
-            Asserts.fail(" 您没有访问的权限！ ");
-        }
+//        if (!clubService.isClubMember(clubId)) {
+//            Asserts.fail(" 您没有访问的权限！ ");
+//        }
         return bulletinMapper.selectByPrimaryKey(bulletinId);
     }
 
@@ -75,19 +75,17 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     public int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
-        if (bulletin == null) {
-            Asserts.fail( "找不到 id 为 " + bulletinId + " 的公告 " );
-        }
+        Asserts.notNull(bulletin);
 
         Integer clubId = bulletin.getClubId();
         //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
-            Asserts.fail(" 找不到该社团 ");
+            Asserts.notFound(" 找不到该社团 ");
         }
 
         if (clubService.getClubStatue(clubId) != ClubStatueEnum.CHIEF) {
-            Asserts.fail( " 权限不足 " );
+            Asserts.forbidden( " 权限不足 " );
         }
 
         BeanUtils.copyProperties(cmsBulletinParam, bulletin);
@@ -101,18 +99,18 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
         if (bulletin == null) {
-            Asserts.fail( "找不到 id 为 " + bulletinId + " 的公告 " );
+            Asserts.notFound( "找不到 id 为 " + bulletinId + " 的公告 " );
         }
 
         Integer clubId = bulletin.getClubId();
         //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
-            Asserts.fail(" 找不到该社团 ");
+            Asserts.notFound(" 找不到该社团 ");
         }
 
         if (clubService.getClubStatue(clubId) != ClubStatueEnum.CHIEF) {
-            Asserts.fail( " 权限不足 " );
+            Asserts.forbidden( " 权限不足 " );
         }
         return bulletinMapper.deleteByPrimaryKey(bulletinId);
     }
