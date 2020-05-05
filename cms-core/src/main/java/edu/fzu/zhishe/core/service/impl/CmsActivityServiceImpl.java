@@ -5,13 +5,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
-import edu.fzu.zhishe.cms.model.CmsActivity;
-import edu.fzu.zhishe.cms.model.CmsActivityExample;
-import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.cms.model.CmsClubExample;
-import edu.fzu.zhishe.cms.model.SysUser;
+import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
+import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
+import edu.fzu.zhishe.core.constant.DeleteStateEnum;
+import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
@@ -31,6 +30,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
+
 /*
  * @author PSF 2020/04/27
  */
@@ -49,8 +50,19 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Autowired
     private SysUserService userService;
 
+    @Autowired
+    private FmsPostMapper postMapper;
+
     @Override
     public void activityApply(CmsClubActivityParam param) {
+        CmsActivityExample example = new CmsActivityExample();
+        example.createCriteria().andStateEqualTo(ActivityStateEnum.PENDING.getValue())
+                .andClubIdEqualTo(param.getClubId()).andNameEqualTo(param.getName());
+
+        if (!activityMapper.selectByExample(example).isEmpty()) {
+            Asserts.forbidden("已申请活动，多次申请失败");
+        }
+
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
         activity.setStarDate(param.getStartDate());
@@ -59,7 +71,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
         activity.setState(0);
         if (activityMapper.insert(activity) == 0) {
-            Asserts.fail("创建申请活动失败");
+            Asserts.fail("数据库插入失败创建申请活动失败");
         }
     }
 
@@ -81,6 +93,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             if (stateId.equals(ActivityStateEnum.ACTIVE) ||
                     stateId.equals(ActivityStateEnum.REJECTED)) {
                 activity.setState(stateId);
+                activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
                 return;
             }
@@ -92,7 +105,22 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             }
             if (stateId.equals(ActivityStateEnum.PUBLISHED) || stateId.equals(ActivityStateEnum.FINISHED)) {
                 activity.setState(stateId);
+                activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
+                //创建一个帖子
+                FmsPost post = new FmsPost() {{
+                    setPosterId(club.getId());
+                    setType(PostTypeEnum.ACTIVITY.getValue());
+                    setTitle(activity.getTitle());
+                    setContent(activity.getBody());
+                    setImgUrl(activity.getImgUrl());
+                    setCreateAt(new Date());
+                    setDeleteState(DeleteStateEnum.Existence.getValue());
+                }};
+                if (postMapper.insertSelective(post) == 0) {
+                    Asserts.fail("发布活动时创建帖子失败");
+                }
+
                 return;
             }
         }
@@ -109,6 +137,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         SysUser user = userService.getCurrentUser();
         if (user.getIsAdmin() == 1 || user.getId().equals(club.getChiefId())) {
             activity.setState(ActivityStateEnum.DELETED.getValue());
+            activity.setHandleAt(new Date());
             if (activityMapper.updateByPrimaryKey(activity) == 0) {
                 Asserts.fail("删除失败，删除0行");
             }

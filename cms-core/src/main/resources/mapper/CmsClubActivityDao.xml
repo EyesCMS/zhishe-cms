@@ -43,8 +43,11 @@
         <if test="queryParam.state!=null">
             AND a.state = #{queryParam.state}
         </if>
-        <if test="queryParam.title!=null">
-            AND a.body LIKE concat("%", #{queryParam.title},"%")
+        <if test="queryParam.name!=null">
+            AND a.name LIKE concat("%", #{queryParam.name},"%")
+        </if>
+        <if test="queryParam.content!=null">
+            AND a.body LIKE concat("%", #{queryParam.content},"%")
         </if>
         <if test="queryParam.location!=null">
             AND a.location LIKE concat("%", #{queryParam.location},"%")
