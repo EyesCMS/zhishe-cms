@@ -175,10 +175,10 @@
       u.id AS user_id,
       u.username,
       u.nickname,
-      u.avatar_url,
       r.description,
       uc.credit,
-      h.`name` AS honor_name
+      h.`name` AS honor_name,
+    u.avatar_url
     FROM
       ( SELECT * FROM cms_user_club_rel WHERE club_id = #{clubId} ) AS uc
       LEFT JOIN sys_user u ON uc.user_id = u.id

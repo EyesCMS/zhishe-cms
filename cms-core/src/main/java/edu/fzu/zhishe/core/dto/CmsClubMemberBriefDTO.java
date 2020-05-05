@@ -13,9 +13,6 @@ public class CmsClubMemberBriefDTO {
     @ApiModelProperty(value = "昵称")
     private String nickname;
 
-    @ApiModelProperty(value = "头像地址")
-    private String avatarUrl;
-
     @ApiModelProperty(value = "头衔")
     private String honor;
 
@@ -24,6 +21,9 @@ public class CmsClubMemberBriefDTO {
 
     @ApiModelProperty(value = "活跃度")
     private Integer credit;
+
+    @ApiModelProperty(value = "头像地址")
+    private String avatarUrl;
 
     public Integer getUserId() {
         return userId;
