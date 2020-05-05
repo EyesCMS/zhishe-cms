@@ -111,8 +111,7 @@ public class AuthController {
         if (user.getIsAdmin() == 1) {
             userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("admin")));
         } else {
-            // TODO: check role string
-            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("normal")));
+            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("student")));
         }
         return ok().body(userInfoDTO);
     }
