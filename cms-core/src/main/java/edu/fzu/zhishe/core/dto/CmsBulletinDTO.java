@@ -16,6 +16,7 @@ public class CmsBulletinDTO {
      * updateAt : 2018-04-19 19:14:12
      */
 
+
     private String title;
     private String body;
     private Date createAt;

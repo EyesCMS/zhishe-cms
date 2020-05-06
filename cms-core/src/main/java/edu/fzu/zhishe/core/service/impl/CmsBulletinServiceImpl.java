@@ -8,7 +8,11 @@ import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
+import edu.fzu.zhishe.core.dao.CmsBulletinDAO;
+import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
+import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.CmsBulletinQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 
@@ -36,6 +40,9 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     @Autowired
     CmsClubMapper clubMapper;
 
+    @Autowired
+    private CmsBulletinDAO bulletinDAO;
+
     @Override
     public CmsBulletin getBulletin(Integer clubId, Integer bulletinId) {
 //        if (!clubService.isClubMember(clubId)) {
@@ -45,12 +52,13 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public List<CmsBulletin> listClubBulletin(int clubId, PaginationParam paginationParam) {
-        CmsBulletinExample bulletinExample = new CmsBulletinExample();
-        bulletinExample.createCriteria().andClubIdEqualTo(clubId);
+    public List<CmsBulletinsDTO> listClubBulletin(int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
+        //CmsBulletinExample bulletinExample = new CmsBulletinExample();
+        //bulletinExample.createCriteria().andClubIdEqualTo(clubId);
+
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return bulletinMapper.selectByExample(bulletinExample);
+        return bulletinDAO.listBulletin(clubId,bulletinQuery);
     }
 
     @Override

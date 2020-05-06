@@ -1,8 +1,11 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.CmsBulletin;
+import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.CmsBulletinQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
+import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
 import java.util.List;
 
 /**
@@ -21,5 +24,5 @@ public interface CmsBulletinService {
 
     int deleteBulletin(Integer bulletinId);
 
-    List<CmsBulletin> listClubBulletin(int clubId, PaginationParam paginationParam);
+    List<CmsBulletinsDTO> listClubBulletin(int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery);
 }

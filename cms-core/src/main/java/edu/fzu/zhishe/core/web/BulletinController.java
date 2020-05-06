@@ -8,7 +8,9 @@ import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
+import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
+import edu.fzu.zhishe.core.param.CmsBulletinQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
+
+import java.util.List;
 
 /**
  * @author zou
@@ -63,10 +67,14 @@ public class BulletinController {
     @IsClubMember
     public ResponseEntity<Object> listClubBulletin(
         @Validated PaginationParam paginationParam,
+        CmsBulletinQuery bulletinQuery,
         @PathVariable("club") Integer clubId) {
 
-        return ok()
-            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, paginationParam)));
+        /**return ok()
+            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, paginationParam)));*/
+        List<CmsBulletinsDTO> bulletinList = null;
+        bulletinList = bulletinService.listClubBulletin(clubId,paginationParam,bulletinQuery);
+        return ResponseEntity.ok().body(CommonPage.restPage(bulletinList));
     }
 
 
