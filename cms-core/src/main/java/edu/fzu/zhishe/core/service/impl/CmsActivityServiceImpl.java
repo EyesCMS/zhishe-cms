@@ -86,24 +86,24 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             Asserts.forbidden("权限不足");
         }
 
-        if (role.equals(UserRoleEnum.ADMIN) && activity.getState().equals(ActivityStateEnum.PENDING)) {
+        if (role.equals(UserRoleEnum.ADMIN) && activity.getState().equals(ActivityStateEnum.PENDING.getValue())) {
             if (user.getIsAdmin() == 0) {
                 Asserts.forbidden("非管理员，权限不足");
             }
-            if (stateId.equals(ActivityStateEnum.ACTIVE) ||
-                    stateId.equals(ActivityStateEnum.REJECTED)) {
+            if (stateId.equals(ActivityStateEnum.ACTIVE.getValue()) ||
+                    stateId.equals(ActivityStateEnum.REJECTED.getValue())) {
                 activity.setState(stateId);
                 activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
                 return;
             }
         }
-        else if (role.equals(UserRoleEnum.CHIEF) && activity.getState().equals(ActivityStateEnum.ACTIVE)) {
+        else if (role.equals(UserRoleEnum.CHIEF) && activity.getState().equals(ActivityStateEnum.ACTIVE.getValue())) {
             CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
             if (club == null || !club.getChiefId().equals(user.getId())) {
                 Asserts.forbidden("非社长，权限不足");
             }
-            if (stateId.equals(ActivityStateEnum.PUBLISHED) || stateId.equals(ActivityStateEnum.FINISHED)) {
+            if (stateId.equals(ActivityStateEnum.PUBLISHED.getValue()) || stateId.equals(ActivityStateEnum.FINISHED.getValue())) {
                 activity.setState(stateId);
                 activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
@@ -168,7 +168,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED)) {
+        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
             Asserts.fail("申请ID错误，获取申请活动失败");
         }
 
@@ -188,7 +188,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (user == null) {
             Asserts.fail("请登录");
         }
-        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED)) {
+        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
             Asserts.fail("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
