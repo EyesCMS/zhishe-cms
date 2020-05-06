@@ -1,7 +1,9 @@
 package edu.fzu.zhishe.core;
 
+import edu.fzu.zhishe.core.config.StorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @ComponentScan(basePackages = "edu.fzu.zhishe")
+@EnableConfigurationProperties(StorageProperties.class)
 public class CmsCoreApplication {
 
     public static void main(String[] args) {
