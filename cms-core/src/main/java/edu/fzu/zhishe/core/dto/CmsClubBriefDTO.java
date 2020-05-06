@@ -14,6 +14,9 @@ public class CmsClubBriefDTO {
     @ApiModelProperty(value = "类型")
     private String type;
 
+    @ApiModelProperty(value = "状态")
+    private Integer state;
+
     @ApiModelProperty(value = "头像链接")
     private String avatarUrl;
 
@@ -47,6 +50,14 @@ public class CmsClubBriefDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
     }
 
     public String getAvatarUrl() {

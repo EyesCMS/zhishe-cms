@@ -40,6 +40,7 @@
       club.name,
       u.nickname,
       club.type,
+      club.official_state,
       club.avatar_url
     FROM
       cms_club club,
@@ -57,6 +58,7 @@
       club.name,
       u.nickname,
       club.type,
+      club.official_state,
       club.avatar_url
     FROM
       cms_club club,
@@ -104,6 +106,7 @@
       club.name,
       u.nickname,
       club.type,
+      club.official_state,
       club.avatar_url
     FROM
       cms_club club,
@@ -127,6 +130,7 @@
       club.name,
       u.nickname,
       club.type,
+      club.official_state,
       club.avatar_url
     FROM
       cms_club club,
@@ -155,6 +159,8 @@
       cms_club_join_apply a
     WHERE
     a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id AND club.delete_status != 1
+    ORDER BY
+    a.create_at DESC
   </select>
 
   <select id="listCreateClubApply" parameterType="java.lang.Integer"
@@ -168,6 +174,8 @@
       cms_club_create_apply
     WHERE
     user_id = #{userId,jdbcType=INTEGER}
+    ORDER BY
+    create_at DESC
   </select>
 
   <select id="listClubMember" resultMap="ClubMap5">
@@ -203,6 +211,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="official_state" jdbcType="INTEGER" property="state" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
   </resultMap>
 
