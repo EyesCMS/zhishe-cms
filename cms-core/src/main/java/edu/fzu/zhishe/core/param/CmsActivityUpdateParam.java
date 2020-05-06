@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.param;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -26,12 +27,12 @@ public class CmsActivityUpdateParam {
     private String content;
 
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
-    @NotNull(message = " 活动开始时间不为空 ")
+    @Future
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date starDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
-    @NotNull(message = " 活动结束时间不为空 ")
+    @Future
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date endDate;
 
