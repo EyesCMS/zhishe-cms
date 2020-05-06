@@ -3,30 +3,38 @@ package edu.fzu.zhishe.core.web;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
+import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户管理
  *
  * @author peng
  */
-
+@Slf4j
 @RestController
 @Api(tags = "UserController")
 @RequestMapping("/users")
@@ -34,6 +42,16 @@ public class SysUserController {
 
     @Autowired
     private SysUserService userService;
+
+    @Autowired
+    private StorageService storageService;
+
+    private final Path imageRootLocation;
+
+    @Autowired
+    public SysUserController(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
+    }
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
@@ -69,6 +87,29 @@ public class SysUserController {
     public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
         userService.updateUserByParam(updateParam);
         return noContent().build();
+    }
+
+    @ApiOperation(value = " 用户修改头像 ")
+    @PostMapping(value = "/avatar")
+    public ResponseEntity<Object> avatar(@RequestParam("image") MultipartFile image) {
+
+        // 1. upload avatar
+        String url = storageService.store(image, imageRootLocation);
+        log.info("You successfully uploaded " + image.getOriginalFilename() + "!");
+
+        // 2. update user info
+        SysUser currentUser = userService.getCurrentUser();
+        SysUser user = new SysUser() {{
+            setId(currentUser.getId());
+            setAvatarUrl(url);
+        }};
+        if (userService.updateUserSelective(user) == 0) {
+            Asserts.fail("update avatar failed");
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("avatarUrl", url);
+        return ok().body(jsonObject);
     }
 
     @ApiOperation(value = " 忘记密码时通过回答保密问题修改密码 ")
