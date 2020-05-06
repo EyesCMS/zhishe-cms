@@ -23,12 +23,14 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author liang on 4/25/2020.
  * @version 1.0
  */
 @Service
+@Transactional(rollbackFor = Throwable.class)
 public class FmsForumServiceImpl implements FmsForumService {
 
     @Autowired

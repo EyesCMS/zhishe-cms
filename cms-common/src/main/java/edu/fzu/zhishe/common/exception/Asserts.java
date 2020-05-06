@@ -40,11 +40,11 @@ public class Asserts {
     }
 
     public static void forbidden(String message) {
-        throw new AccessException(message);
+        throw new AccessDeniedException(message);
     }
 
     public static void forbidden() {
-        throw new AccessException("Access is denied");
+        throw new AccessDeniedException("Access is denied");
     }
 
     public static void notFound(boolean condition) {

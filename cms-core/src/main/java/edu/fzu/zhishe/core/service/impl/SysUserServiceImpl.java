@@ -34,8 +34,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-//import org.springframework.security.core.userdetails.UserDetails;
-
 /**
  * @author liang on 4/19/2020.
  * @version 1.0
@@ -140,13 +138,13 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser getCurrentUser() {
+
         SecurityContext context = SecurityContextHolder.getContext();
-        Authentication auth = context.getAuthentication();
-        if (auth.getPrincipal() == ANON_USER) {
-            return null;
+        Object principal = context.getAuthentication().getPrincipal();
+        if (principal.getClass().equals(SysUserDetails.class)) {
+            return ((SysUserDetails) principal).getSysUser();
         }
-        SysUserDetails userDetails = (SysUserDetails) auth.getPrincipal();
-        return userDetails.getSysUser();
+        return null;
     }
 
 //    @Override

@@ -1,8 +1,6 @@
 package edu.fzu.zhishe.common.exception;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.common.api.ErrorResponseBody;
-import java.awt.MediaTracker;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -13,7 +11,6 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
@@ -43,8 +40,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonObject);
     }
 
-    @ExceptionHandler(value = AccessException.class)
-    public ResponseEntity<Object> handle(AccessException e) {
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public ResponseEntity<Object> handle(AccessDeniedException e) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("message", e.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonObject);

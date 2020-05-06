@@ -5,9 +5,9 @@ package edu.fzu.zhishe.common.exception;
  * @author liang on 5/3/2020.
  * @version 1.0
  */
-public class AccessException extends RuntimeException {
+public class AccessDeniedException extends RuntimeException {
 
-    public AccessException(String message) {
+    public AccessDeniedException(String message) {
         super(message);
     }
 }
