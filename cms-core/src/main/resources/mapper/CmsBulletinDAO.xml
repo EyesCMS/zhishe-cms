@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsBulletinDAO">
+
+    <resultMap id="BulletinResultMap" type="edu.fzu.zhishe.core.dto.CmsBulletinsDTO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="body" jdbcType="VARCHAR" property="body" />
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+        <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    </resultMap>
+
+    <select id="listBulletin" parameterType="java.lang.Integer" resultMap="BulletinResultMap">
+     SELECT
+        p.id,
+        p.club_id,
+        p.title,
+        p.body,
+        p.create_at,
+        p.update_at
+     FROM
+        cms_bulletin AS p
+     WHERE
+        p.club_id = #{clubId}
+        <if test="bulletinQuery.title != null and bulletinQuery.title != ''">
+            AND p.title LIKE concat("%",#{bulletinQuery.title},"%")
+        </if>
+        <if test="bulletinQuery.body != null and bulletinQuery.body != ''">
+            AND p.body LIKE concat("%",#{bulletinQuery.body},"%")
+        </if>
+        ORDER BY
+        p.update_at DESC
+    </select>
+</mapper>
