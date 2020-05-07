@@ -55,6 +55,19 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @Override
     public void activityApply(CmsClubActivityParam param) {
+        SysUser user = userService.getCurrentUser();
+        if (user == null) {
+            Asserts.forbidden("请登录");
+        }
+        CmsClub club = clubMapper.selectByPrimaryKey(param.getClubId());
+        if (club== null) {
+            Asserts.notFound("clubId错误，找不到社团");
+        }
+
+        if (!club.getChiefId().equals(user.getId())) {
+            Asserts.forbidden("非社长无法申请社团活动");
+        }
+
         CmsActivityExample example = new CmsActivityExample();
         example.createCriteria().andStateEqualTo(ActivityStateEnum.PENDING.getValue())
                 .andClubIdEqualTo(param.getClubId()).andNameEqualTo(param.getName());
@@ -65,6 +78,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
+        activity.setBody(param.getContent());
         activity.setStarDate(param.getStartDate());
         activity.setEndData(param.getEndDate());
         activity.setCreateAt(new Date());
