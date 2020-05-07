@@ -1,7 +1,9 @@
 package edu.fzu.zhishe.core.web;
 
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.CommonPage;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
@@ -114,4 +116,26 @@ public class CmsClubController {
         return ResponseEntity.noContent().build();
     }
 
+    @ApiOperation(" 3.11修改社团信息 ")
+    @PostMapping("/{clubId}/alter/info")
+    @CheckClubAuth("3")
+    public ResponseEntity<Integer> alterClubInfo(@PathVariable("clubId") Integer clubId,
+                                                 @RequestBody JSONObject object) {
+        if((String)object.get("type") == null) {
+            Asserts.fail("社团类型不能为空");
+        }
+        return ResponseEntity.ok(clubService.alterClubInfo(clubId, (String)object.get("slogan"),
+                                            (String)object.get("qqGroup"),(String)object.get("type")));
+    }
+
+    @ApiOperation(" 3.12修改社团头像 ")
+    @PostMapping("/{clubId}/alter/pic")
+    @CheckClubAuth("3")
+    public ResponseEntity<Integer> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
+                                                 @RequestBody JSONObject object) {
+        if((String)object.get("avatarUrl") == null) {
+            Asserts.fail("头像不能为空");
+        }
+        return ResponseEntity.ok(clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl")));
+    }
 }

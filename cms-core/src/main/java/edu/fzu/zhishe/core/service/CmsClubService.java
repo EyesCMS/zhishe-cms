@@ -41,13 +41,13 @@ public interface CmsClubService {
 
     Integer deleteClubMember(Integer clubId, Integer userId);
 
-    Integer alterClubInfo(Integer clubId, Integer userId, String slogan, String qqGroup, String type, String avatarUrl);
+    Integer alterClubInfo(Integer clubId, String slogan, String qqGroup, String type);
 
     /*
     Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup);
 
     Integer alterClubType(Integer clubId, Integer userId, String type);
-
-    Integer alterClubAvatarUrl(Integer clubId, Integer userId, String avatarUrl);
 */
+    Integer alterClubAvatarUrl(Integer clubId, String avatarUrl);
+
 }
