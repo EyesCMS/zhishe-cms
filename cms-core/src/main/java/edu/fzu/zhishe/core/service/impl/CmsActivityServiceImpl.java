@@ -56,6 +56,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void activityApply(CmsClubActivityParam param) {
         SysUser user = userService.getCurrentUser();
+
+        if (param.getStartDate().after(param.getEndDate())) {
+            Asserts.forbidden("结束日期不可以在开始日期之前");
+        }
+
         if (user == null) {
             Asserts.forbidden("请登录");
         }
@@ -79,8 +84,6 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         CmsActivity activity = new CmsActivity();
         BeanUtils.copyProperties(param, activity);
         activity.setBody(param.getContent());
-        activity.setStarDate(param.getStartDate());
-        activity.setEndData(param.getEndDate());
         activity.setCreateAt(new Date());
 
         activity.setState(0);
@@ -209,11 +212,14 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (!club.getChiefId().equals(user.getId())) {
             Asserts.fail("非社长不能修改活动");
         }
+        if (param.getStartDate().after(param.getEndDate())) {
+            Asserts.forbidden("结束日期不可以在开始日期之前");
+        }
         activity.setName(param.getName());
         activity.setTitle(param.getTitle());
         activity.setBody(param.getContent());
-        activity.setStarDate(param.getStarDate());
-        activity.setEndData(param.getEndDate());
+        activity.setStartDate(param.getStartDate());
+        activity.setEndDate(param.getEndDate());
         if (param.getLocation() != null) {
             activity.setLocation(param.getLocation());
         }

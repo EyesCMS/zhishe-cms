@@ -8,8 +8,8 @@
         <result column="location" jdbcType="VARCHAR" property="location" />
         <result column="body" jdbcType="VARCHAR" property="content" />
         <result column="member_count" jdbcType="INTEGER" property="memberCount" />
-        <result column="star_date" jdbcType="TIMESTAMP" property="startDate" />
-        <result column="end_data" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
         <result column="state" jdbcType="INTEGER" property="state" />
     </resultMap>
 
@@ -19,8 +19,8 @@
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="title" jdbcType="VARCHAR" property="title" />
         <result column="body" jdbcType="VARCHAR" property="content" />
-        <result column="star_date" jdbcType="TIMESTAMP" property="startDate" />
-        <result column="end_data" jdbcType="TIMESTAMP" property="endDate" />
+        <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+        <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
         <result column="location" jdbcType="VARCHAR" property="location" />
         <result column="state" jdbcType="INTEGER" property="state" />
     </resultMap>
@@ -32,8 +32,8 @@
         a.location,
         a.body,
         a.member_count,
-        a.star_date,
-        a.end_data,
+        a.start_date,
+        a.end_date,
         a.state
         FROM
         cms_activity a
@@ -53,10 +53,10 @@
             AND a.location LIKE concat("%", #{queryParam.location},"%")
         </if>
         <if test="queryParam.startDate!=null and queryParam.startDate!=''">
-            AND a.star_date >= #{queryParam.startDate}
+            AND a.start_date >= #{queryParam.startDate}
         </if>
         <if test="queryParam.endDate!=null and queryParam.endDate!=''">
-            AND a.end_data &lt; #{queryParam.endDate}
+            AND a.end_date &lt; #{queryParam.endDate}
         </if>
 
         ORDER BY
@@ -70,8 +70,8 @@
         a.name,
         a.title,
         a.body,
-        a.star_date,
-        a.end_data,
+        a.start_date,
+        a.end_date,
         a.location,
         a.state
         FROM

@@ -22,10 +22,10 @@ public class CmsActivity implements Serializable {
     private String imgUrl;
 
     @ApiModelProperty(value = "开始日期")
-    private Date starDate;
+    private Date startDate;
 
     @ApiModelProperty(value = "结束日期")
-    private Date endData;
+    private Date endDate;
 
     @ApiModelProperty(value = "活动地址")
     private String location;
@@ -92,20 +92,20 @@ public class CmsActivity implements Serializable {
         this.imgUrl = imgUrl;
     }
 
-    public Date getStarDate() {
-        return starDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public void setStarDate(Date starDate) {
-        this.starDate = starDate;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
-    public Date getEndData() {
-        return endData;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndData(Date endData) {
-        this.endData = endData;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public String getLocation() {
@@ -160,8 +160,8 @@ public class CmsActivity implements Serializable {
         sb.append(", title=").append(title);
         sb.append(", body=").append(body);
         sb.append(", imgUrl=").append(imgUrl);
-        sb.append(", starDate=").append(starDate);
-        sb.append(", endData=").append(endData);
+        sb.append(", startDate=").append(startDate);
+        sb.append(", endDate=").append(endDate);
         sb.append(", location=").append(location);
         sb.append(", memberCount=").append(memberCount);
         sb.append(", createAt=").append(createAt);

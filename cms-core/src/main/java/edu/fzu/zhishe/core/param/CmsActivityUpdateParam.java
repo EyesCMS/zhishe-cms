@@ -29,7 +29,7 @@ public class CmsActivityUpdateParam {
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
     @Future
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    private Date starDate;
+    private Date startDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
     @Future
@@ -51,8 +51,8 @@ public class CmsActivityUpdateParam {
         return content;
     }
 
-    public Date getStarDate() {
-        return starDate;
+    public Date getStartDate() {
+        return startDate;
     }
 
     public Date getEndDate() {
