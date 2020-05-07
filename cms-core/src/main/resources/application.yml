@@ -55,7 +55,7 @@ secure:
       - /clubs
       - /forum/**
       - /roles/**
-      - /files/images
+      - /files/images/**
 
 logging:
   level:
