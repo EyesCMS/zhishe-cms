@@ -240,7 +240,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     //修改社团信息接口
     @Override
     @CheckClubAuth("3")
-    public Integer alterClubSlogan(Integer clubId, Integer userId, String slogan){
+    public Integer alterClubInfo(Integer clubId, Integer userId, String slogan, String qqGroup, String type, String avatarUrl){
 //        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
 //        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
 //        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
@@ -250,9 +250,14 @@ public class CmsClubServiceImpl implements CmsClubService {
 
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setSlogan(slogan);
+        club.setQqGroup(qqGroup);
+        club.setQqGroup(type);
+        club.setQqGroup(avatarUrl);
         return clubMapper.updateByPrimaryKey(club);
     }
 
+
+    /*
     @Override
     @CheckClubAuth("3")
     public Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup){
@@ -299,5 +304,5 @@ public class CmsClubServiceImpl implements CmsClubService {
         club.setAvatarUrl(avatarUrl);
         return clubMapper.updateByPrimaryKey(club);
     }
-
+*/
 }
