@@ -37,7 +37,8 @@
             AND a.state = #{queryParam.state}
         </if>
         ORDER BY
-            a.id ASC
+        a.state ASC ,
+        a.id ASC
     </select>
 
 </mapper>

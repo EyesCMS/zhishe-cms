@@ -47,6 +47,7 @@
       AND state = #{queryParam.state}
     </if>
     ORDER BY
+      state ASC ,
       id ASC
   </select>
 
