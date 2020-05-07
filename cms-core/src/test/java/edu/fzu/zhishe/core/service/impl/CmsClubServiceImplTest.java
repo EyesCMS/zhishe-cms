@@ -1,11 +1,17 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.common.exception.AccessDeniedException;
 import edu.fzu.zhishe.common.exception.ApiException;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.param.FmsPostParam;
+import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsActivityService;
 import edu.fzu.zhishe.core.service.CmsApplyAuditService;
+import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.util.MockUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class CmsClubServiceImplTest{
     Integer id1 = 10020;
     Integer id2 = 10000;
-    JSONObject object;
 
     Logger log = LoggerFactory.getLogger(CmsClubServiceImplTest.class);
     @Autowired
     CmsClubService cmsClubService;
-
+    PaginationParam paginationParam;
+    CmsClubMemberQuery clubMemberQuery;
     @BeforeEach
     void mockLoginUser() {
         MockUtil.mockLoginUser("test");
@@ -40,16 +46,17 @@ public class CmsClubServiceImplTest{
     @Transactional
     @Rollback
     public void TestForbiddenOperation(){
-        //修改社团信息
-        Assertions.assertThrows(AccessDeniedException.class, () -> {
-            cmsClubService.alterClubAvatarUrl(id2,object);
-        }, " 社团类型不能为空");
 
+        //修改社团信息
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+            cmsClubService.alterClubInfo(id2,"","","");
+        }, " 社团类型不能为空");
 
         //修改社团头像
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            cmsClubService.alterClubAvatarUrl(id1,object);
-        }, " url不能为空");
+            cmsClubService.alterClubAvatarUrl(id1,
+                    "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        }, " 没有该权限");
     }
     @Test
     @Transactional

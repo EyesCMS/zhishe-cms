@@ -121,9 +121,6 @@ public class CmsClubController {
     @CheckClubAuth("3")
     public ResponseEntity<Integer> alterClubInfo(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody JSONObject object) {
-        if((String)object.get("type") == null) {
-            Asserts.fail("社团类型不能为空");
-        }
         return ResponseEntity.ok(clubService.alterClubInfo(clubId, (String)object.get("slogan"),
                                             (String)object.get("qqGroup"),(String)object.get("type")));
     }
@@ -133,9 +130,6 @@ public class CmsClubController {
     @CheckClubAuth("3")
     public ResponseEntity<Integer> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody JSONObject object) {
-        if((String)object.get("avatarUrl") == null) {
-            Asserts.fail("头像不能为空");
-        }
         return ResponseEntity.ok(clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl")));
     }
 }

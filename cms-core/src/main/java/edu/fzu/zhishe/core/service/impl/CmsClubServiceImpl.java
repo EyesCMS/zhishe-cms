@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.service.impl;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dao.*;
@@ -182,9 +183,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社团成员，您没有该权限");
+//       if (CollectionUtils.isEmpty(userClubList)) {
+//            Asserts.forbidden();
 //        }
 
         SysUser user = sysUserMapper.selectByPrimaryKey(userId);
@@ -247,6 +247,10 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
+        if(type==null ||type.equals(""))
+        {
+            Asserts.notNull(null);
+        }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setSlogan(slogan);
         club.setQqGroup(qqGroup);
@@ -295,6 +299,10 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
+        if(avatarUrl==null ||avatarUrl.equals(""))
+        {
+            Asserts.notNull(null);
+        }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setAvatarUrl(avatarUrl);
         return clubMapper.updateByPrimaryKey(club);
