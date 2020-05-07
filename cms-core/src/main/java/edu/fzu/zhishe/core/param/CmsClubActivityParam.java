@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -21,6 +22,10 @@ public class CmsClubActivityParam {
     @ApiModelProperty(value = " 活动名称 ", required = true)
     @NotEmpty(message = " 活动名不能为空 ")
     private String name;
+
+    @ApiModelProperty(value = " 活动人数 ", required = true)
+    @Min(1)
+    private Integer memberCount = 1;
 
     @ApiModelProperty(value = " 活动标题 ")
     private String title;
@@ -81,5 +86,13 @@ public class CmsClubActivityParam {
 
     public String getAccessoryUrl() {
         return accessoryUrl;
+    }
+
+    public Integer getMemberCount() {
+        return memberCount;
+    }
+
+    public void setMemberCount(Integer memberCount) {
+        this.memberCount = memberCount;
     }
 }
