@@ -141,15 +141,16 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 return;
             }
         }
-        Asserts.fail("状态未改变或权限不足");
+        Asserts.forbidden("状态未改变或权限不足");
     }
 
     @Override
     public void delActivity(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (activity == null || club == null) {
-            Asserts.fail("活动ID不存在");
+        if (activity == null || club == null
+                || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+            Asserts.notFound("活动ID不存在");
         }
         SysUser user = userService.getCurrentUser();
         if (user.getIsAdmin() == 1 || user.getId().equals(club.getChiefId())) {
@@ -159,7 +160,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 Asserts.fail("删除失败，删除0行");
             }
         } else {
-            Asserts.fail("非社长或管理员，权限不足");
+            Asserts.forbidden("非社长或管理员，权限不足");
         }
     }
 
@@ -171,11 +172,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         SysUser user = userService.getCurrentUser();
 
         if (club == null) {
-            Asserts.fail("社团ID错误，无法获取社团信息");
+            Asserts.notFound("社团ID错误，无法获取社团信息");
         }
 
         if (user == null || !user.getId().equals(club.getChiefId())) {
-            Asserts.fail("非社长无法查看申请活动");
+            Asserts.forbidden("非社长无法查看申请活动");
         }
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
@@ -203,14 +204,14 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         SysUser user = userService.getCurrentUser();
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
         if (user == null) {
-            Asserts.fail("请登录");
+            Asserts.forbidden("请登录");
         }
         if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
-            Asserts.fail("获取活动失败");
+            Asserts.notFound("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
         if (!club.getChiefId().equals(user.getId())) {
-            Asserts.fail("非社长不能修改活动");
+            Asserts.forbidden("非社长不能修改活动");
         }
         if (param.getStartDate().after(param.getEndDate())) {
             Asserts.forbidden("结束日期不可以在开始日期之前");
