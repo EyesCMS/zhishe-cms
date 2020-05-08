@@ -69,4 +69,11 @@ public class CmsBulletinServiceImplTest{
 
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    public void TestAcceptedOperation() {
+
+    }
+
 }
