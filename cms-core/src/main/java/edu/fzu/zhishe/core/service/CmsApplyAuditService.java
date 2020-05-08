@@ -72,4 +72,8 @@ public interface CmsApplyAuditService {
     CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     List<CmsOfficialChangeApply> listMyClubOfficialChange(Integer clubId, PaginationParam queryParam);
+
+    List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam queryParam);
+
+    List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam queryParam);
 }

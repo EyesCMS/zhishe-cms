@@ -756,4 +756,38 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = officialChangeApplyMapper.selectByExample(example);
         return cmsOfficialChangeApplyList;
     }
+
+    @Override
+    public List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam paginationParam) {
+        // 查询是否已存在该社团
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
+        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(" 该社团不存在 ");
+        }
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.forbidden(" 您不是该社团社长无权查看 ");
+        }
+        CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsChiefChangeApply> cmsChiefChangeApplyList = chiefChangeApplyMapper.selectByExample(example);
+        return cmsChiefChangeApplyList;
+    }
+
+    @Override
+    public List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam paginationParam) {
+        // 查询是否已存在该社团
+        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
+        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(" 该社团不存在 ");
+        }
+        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
+            Asserts.forbidden(" 您不是该社团社长无权查看 ");
+        }
+        CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
+        example.createCriteria().andClubIdEqualTo(clubId);
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        List<CmsClubDisbandApply> cmsClubDisbandApplyList = clubDisbandApplyMapper.selectByExample(example);
+        return cmsClubDisbandApplyList;
+    }
 }
