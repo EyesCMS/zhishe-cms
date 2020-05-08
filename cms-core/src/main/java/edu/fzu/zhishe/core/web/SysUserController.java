@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.common.util.FileNameUtils;
 import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -93,12 +95,23 @@ public class SysUserController {
     @PostMapping(value = "/avatar")
     public ResponseEntity<Object> avatar(@RequestParam("image") MultipartFile image) {
 
+        SysUser currentUser = userService.getCurrentUser();
+        String avatarUrl = currentUser.getAvatarUrl();
+        // FIXME: hard code here
+        String rootLocation = "http://101.200.193.180:9520/files/images";
+        // delete if avatar is uploaded to server before
+        int index = avatarUrl.lastIndexOf('/');
+        if (rootLocation.equals(avatarUrl.substring(0, index))) {
+            String filename = avatarUrl.substring(index);
+            Path oldAvatarPath = Paths.get(imageRootLocation.toAbsolutePath() + filename);
+            storageService.deleteFile(oldAvatarPath);
+        }
+
         // 1. upload avatar
         String url = storageService.store(image, imageRootLocation);
         log.info("You successfully uploaded " + image.getOriginalFilename() + "!");
 
         // 2. update user info
-        SysUser currentUser = userService.getCurrentUser();
         SysUser user = new SysUser() {{
             setId(currentUser.getId());
             setAvatarUrl(url);

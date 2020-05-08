@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -30,17 +31,8 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
  * @version 1.0
  */
 @Service
+@Slf4j
 public class StorageServiceImpl implements StorageService {
-
-    private final Path avatarRootLocation;
-
-    private final Path fileRootLocation;
-
-    @Autowired
-    public StorageServiceImpl(StorageProperties properties) {
-        this.avatarRootLocation = Paths.get(properties.getImageLocation());
-        this.fileRootLocation = Paths.get(properties.getFileLocation());
-    }
 
     @Override
     public String store(MultipartFile file, Path location) {
@@ -122,6 +114,16 @@ public class StorageServiceImpl implements StorageService {
         catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
         }
+    }
+
+    @Override
+    public int deleteFile(Path location) {
+        try {
+            Files.deleteIfExists(location);
+        } catch (IOException e) {
+            throw new StorageException("Failed to delete file " + location, e);
+        }
+        return 1;
     }
 
     @Override
