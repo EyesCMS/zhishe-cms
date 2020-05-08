@@ -126,17 +126,16 @@ public class CmsClubController {
     @CheckClubAuth("3")
     public ResponseEntity<Object> updateClubInfo(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody CmsClubInfoParam clubInfoParam) {
-        if (clubService.updateClubInfo(clubId, clubInfoParam) == 0) {
-            Asserts.fail();
-        }
+        clubService.updateClubInfo(clubId, clubInfoParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 3.12 社长修改社团头像 ")
-    @PostMapping("/{clubId}/alter/pic")
+    @RequestMapping(value = "/{clubId}/pic", method = RequestMethod.PUT)
     @CheckClubAuth("3")
     public ResponseEntity<Integer> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody JSONObject object) {
-        return ResponseEntity.ok(clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl")));
+        clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
+        return ResponseEntity.noContent().build();
     }
 }

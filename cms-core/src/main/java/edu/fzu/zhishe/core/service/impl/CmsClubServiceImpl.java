@@ -258,12 +258,14 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
-        Asserts.hasFiled(clubInfoParam);
 
+        if(clubInfoParam.getType() == null || clubInfoParam.getType().equals(""))
+        {
+            Asserts.notNull(null);
+        }
         CmsClub club = new CmsClub();
         club.setId(clubId);
         BeanUtils.copyProperties(clubInfoParam, club);
-
         return clubMapper.updateByPrimaryKeySelective(club);
     }
     /*
@@ -308,13 +310,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
-        if(avatarUrl==null ||avatarUrl.equals(""))
+        if(avatarUrl==null || avatarUrl.equals(""))
         {
             Asserts.notNull(null);
         }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setAvatarUrl(avatarUrl);
-        return clubMapper.updateByPrimaryKey(club);
+        return clubMapper.updateByPrimaryKeySelective(club);
     }
 
 }
