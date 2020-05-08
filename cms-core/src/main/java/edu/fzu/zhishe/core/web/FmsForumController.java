@@ -123,6 +123,7 @@ public class FmsForumController {
         return ResponseEntity.ok().body(CommonPage.restPage(postList));
     }
 
+    @ApiOperation(" 7.7 我的帖子列表 ")
     @RequestMapping(value = "/posts/mine", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listMyPosts(@Validated PaginationParam paginationParam,
             FmsPostQuery postQuery) {
