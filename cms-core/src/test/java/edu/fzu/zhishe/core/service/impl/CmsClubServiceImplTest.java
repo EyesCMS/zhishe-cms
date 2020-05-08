@@ -1,16 +1,10 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.exception.AccessDeniedException;
-import edu.fzu.zhishe.common.exception.ApiException;
-import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.service.CmsActivityService;
-import edu.fzu.zhishe.core.service.CmsApplyAuditService;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.util.MockUtil;
 import org.junit.jupiter.api.Assertions;
@@ -49,7 +43,12 @@ public class CmsClubServiceImplTest{
 
         //修改社团信息
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            cmsClubService.alterClubInfo(id2,"","","");
+            CmsClubInfoParam param = new CmsClubInfoParam() {{
+                setQqGroup("");
+                setSlogan("");
+                setType("");
+            }};
+            cmsClubService.updateClubInfo(id2, param);
         }, " 社团类型不能为空");
 
         //修改社团头像
