@@ -1,13 +1,18 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import edu.fzu.zhishe.cms.mapper.CmsClubCreateApplyMapper;
+import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.model.CmsClub;
+import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
 import edu.fzu.zhishe.cms.model.CmsQuitNotice;
 import edu.fzu.zhishe.common.exception.ApiException;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
+import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.param.*;
 import edu.fzu.zhishe.core.service.CmsActivityService;
 import edu.fzu.zhishe.core.service.CmsApplyAuditService;
+import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.MockUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,9 +37,17 @@ public class CmsApplyAuditServiceImplTest{
     @Autowired
     CmsApplyAuditService cmsApplyAuditService;
 
+//    @Autowired
+//    CmsClubMapper cmsClubMapper;
+//
+//    @Autowired
+//    CmsClubCreateApplyMapper clubCreateApplyMapper;
+
+
+
     @BeforeEach
     void mockLoginUser() {
-        MockUtil.mockLoginUser("test");
+        MockUtil.mockLoginUser("test6");
     }
 
     @Test
@@ -72,13 +85,13 @@ public class CmsApplyAuditServiceImplTest{
         }};
 
         CmsClubsDisbandParam cmsClubsDisbandParamClubIdNotExist = new CmsClubsDisbandParam(){{
-           setClubId(clubIdNotExist);
-           setReason("xx");
+            setClubId(clubIdNotExist);
+            setReason("xx");
         }};
-//        CmsClubsDisbandParam cmsClubsDisbandParamClubIdRePeat = new CmsClubsDisbandParam(){{
-//            setClubId(clubIdRepeat);
-//            setReason("xx");
-//        }};
+        CmsClubsDisbandParam cmsClubsDisbandParamClubIdRePeat = new CmsClubsDisbandParam(){{
+            setClubId(clubIdRepeat);
+            setReason("xx");
+        }};
 
         CmsClubsJoinParam cmsClubsJoinParamClubIdNotExist= new CmsClubsJoinParam(){{
             setClubId(clubIdNotExist);
@@ -124,9 +137,9 @@ public class CmsApplyAuditServiceImplTest{
             cmsApplyAuditService.clubDisband(cmsClubsDisbandParamClubIdNotExist);
         }, " 社团不存在，却可以解散 ");
 
-//        Assertions.assertThrows(ApiException.class, () -> {
-//            cmsApplyAuditService.clubDisband(cmsClubsDisbandParamClubIdRePeat);
-//        }, " 社团解散申请已存在并且还没审核，却可以重复申请 ");
+        Assertions.assertThrows(ApiException.class, () -> {
+            cmsApplyAuditService.clubDisband(cmsClubsDisbandParamClubIdRePeat);
+        }, " 社团解散申请已存在并且还没审核，却可以重复申请 ");
 
         //审核社团解散申请
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
@@ -195,6 +208,116 @@ public class CmsApplyAuditServiceImplTest{
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
+        int clubIdExisted = 10013;
+        int clubIdMine = 10014;
+        int clubIdHasNotJoined = 5000;
+        int clubIdHasJoin = 10000;
+        int applyIdHasNotAudited = 10000;
+
+        String clubNameNotExisted = "还不存在社";
+
+
+        CmsClubsCreationsParam cmsClubsCreationsParam = new CmsClubsCreationsParam(){{
+            setClubName(clubNameNotExisted);
+            setOfficialState(1);
+            setReason("xx");
+            setType("xx");
+        }};
+
+        CmsClubsAuditParam cmsClubsAuditParamHasNotAudited = new CmsClubsAuditParam(){{
+            setId(applyIdHasNotAudited);
+            setState(ApplyStateEnum.PENDING.getValue());
+        }};
+
+        CmsClubsDisbandParam cmsClubsDisbandParamClubIdExisted = new CmsClubsDisbandParam(){{
+            setClubId(clubIdExisted);
+            setReason("xx");
+        }};
+        CmsClubsJoinParam cmsClubsJoinParamClubIdExisted= new CmsClubsJoinParam(){{
+            setClubId(clubIdHasNotJoined);
+            setReason("xx");
+        }};
+
+        CmsClubsQuitParam cmsClubsQuitParamClubIdExisted = new CmsClubsQuitParam(){{
+            setClubId(clubIdHasJoin);
+            setReason("xx");
+        }};
+
+        CmsClubsChiefChangeParam cmsClubsChiefChangeParamClubIdExisted = new CmsClubsChiefChangeParam(){{
+            setClubId(clubIdMine);
+            setNewChiefName("test");
+            setReason("xx");
+        }};
+
+        CmsClubsCertificationsParam cmsClubsCertificationsParamClubIdExisted = new CmsClubsCertificationsParam(){{
+            setClubId(clubIdMine);
+            setReason("xx");
+        }};
+
+        //提交创建社团申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.createClub(cmsClubsCreationsParam);
+        }, " 社团不存在，却不可以创建 ");
+
+        //审核社团申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubCreationsAudit(cmsClubsAuditParamHasNotAudited);
+        }, " 申请存在且未审核，却不可以审核 ");
+
+        //提交社团解散申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubDisband(cmsClubsDisbandParamClubIdExisted);
+        }, " 社团存在，却不可以解散 ");
+
+        //审核社团解散申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubDissolutionAudit(cmsClubsAuditParamHasNotAudited);
+        }, " 申请存在且还未审核，却不可以审核 ");
+
+        //提交社团加入申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubJoin(cmsClubsJoinParamClubIdExisted);
+        }, " 不是社团成员，却不可以加入 ");
+
+        //查看社团加入申请列表
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.listJoinClubApply(clubIdExisted,new CmsClubsJoinQuery(),new PaginationParam());
+        }, " 社团存在且为社长，却不可以查看加入列表 ");
+//
+        //审核社团加入申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubJoinsAudit(cmsClubsAuditParamHasNotAudited);
+        }, " 申请存在且还未审核，却不可以审核 ");
+
+        //提交社团退出信息
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubQuit(cmsClubsQuitParamClubIdExisted);
+        }, " 是社团成员，却不可以退出 ");
+
+        //查看社团退出信息列表
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.listClubQuit(clubIdExisted,new CmsClubsQuitQuery(),new PaginationParam());
+        }, " 社团存在且为社长，却不可以查看退出信息列表 ");
+
+        //提出社团换届申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubChiefChange(cmsClubsChiefChangeParamClubIdExisted);
+        }, " 社团存在且为社长，新社长为存在的社团成员，却不可以换届 ");
+
+        //审核社团换届申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubChiefChangeAudit(cmsClubsAuditParamHasNotAudited);
+        }, " 申请存在且还未审核，却不可以审核 ");
+
+        //提出社团认证申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubOfficialChange(cmsClubsCertificationsParamClubIdExisted);
+        }, " 社团存在且为社长，社团为小团体类型，却不可以认证 ");
+
+        //审核社团换届申请
+        Assertions.assertDoesNotThrow(() -> {
+            cmsApplyAuditService.clubOfficialChangeAudit(cmsClubsAuditParamHasNotAudited);
+        }, " 申请存在且还未审核，却不可以审核 ");
 
     }
 }
