@@ -107,8 +107,8 @@ public class AuthController {
         SysUser user = userService.getByUsername(username);
 
         // MUST: reset current user role
-        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
-        userService.updateUserSelective(user);
+//        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
+//        userService.updateUserSelective(user);
 
         SysUserInfoDTO userInfoDTO = new SysUserInfoDTO();
         BeanUtils.copyProperties(user, userInfoDTO);
