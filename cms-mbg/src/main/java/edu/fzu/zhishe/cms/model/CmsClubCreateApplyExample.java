@@ -375,52 +375,52 @@ public class CmsClubCreateApplyExample {
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateEqualTo(Boolean value) {
+        public Criteria andOfficialStateEqualTo(Integer value) {
             addCriterion("official_state =", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateNotEqualTo(Boolean value) {
+        public Criteria andOfficialStateNotEqualTo(Integer value) {
             addCriterion("official_state <>", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateGreaterThan(Boolean value) {
+        public Criteria andOfficialStateGreaterThan(Integer value) {
             addCriterion("official_state >", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateGreaterThanOrEqualTo(Boolean value) {
+        public Criteria andOfficialStateGreaterThanOrEqualTo(Integer value) {
             addCriterion("official_state >=", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateLessThan(Boolean value) {
+        public Criteria andOfficialStateLessThan(Integer value) {
             addCriterion("official_state <", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateLessThanOrEqualTo(Boolean value) {
+        public Criteria andOfficialStateLessThanOrEqualTo(Integer value) {
             addCriterion("official_state <=", value, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateIn(List<Boolean> values) {
+        public Criteria andOfficialStateIn(List<Integer> values) {
             addCriterion("official_state in", values, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateNotIn(List<Boolean> values) {
+        public Criteria andOfficialStateNotIn(List<Integer> values) {
             addCriterion("official_state not in", values, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateBetween(Boolean value1, Boolean value2) {
+        public Criteria andOfficialStateBetween(Integer value1, Integer value2) {
             addCriterion("official_state between", value1, value2, "officialState");
             return (Criteria) this;
         }
 
-        public Criteria andOfficialStateNotBetween(Boolean value1, Boolean value2) {
+        public Criteria andOfficialStateNotBetween(Integer value1, Integer value2) {
             addCriterion("official_state not between", value1, value2, "officialState");
             return (Criteria) this;
         }

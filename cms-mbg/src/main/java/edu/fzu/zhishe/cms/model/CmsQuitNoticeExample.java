@@ -312,133 +312,133 @@ public class CmsQuitNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateIsNull() {
-            addCriterion("qiut_date is null");
+        public Criteria andQuitDateIsNull() {
+            addCriterion("quit_date is null");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateIsNotNull() {
-            addCriterion("qiut_date is not null");
+        public Criteria andQuitDateIsNotNull() {
+            addCriterion("quit_date is not null");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateEqualTo(Date value) {
-            addCriterionForJDBCDate("qiut_date =", value, "qiutDate");
+        public Criteria andQuitDateEqualTo(Date value) {
+            addCriterionForJDBCDate("quit_date =", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateNotEqualTo(Date value) {
-            addCriterionForJDBCDate("qiut_date <>", value, "qiutDate");
+        public Criteria andQuitDateNotEqualTo(Date value) {
+            addCriterionForJDBCDate("quit_date <>", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateGreaterThan(Date value) {
-            addCriterionForJDBCDate("qiut_date >", value, "qiutDate");
+        public Criteria andQuitDateGreaterThan(Date value) {
+            addCriterionForJDBCDate("quit_date >", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateGreaterThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("qiut_date >=", value, "qiutDate");
+        public Criteria andQuitDateGreaterThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("quit_date >=", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateLessThan(Date value) {
-            addCriterionForJDBCDate("qiut_date <", value, "qiutDate");
+        public Criteria andQuitDateLessThan(Date value) {
+            addCriterionForJDBCDate("quit_date <", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateLessThanOrEqualTo(Date value) {
-            addCriterionForJDBCDate("qiut_date <=", value, "qiutDate");
+        public Criteria andQuitDateLessThanOrEqualTo(Date value) {
+            addCriterionForJDBCDate("quit_date <=", value, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateIn(List<Date> values) {
-            addCriterionForJDBCDate("qiut_date in", values, "qiutDate");
+        public Criteria andQuitDateIn(List<Date> values) {
+            addCriterionForJDBCDate("quit_date in", values, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateNotIn(List<Date> values) {
-            addCriterionForJDBCDate("qiut_date not in", values, "qiutDate");
+        public Criteria andQuitDateNotIn(List<Date> values) {
+            addCriterionForJDBCDate("quit_date not in", values, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("qiut_date between", value1, value2, "qiutDate");
+        public Criteria andQuitDateBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("quit_date between", value1, value2, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andQiutDateNotBetween(Date value1, Date value2) {
-            addCriterionForJDBCDate("qiut_date not between", value1, value2, "qiutDate");
+        public Criteria andQuitDateNotBetween(Date value1, Date value2) {
+            addCriterionForJDBCDate("quit_date not between", value1, value2, "quitDate");
             return (Criteria) this;
         }
 
-        public Criteria andReadonIsNull() {
-            addCriterion("readon is null");
+        public Criteria andReasonIsNull() {
+            addCriterion("reason is null");
             return (Criteria) this;
         }
 
-        public Criteria andReadonIsNotNull() {
-            addCriterion("readon is not null");
+        public Criteria andReasonIsNotNull() {
+            addCriterion("reason is not null");
             return (Criteria) this;
         }
 
-        public Criteria andReadonEqualTo(String value) {
-            addCriterion("readon =", value, "readon");
+        public Criteria andReasonEqualTo(String value) {
+            addCriterion("reason =", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonNotEqualTo(String value) {
-            addCriterion("readon <>", value, "readon");
+        public Criteria andReasonNotEqualTo(String value) {
+            addCriterion("reason <>", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonGreaterThan(String value) {
-            addCriterion("readon >", value, "readon");
+        public Criteria andReasonGreaterThan(String value) {
+            addCriterion("reason >", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonGreaterThanOrEqualTo(String value) {
-            addCriterion("readon >=", value, "readon");
+        public Criteria andReasonGreaterThanOrEqualTo(String value) {
+            addCriterion("reason >=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonLessThan(String value) {
-            addCriterion("readon <", value, "readon");
+        public Criteria andReasonLessThan(String value) {
+            addCriterion("reason <", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonLessThanOrEqualTo(String value) {
-            addCriterion("readon <=", value, "readon");
+        public Criteria andReasonLessThanOrEqualTo(String value) {
+            addCriterion("reason <=", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonLike(String value) {
-            addCriterion("readon like", value, "readon");
+        public Criteria andReasonLike(String value) {
+            addCriterion("reason like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonNotLike(String value) {
-            addCriterion("readon not like", value, "readon");
+        public Criteria andReasonNotLike(String value) {
+            addCriterion("reason not like", value, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonIn(List<String> values) {
-            addCriterion("readon in", values, "readon");
+        public Criteria andReasonIn(List<String> values) {
+            addCriterion("reason in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonNotIn(List<String> values) {
-            addCriterion("readon not in", values, "readon");
+        public Criteria andReasonNotIn(List<String> values) {
+            addCriterion("reason not in", values, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonBetween(String value1, String value2) {
-            addCriterion("readon between", value1, value2, "readon");
+        public Criteria andReasonBetween(String value1, String value2) {
+            addCriterion("reason between", value1, value2, "reason");
             return (Criteria) this;
         }
 
-        public Criteria andReadonNotBetween(String value1, String value2) {
-            addCriterion("readon not between", value1, value2, "readon");
+        public Criteria andReasonNotBetween(String value1, String value2) {
+            addCriterion("reason not between", value1, value2, "reason");
             return (Criteria) this;
         }
     }

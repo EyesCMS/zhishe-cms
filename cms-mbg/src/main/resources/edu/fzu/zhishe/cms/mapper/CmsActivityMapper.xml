@@ -8,8 +8,8 @@
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="body" jdbcType="VARCHAR" property="body" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
-    <result column="star_date" jdbcType="TIMESTAMP" property="starDate" />
-    <result column="end_data" jdbcType="TIMESTAMP" property="endData" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
     <result column="location" jdbcType="VARCHAR" property="location" />
     <result column="member_count" jdbcType="INTEGER" property="memberCount" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
@@ -75,7 +75,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, club_id, name, title, body, img_url, star_date, end_data, location, member_count, 
+    id, club_id, name, title, body, img_url, start_date, end_date, location, member_count, 
     create_at, handle_at, state
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsActivityExample" resultMap="BaseResultMap">
@@ -113,13 +113,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into cms_activity (club_id, name, title, 
-      body, img_url, star_date, 
-      end_data, location, member_count, 
+      body, img_url, start_date, 
+      end_date, location, member_count, 
       create_at, handle_at, state
       )
     values (#{clubId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{body,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{starDate,jdbcType=TIMESTAMP}, 
-      #{endData,jdbcType=TIMESTAMP}, #{location,jdbcType=VARCHAR}, #{memberCount,jdbcType=INTEGER}, 
+      #{body,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{location,jdbcType=VARCHAR}, #{memberCount,jdbcType=INTEGER}, 
       #{createAt,jdbcType=TIMESTAMP}, #{handleAt,jdbcType=TIMESTAMP}, #{state,jdbcType=INTEGER}
       )
   </insert>
@@ -144,11 +144,11 @@
       <if test="imgUrl != null">
         img_url,
       </if>
-      <if test="starDate != null">
-        star_date,
+      <if test="startDate != null">
+        start_date,
       </if>
-      <if test="endData != null">
-        end_data,
+      <if test="endDate != null">
+        end_date,
       </if>
       <if test="location != null">
         location,
@@ -182,11 +182,11 @@
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="starDate != null">
-        #{starDate,jdbcType=TIMESTAMP},
+      <if test="startDate != null">
+        #{startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="endData != null">
-        #{endData,jdbcType=TIMESTAMP},
+      <if test="endDate != null">
+        #{endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="location != null">
         #{location,jdbcType=VARCHAR},
@@ -232,11 +232,11 @@
       <if test="record.imgUrl != null">
         img_url = #{record.imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="record.starDate != null">
-        star_date = #{record.starDate,jdbcType=TIMESTAMP},
+      <if test="record.startDate != null">
+        start_date = #{record.startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.endData != null">
-        end_data = #{record.endData,jdbcType=TIMESTAMP},
+      <if test="record.endDate != null">
+        end_date = #{record.endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="record.location != null">
         location = #{record.location,jdbcType=VARCHAR},
@@ -266,8 +266,8 @@
       title = #{record.title,jdbcType=VARCHAR},
       body = #{record.body,jdbcType=VARCHAR},
       img_url = #{record.imgUrl,jdbcType=VARCHAR},
-      star_date = #{record.starDate,jdbcType=TIMESTAMP},
-      end_data = #{record.endData,jdbcType=TIMESTAMP},
+      start_date = #{record.startDate,jdbcType=TIMESTAMP},
+      end_date = #{record.endDate,jdbcType=TIMESTAMP},
       location = #{record.location,jdbcType=VARCHAR},
       member_count = #{record.memberCount,jdbcType=INTEGER},
       create_at = #{record.createAt,jdbcType=TIMESTAMP},
@@ -295,11 +295,11 @@
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
       </if>
-      <if test="starDate != null">
-        star_date = #{starDate,jdbcType=TIMESTAMP},
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="endData != null">
-        end_data = #{endData,jdbcType=TIMESTAMP},
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="location != null">
         location = #{location,jdbcType=VARCHAR},
@@ -326,8 +326,8 @@
       title = #{title,jdbcType=VARCHAR},
       body = #{body,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
-      star_date = #{starDate,jdbcType=TIMESTAMP},
-      end_data = #{endData,jdbcType=TIMESTAMP},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_date = #{endDate,jdbcType=TIMESTAMP},
       location = #{location,jdbcType=VARCHAR},
       member_count = #{memberCount,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},

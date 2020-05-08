@@ -20,18 +20,20 @@ import org.springframework.stereotype.Component;
  */
 @Aspect
 @Component
-@Order(1)
+@Order(3)
 public class WebLogAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebLogAspect.class);
 
-    @Pointcut("execution(public * edu.fzu.zhishe.cms.core.web.*.*(..))")
+    @Pointcut("execution(public * edu.fzu.zhishe.core.web.*.*(..))")
     public void webLog() {
     }
 
-    @Before("webLog()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
-    }
+
+
+//    @Before("webLog()")
+//    public void doBefore(JoinPoint joinPoint) throws Throwable {
+//    }
 
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {

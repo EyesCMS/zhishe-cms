@@ -27,6 +27,9 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "电话")
     private String phone;
 
+    @ApiModelProperty(value = "宿舍地址")
+    private String address;
+
     @ApiModelProperty(value = "标语")
     private String slogan;
 
@@ -38,6 +41,9 @@ public class SysUser implements Serializable {
 
     @ApiModelProperty(value = "管理状态：0 -> 普通用户；1 -> 管理员；")
     private Integer isAdmin;
+
+    @ApiModelProperty(value = "当前用户角色，可能随着前端路由改变而切换")
+    private Integer currentRole;
 
     private static final long serialVersionUID = 1L;
 
@@ -105,6 +111,14 @@ public class SysUser implements Serializable {
         this.phone = phone;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getSlogan() {
         return slogan;
     }
@@ -137,6 +151,14 @@ public class SysUser implements Serializable {
         this.isAdmin = isAdmin;
     }
 
+    public Integer getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(Integer currentRole) {
+        this.currentRole = currentRole;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -151,10 +173,12 @@ public class SysUser implements Serializable {
         sb.append(", major=").append(major);
         sb.append(", email=").append(email);
         sb.append(", phone=").append(phone);
+        sb.append(", address=").append(address);
         sb.append(", slogan=").append(slogan);
         sb.append(", loginQuestion=").append(loginQuestion);
         sb.append(", loginAnswer=").append(loginAnswer);
         sb.append(", isAdmin=").append(isAdmin);
+        sb.append(", currentRole=").append(currentRole);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

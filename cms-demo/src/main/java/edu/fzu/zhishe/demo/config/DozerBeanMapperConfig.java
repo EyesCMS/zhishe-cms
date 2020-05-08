@@ -3,7 +3,7 @@ package edu.fzu.zhishe.demo.config;
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
-import edu.fzu.zhishe.cms.model.CmsClubDO;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.demo.dto.CmsClubDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class DozerBeanMapperConfig {
             @Override
             protected void configure() {
                 // 个性化配置添加在此
-                mapping(CmsClubDTO.class, CmsClubDO.class)
+                mapping(CmsClubDTO.class, CmsClub.class)
                     .fields("userId", "chiefId")
                     .fields("clubName", "name")
                     .exclude("applicant")

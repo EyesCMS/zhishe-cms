@@ -654,6 +654,76 @@ public class SysUserExample {
             return (Criteria) this;
         }
 
+        public Criteria andAddressIsNull() {
+            addCriterion("address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIsNotNull() {
+            addCriterion("address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressEqualTo(String value) {
+            addCriterion("address =", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotEqualTo(String value) {
+            addCriterion("address <>", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThan(String value) {
+            addCriterion("address >", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("address >=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThan(String value) {
+            addCriterion("address <", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLessThanOrEqualTo(String value) {
+            addCriterion("address <=", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressLike(String value) {
+            addCriterion("address like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotLike(String value) {
+            addCriterion("address not like", value, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressIn(List<String> values) {
+            addCriterion("address in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotIn(List<String> values) {
+            addCriterion("address not in", values, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressBetween(String value1, String value2) {
+            addCriterion("address between", value1, value2, "address");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressNotBetween(String value1, String value2) {
+            addCriterion("address not between", value1, value2, "address");
+            return (Criteria) this;
+        }
+
         public Criteria andSloganIsNull() {
             addCriterion("slogan is null");
             return (Criteria) this;
@@ -921,6 +991,66 @@ public class SysUserExample {
 
         public Criteria andIsAdminNotBetween(Integer value1, Integer value2) {
             addCriterion("is_admin not between", value1, value2, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleIsNull() {
+            addCriterion("current_role is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleIsNotNull() {
+            addCriterion("current_role is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleEqualTo(Integer value) {
+            addCriterion("current_role =", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleNotEqualTo(Integer value) {
+            addCriterion("current_role <>", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleGreaterThan(Integer value) {
+            addCriterion("current_role >", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleGreaterThanOrEqualTo(Integer value) {
+            addCriterion("current_role >=", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleLessThan(Integer value) {
+            addCriterion("current_role <", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleLessThanOrEqualTo(Integer value) {
+            addCriterion("current_role <=", value, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleIn(List<Integer> values) {
+            addCriterion("current_role in", values, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleNotIn(List<Integer> values) {
+            addCriterion("current_role not in", values, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleBetween(Integer value1, Integer value2) {
+            addCriterion("current_role between", value1, value2, "currentRole");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentRoleNotBetween(Integer value1, Integer value2) {
+            addCriterion("current_role not between", value1, value2, "currentRole");
             return (Criteria) this;
         }
     }

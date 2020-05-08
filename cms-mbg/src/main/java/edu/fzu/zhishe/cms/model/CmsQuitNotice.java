@@ -12,10 +12,10 @@ public class CmsQuitNotice implements Serializable {
     private Integer clubId;
 
     @ApiModelProperty(value = "退社日期")
-    private Date qiutDate;
+    private Date quitDate;
 
     @ApiModelProperty(value = "原因")
-    private String readon;
+    private String reason;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,20 +43,20 @@ public class CmsQuitNotice implements Serializable {
         this.clubId = clubId;
     }
 
-    public Date getQiutDate() {
-        return qiutDate;
+    public Date getQuitDate() {
+        return quitDate;
     }
 
-    public void setQiutDate(Date qiutDate) {
-        this.qiutDate = qiutDate;
+    public void setQuitDate(Date quitDate) {
+        this.quitDate = quitDate;
     }
 
-    public String getReadon() {
-        return readon;
+    public String getReason() {
+        return reason;
     }
 
-    public void setReadon(String readon) {
-        this.readon = readon;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     @Override
@@ -68,8 +68,8 @@ public class CmsQuitNotice implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", clubId=").append(clubId);
-        sb.append(", qiutDate=").append(qiutDate);
-        sb.append(", readon=").append(readon);
+        sb.append(", quitDate=").append(quitDate);
+        sb.append(", reason=").append(reason);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -5,8 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="club_id" jdbcType="INTEGER" property="clubId" />
-    <result column="qiut_date" jdbcType="DATE" property="qiutDate" />
-    <result column="readon" jdbcType="VARCHAR" property="readon" />
+    <result column="quit_date" jdbcType="DATE" property="quitDate" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -67,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, club_id, qiut_date, readon
+    id, user_id, club_id, quit_date, reason
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsQuitNoticeExample" resultMap="BaseResultMap">
     select
@@ -103,10 +103,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cms_quit_notice (user_id, club_id, qiut_date, 
-      readon)
-    values (#{userId,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{qiutDate,jdbcType=DATE}, 
-      #{readon,jdbcType=VARCHAR})
+    insert into cms_quit_notice (user_id, club_id, quit_date, 
+      reason)
+    values (#{userId,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{quitDate,jdbcType=DATE}, 
+      #{reason,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsQuitNotice">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -120,11 +120,11 @@
       <if test="clubId != null">
         club_id,
       </if>
-      <if test="qiutDate != null">
-        qiut_date,
+      <if test="quitDate != null">
+        quit_date,
       </if>
-      <if test="readon != null">
-        readon,
+      <if test="reason != null">
+        reason,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -134,11 +134,11 @@
       <if test="clubId != null">
         #{clubId,jdbcType=INTEGER},
       </if>
-      <if test="qiutDate != null">
-        #{qiutDate,jdbcType=DATE},
+      <if test="quitDate != null">
+        #{quitDate,jdbcType=DATE},
       </if>
-      <if test="readon != null">
-        #{readon,jdbcType=VARCHAR},
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -160,11 +160,11 @@
       <if test="record.clubId != null">
         club_id = #{record.clubId,jdbcType=INTEGER},
       </if>
-      <if test="record.qiutDate != null">
-        qiut_date = #{record.qiutDate,jdbcType=DATE},
+      <if test="record.quitDate != null">
+        quit_date = #{record.quitDate,jdbcType=DATE},
       </if>
-      <if test="record.readon != null">
-        readon = #{record.readon,jdbcType=VARCHAR},
+      <if test="record.reason != null">
+        reason = #{record.reason,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -176,8 +176,8 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       club_id = #{record.clubId,jdbcType=INTEGER},
-      qiut_date = #{record.qiutDate,jdbcType=DATE},
-      readon = #{record.readon,jdbcType=VARCHAR}
+      quit_date = #{record.quitDate,jdbcType=DATE},
+      reason = #{record.reason,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -191,11 +191,11 @@
       <if test="clubId != null">
         club_id = #{clubId,jdbcType=INTEGER},
       </if>
-      <if test="qiutDate != null">
-        qiut_date = #{qiutDate,jdbcType=DATE},
+      <if test="quitDate != null">
+        quit_date = #{quitDate,jdbcType=DATE},
       </if>
-      <if test="readon != null">
-        readon = #{readon,jdbcType=VARCHAR},
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -204,8 +204,8 @@
     update cms_quit_notice
     set user_id = #{userId,jdbcType=INTEGER},
       club_id = #{clubId,jdbcType=INTEGER},
-      qiut_date = #{qiutDate,jdbcType=DATE},
-      readon = #{readon,jdbcType=VARCHAR}
+      quit_date = #{quitDate,jdbcType=DATE},
+      reason = #{reason,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

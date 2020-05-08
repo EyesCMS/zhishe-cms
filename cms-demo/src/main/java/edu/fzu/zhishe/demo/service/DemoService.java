@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.demo.service;
 
-import edu.fzu.zhishe.cms.model.CmsClubDO;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.demo.dto.CmsClubDTO;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface DemoService {
 
     int deleteClub(Integer id);
 
-    List<CmsClubDO> listClubs(int pageNum, int pageSize);
+    List<CmsClub> listClubs(int pageNum, int pageSize);
 
-    CmsClubDO getClub(Integer id);
+    CmsClub getClub(Integer id);
 }

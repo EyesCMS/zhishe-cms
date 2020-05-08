@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.FmsRemarkDAO">
+
+  <resultMap id="PostResultMap" type="edu.fzu.zhishe.core.dto.FmsRemarkDTO">
+    <id column="id" jdbcType="INTEGER" property="userId" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+</resultMap>
+
+  <select id="listRemarkByPostId" parameterType="java.lang.Long" resultMap="PostResultMap">
+    SELECT
+     u.id,
+     u.nickname,
+     u.avatar_url,
+     r.content,
+     r.create_at
+    FROM
+     fms_post_remark r
+     LEFT JOIN sys_user u ON r.user_id = u.id
+    WHERE
+     r.post_id = #{postId}
+    ORDER BY
+     r.create_at DESC
+  </select>
+
+</mapper>

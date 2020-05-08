@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0
  */
 @Configuration
-@MapperScan("edu.fzu.zhishe.cms.mapper")
+@MapperScan({"edu.fzu.zhishe.cms.mapper", "edu.fzu.zhishe.core.dao"})
 public class MybatisConfig {
 
 }

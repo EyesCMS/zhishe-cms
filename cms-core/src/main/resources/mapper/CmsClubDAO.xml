@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubDAO">
+
+  <sql id="Base_Column_List">
+    id, `name`, chief_id, member_count, qq_group, slogan, avatar_url, official_state, `type`,
+    grade, create_at
+  </sql>
+
+
+  <!--
+  <select id="listClubMember" parameterType="java.lang.Integer"
+    resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
+    SELECT
+      u.id,
+      u.username,
+      u.PASSWORD,
+      u.nickname,
+      u.avatar_url,
+      u.major,
+      u.email,
+      u.phone,
+      u.slogan,
+      u.login_question,
+      u.login_answer,
+      u.is_admin
+    FROM
+      cms_user_club_rel r,
+      sys_user u
+    WHERE
+      r.club_id = #{id,jdbcType=INTEGER} AND r.user_id=u.id
+  </select>
+-->
+
+  <select id="listHotClub" parameterType="java.lang.Integer"
+    resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      u.nickname,
+      club.type,
+      club.official_state,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+     delete_status != 1 AND club.chief_id = u.id
+     ORDER BY
+     club.grade DESC
+  </select>
+
+  <select id="listClub" parameterType="java.lang.String"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      u.nickname,
+      club.type,
+      club.official_state,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.delete_status = 0
+    <if test="keyword != null and keyword != ''">
+      AND club.name LIKE concat("%",#{keyword,jdbcType=VARCHAR},"%")
+    </if>
+
+    <if test="type != null and type != ''">
+      AND club.type LIKE concat("%",#{type,jdbcType=VARCHAR},"%")
+    </if>
+
+    <if test="state == 1 or state == 0">
+      AND club.official_state = #{state,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <!--
+  <select id="getClubById" parameterType="java.lang.Integer"
+          resultMap="ClubMap2">
+    SELECT
+      club.id,
+      club.name,
+      club.chief_id,
+      u.nickname,
+      club.avatar_url,
+      club.slogan,
+      club.member_count,
+      club.qq_group
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
+  </select>
+
+-->
+
+  <select id="listJoinedClub" parameterType="java.lang.Integer"
+          resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      u.nickname,
+      club.type,
+      club.official_state,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.delete_status != 1 AND club.id IN
+      (
+      SELECT
+      club_id
+      FROM
+      cms_user_club_rel
+      WHERE
+      role_id = 2 AND user_id = #{userId,jdbcType=INTEGER}
+      )
+  </select>
+
+  <select id="listManagedClub" parameterType="java.lang.Integer"
+                   resultMap="ClubMap1">
+    SELECT
+      club.id,
+      club.name,
+      u.nickname,
+      club.type,
+      club.official_state,
+      club.avatar_url
+    FROM
+      cms_club club,
+      sys_user u
+    WHERE
+      club.chief_id = u.id AND club.delete_status != 1 AND club.id IN
+      (
+      SELECT
+      club_id
+      FROM
+      cms_user_club_rel
+      WHERE
+      role_id = 3 AND user_id = #{userId,jdbcType=INTEGER}
+      )
+  </select>
+
+  <select id="listJoinClubApply" parameterType="java.lang.Integer"
+          resultMap="ClubMap3">
+    SELECT
+      club.name,
+      a.create_at,
+      a.reason,
+      a.state
+    FROM
+      cms_club club,
+      cms_club_join_apply a
+    WHERE
+    a.user_id = #{userId,jdbcType=INTEGER} AND club.id = a.club_id AND club.delete_status != 1
+    ORDER BY
+    a.create_at DESC
+  </select>
+
+  <select id="listCreateClubApply" parameterType="java.lang.Integer"
+          resultMap="ClubMap4">
+    SELECT
+      club_name,
+      create_at,
+      reason,
+      state
+    FROM
+      cms_club_create_apply
+    WHERE
+    user_id = #{userId,jdbcType=INTEGER}
+    ORDER BY
+    create_at DESC
+  </select>
+
+  <select id="listClubMember" resultMap="ClubMap5">
+    SELECT
+      u.id AS user_id,
+      u.username,
+      u.nickname,
+      r.description,
+      uc.credit,
+      h.`name` AS honor_name,
+    u.avatar_url
+    FROM
+      ( SELECT * FROM cms_user_club_rel WHERE club_id = #{clubId} ) AS uc
+      LEFT JOIN sys_user u ON uc.user_id = u.id
+      LEFT JOIN sys_role r ON uc.role_id = r.id
+      LEFT JOIN cms_member_honor h ON uc.honor_id = h.id
+    <where>
+      <if test="queryParam.name!=null and queryParam.name!=''">
+        AND (username LIKE concat("%",#{queryParam.name},"%") OR
+            nickname LIKE concat("%",#{queryParam.name},"%"))
+      </if>
+      <if test="queryParam.honorId!=null and queryParam.honorId!=''">
+        AND uc.honor_id = #{queryParam.honorId, jdbcType=INTEGER}
+      </if>
+    </where>
+    ORDER BY
+      uc.join_date DESC
+  </select>
+
+
+  <resultMap id="ClubMap1" type="edu.fzu.zhishe.core.dto.CmsClubBriefDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="official_state" jdbcType="INTEGER" property="state" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
+
+  <resultMap id="ClubMap2" type="edu.fzu.zhishe.core.dto.CmsClubDetailDTO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="nickname" jdbcType="VARCHAR" property="chiefName" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+    <result column="qq_group" jdbcType="VARCHAR" property="qqGroup" />
+  </resultMap>
+
+  <resultMap id="ClubMap3" type="edu.fzu.zhishe.core.dto.CmsClubJoinApplyDTO">
+    <result column="name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="VARCHAR" property="createAt" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+
+  <resultMap id="ClubMap4" type="edu.fzu.zhishe.core.dto.CmsClubCreateApplyDTO">
+    <result column="club_name" jdbcType="VARCHAR" property="clubName" />
+    <result column="create_at" jdbcType="VARCHAR" property="createAt" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+
+  <resultMap id="ClubMap5" type="edu.fzu.zhishe.core.dto.CmsClubMemberBriefDTO">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="description" jdbcType="VARCHAR" property="role" />
+    <result column="honor_name" jdbcType="VARCHAR" property="honor" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
+
+  <resultMap id="ClubMap6" type="edu.fzu.zhishe.core.dto.CmsClubMemberDetailDTO">
+    <id column="username" jdbcType="VARCHAR" property="username" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="slogan" jdbcType="VARCHAR" property="slogan" />
+    <result column="description" jdbcType="VARCHAR" property="role" />
+    <result column="major" jdbcType="VARCHAR" property="major" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="name" jdbcType="VARCHAR" property="honor" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+  </resultMap>
+
+</mapper>

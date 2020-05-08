@@ -3,140 +3,125 @@ package edu.fzu.zhishe.core.web;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
-import edu.fzu.zhishe.common.api.Error;
+import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.dto.SysUserLoginParam;
-import edu.fzu.zhishe.core.dto.SysUserRegisterParam;
-import edu.fzu.zhishe.core.dto.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.SysUserUpdateParam;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import java.security.Principal;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Value;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
- * 会员登录注册管理
+ * 用户管理
  *
- * @author liang
+ * @author peng
  */
+@Slf4j
 @RestController
-@Api(tags = "UmsMemberController")
-@RequestMapping("/auth")
+@Api(tags = "UserController")
+@RequestMapping("/users")
 public class SysUserController {
 
-    private final SysUserService userService;
-    @Value("${jwt.tokenHeader}")
-    private String tokenHeader;
-    @Value("${jwt.tokenHead}")
-    private String tokenHead;
+    @Autowired
+    private SysUserService userService;
 
-    public SysUserController(SysUserService userService) {
-        this.userService = userService;
+    @Autowired
+    private StorageService storageService;
+
+    private final Path imageRootLocation;
+
+    @Autowired
+    public SysUserController(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
     }
 
-    @ApiOperation(" 用户注册 ")
-    @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody SysUserRegisterParam userRegisterParam) {
-        userService.register(userRegisterParam);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @ApiOperation("  登录以后返回 token ")
-    @PostMapping("/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody SysUserLoginParam userLoginParam) {
-        String token = userService
-            .login(userLoginParam.getUsername(), userLoginParam.getPassword());
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @ApiOperation(value = " 根据用户名获取密保问题 ")
+    @GetMapping(value = "/question")
+    public ResponseEntity<Object> question(String username) {
+        if (username == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        Map<String, String> tokenMap = new HashMap<>();
-        tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
-        return ok(tokenMap);
+        SysUser user = userService.getByUsername(username);
+        if (user == null || user.getLoginQuestion() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Map<String, String> myMap = new HashMap<>();
+        myMap.put("loginProblem", user.getLoginQuestion());
+        return ok(myMap);
     }
 
-    @ApiOperation(value = " 登出功能 ")
-    @PostMapping(value = "/logout")
-    public ResponseEntity<Object> logout() {
+    @ApiOperation(value = " 校验密保问题回答是否正确 ")
+    @PostMapping(value = "/answer")
+    public ResponseEntity<Object> answer(@RequestBody SysUserUpdatePwdByAnswer param) {
+        if (param.getUsername() == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        SysUser user = userService.getByUsername(param.getUsername());
+        if (user != null && user.getLoginAnswer() != null && user.getLoginAnswer().equals(param.getAnswer())) {
+            return noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @ApiOperation(value = " 用户修改个人信息 ")
+    @PutMapping(value = "/info")
+    public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
+        userService.updateUserByParam(updateParam);
         return noContent().build();
     }
 
-    @ApiOperation(" 获取用户信息 ")
-    @GetMapping("/info")
-    public ResponseEntity<Object> info(Principal principal) {
-        if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @ApiOperation(value = " 用户修改头像 ")
+    @PostMapping(value = "/avatar")
+    public ResponseEntity<Object> avatar(@RequestParam("image") MultipartFile image) {
+
+        // 1. upload avatar
+        String url = storageService.store(image, imageRootLocation);
+        log.info("You successfully uploaded " + image.getOriginalFilename() + "!");
+
+        // 2. update user info
+        SysUser currentUser = userService.getCurrentUser();
+        SysUser user = new SysUser() {{
+            setId(currentUser.getId());
+            setAvatarUrl(url);
+        }};
+        if (userService.updateUserSelective(user) == 0) {
+            Asserts.fail("update avatar failed");
         }
-        //SysUser user = userService.getCurrentMember();
-        String username = principal.getName();
-        SysUser user = userService.getByUsername(username);
-        Map<String, Object> data = new HashMap<>();
-        data.put("username", user.getUsername());
-        data.put("roles", new String[]{"TEST"});
-        data.put("permissions", new String[]{"user:list"});
-        // TODO
-        //data.put("menus", roleService.getMenuList(user.getId()));
-        data.put("avatar", user.getAvatarUrl());
-        return ok().body(data);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("avatarUrl", url);
+        return ok().body(jsonObject);
     }
 
-    @PreAuthorize("hasAuthority('sys:user:read')")
-    @ApiOperation(" 获取用户列表 ")
-    @GetMapping("/users")
-    public ResponseEntity<Object> users() {
-        List<SysUser> users = userService.users();
-        List<SysUser> userList = users.stream().limit(3).collect(Collectors.toList());
-        return ok().body(userList);
-    }
-
-//    @ApiOperation(" 获取验证码 ")
-//    @RequestMapping(value = "/getAuthCode", method = RequestMethod.GET)
-//    public CommonResult getAuthCode(@RequestParam String telephone) {
-//        String authCode = memberService.generateAuthCode(telephone);
-//        return CommonResult.success(authCode, " 获取验证码成功 ");
-//    }
-
-    @ApiOperation(" 修改密码 ")
-    @PostMapping("/password")
-    public ResponseEntity<Object> updatePassword(
-        @Validated @RequestBody UpdateUserPasswordParam updateUserPasswordParam) {
-        UpdatePasswordResultEnum result = userService.updatePassword(updateUserPasswordParam);
+    @ApiOperation(value = " 忘记密码时通过回答保密问题修改密码 ")
+    @PutMapping(value = "/password")
+    public ResponseEntity<Object> password(@Validated @RequestBody SysUserUpdatePwdByAnswer param) {
+        UpdatePasswordResultEnum result = userService.updateUserPasswordAfterAnswer(param);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {
-            Error error = new Error("", "", "");
             AjaxResponse response = new AjaxResponse();
             response.setMessage(result.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
         return noContent().build();
     }
-
-//    @ApiOperation(value = " 刷新 token ")
-//    @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
-//    public CommonResult refreshToken(HttpServletRequest request) {
-//        String token = request.getHeader(tokenHeader);
-//        String refreshToken = memberService.refreshToken(token);
-//        if (refreshToken == null) {
-//            return CommonResult.failed("token 已经过期！");
-//        }
-//        Map<String, String> tokenMap = new HashMap<>();
-//        tokenMap.put("token", refreshToken);
-//        tokenMap.put("tokenHead", tokenHead);
-//        return CommonResult.success(tokenMap);
-//    }
 }

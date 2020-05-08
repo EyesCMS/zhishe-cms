@@ -3,14 +3,10 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-  datasource:
-    url: jdbc:mysql://101.200.193.180:3306/zhishedb?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: mysql
 
 redis:
   database: zhishe
@@ -30,7 +26,7 @@ mybatis:
 jwt:
   tokenHeader: Authorization # JWT 存储的请求头
   secret: cms-secret # JWT 加解密使用的密钥
-  expiration: 604800 # JWT 的超期限时间 (60 * 60 * 24 * 7)
+  expiration: 900 # JWT 的超期限时间 (60 * 15 * 1 * 1)
   tokenHead: Bearer  # JWT 负载中拿到开头
 
 secure:
@@ -47,8 +43,19 @@ secure:
       - /webjars/springfox-swagger-ui/**
       - /druid/**
       - /actuator/**
-      - /auth/**
+      - /auth/login
+      - /auth/register
+      - /auth/info
+      - /auth/logout
+      - /users/answer
+      - /users/question
+      - /users/password
       - /home/**
+      - /clubs/recommended
+      - /clubs
+      - /forum/**
+      - /roles/**
+      - /files/images/**
 
 logging:
   level:
@@ -56,3 +63,8 @@ logging:
     com.macro.mall: debug
 #  file: demo_log.log #配置日志生成路径
 #  path: /var/logs #配置日志文件名称
+
+storage:
+  location:
+    images: /cms-core/src/main/resources/static/upload-dir/images
+    files: /cms-core/src/main/resources/static/upload-dir/files

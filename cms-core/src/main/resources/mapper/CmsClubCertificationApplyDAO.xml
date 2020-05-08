@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.CmsClubCertificationDAO">
+    <resultMap id="CmsClubCertificationReturnResultMapper" type="edu.fzu.zhishe.core.dto.CmsClubsCertificationsDTO">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="reason" jdbcType="VARCHAR" property="reason" />
+        <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+        <result property="clubName" jdbcType="VARCHAR" column="name" />
+    </resultMap>
+
+    <select id="listClubCertificationApply" resultMap="CmsClubCertificationReturnResultMapper">
+        SELECT
+        a.id,
+        a.reason,
+        a.create_at,
+        a.state,
+        b.name
+        FROM
+        cms_official_change_apply a left join cms_club b on a.club_id = b.id
+        WHERE
+        1
+        <if test="queryParam.id!=null">
+            AND a.id = #{queryParam.id}
+        </if>
+        <if test="queryParam.clubName!=null and  queryParam.clubName!=''">
+            AND b.name LIKE concat("%", #{queryParam.clubName},"%")
+        </if>
+        <if test="queryParam.reason!=null and  queryParam.reason!=''">
+            AND a.reason LIKE concat("%", #{queryParam.reason},"%")
+        </if>
+        <if test="queryParam.createAt!=null and  queryParam.createAt!=''">
+            AND a.create_at LIKE concat("%", #{queryParam.createAt},"%")
+        </if>
+        <if test="queryParam.state!=null">
+            AND a.state = #{queryParam.state}
+        </if>
+        ORDER BY
+        a.state ASC ,
+        a.id ASC
+
+    </select>
+
+</mapper>
