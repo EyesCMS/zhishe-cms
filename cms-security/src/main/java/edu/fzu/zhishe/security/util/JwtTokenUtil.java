@@ -57,7 +57,7 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
         } catch (Exception e) {
-            LOGGER.info("JWT格式验证失败:{}", token);
+            LOGGER.info("check JWT format failed: {}", token);
         }
         return claims;
     }

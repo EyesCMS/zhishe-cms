@@ -1,7 +1,5 @@
 package edu.fzu.zhishe.common.api;
 
-import java.util.List;
-
 /**
  * 通用返回对象
  *

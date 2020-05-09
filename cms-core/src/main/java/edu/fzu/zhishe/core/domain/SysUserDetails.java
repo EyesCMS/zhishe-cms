@@ -1,15 +1,10 @@
 package edu.fzu.zhishe.core.domain;
 
-import com.sun.media.jfxmedia.logging.Logger;
 import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.cms.model.SysUser;
-import edu.fzu.zhishe.core.service.SysUserService;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

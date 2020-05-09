@@ -1,5 +1,7 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.cms.model.CmsChiefChangeApply;
+import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.cms.model.CmsOfficialChangeApply;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
@@ -192,4 +194,21 @@ public class CmsApplyAuditController {
         List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = applyAuditService.listMyClubOfficialChange(clubId,paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsOfficialChangeApplyList));
     }
+
+    @ApiOperation(value = " 4.19根据社团 ID 获取换届申请列表 ")
+    @GetMapping("/{clubId}/leaderChange")
+    public ResponseEntity<Object> myClubChiefChangeList(@PathVariable("clubId") Integer clubId,
+                                                           @Validated PaginationParam paginationParam) {
+        List<CmsChiefChangeApply> cmsChiefChangeApplyList = applyAuditService.listMyClubChiefChange(clubId,paginationParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsChiefChangeApplyList));
+    }
+
+    @ApiOperation(value = " 4.20根据社团 ID 获取解散申请列表 ")
+    @GetMapping("/{clubId}/dissolution")
+    public ResponseEntity<Object> myClubDissolutionList(@PathVariable("clubId") Integer clubId,
+                                                        @Validated PaginationParam paginationParam) {
+        List<CmsClubDisbandApply> cmsClubDisbandApplyList = applyAuditService.listMyClubDissolution(clubId,paginationParam);
+        return ResponseEntity.ok().body(CommonPage.restPage(cmsClubDisbandApplyList));
+    }
+
 }

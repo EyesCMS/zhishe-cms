@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.service;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dto.*;
 
+import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
@@ -41,13 +42,8 @@ public interface CmsClubService {
 
     Integer deleteClubMember(Integer clubId, Integer userId);
 
-    Integer alterClubInfo(Integer clubId, String slogan, String qqGroup, String type);
+    int updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam);
 
-    /*
-    Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup);
-
-    Integer alterClubType(Integer clubId, Integer userId, String type);
-*/
     Integer alterClubAvatarUrl(Integer clubId, String avatarUrl);
 
 }

@@ -32,6 +32,7 @@
             AND a.quit_date LIKE concat("%", #{queryParam.createAt},"%")
         </if>
         ORDER BY
+            a.quit_date DESC ,
             a.id ASC
 
 

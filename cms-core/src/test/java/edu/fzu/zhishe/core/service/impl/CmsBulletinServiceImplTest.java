@@ -6,6 +6,7 @@ import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
 import edu.fzu.zhishe.core.service.CmsBulletinService;
 import edu.fzu.zhishe.core.util.MockUtil;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,14 +42,18 @@ public class CmsBulletinServiceImplTest{
         //已被删除的公告id
         int deletedBulletinId = 88888;
         //社团id
-        int clubId = 5000;
+        int clubId = 10000;
 
         //发布公告
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            bulletinService.creatBulletin(clubId, new CmsBulletinParam());
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            bulletinService.creatBulletin(5000, new CmsBulletinParam());
         }, " 不是社长，却可以发布 ");
 
         // 更新公告
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            bulletinService.updateBulletin(1, new CmsBulletinParam());
+        }, " 不是社长，却可以更新 ");
+
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             bulletinService.updateBulletin(bulletinIdNotExist, new CmsBulletinParam());
         }, " 公告不存在，却可以更新 ");
@@ -63,10 +68,35 @@ public class CmsBulletinServiceImplTest{
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             bulletinService.deleteBulletin(deletedBulletinId);
         }, " 公告不存在，却可以删除 ");
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
             bulletinService.deleteBulletin(1);
         }, " 不是社长，却可以删除 ");
 
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void TestAcceptedOperation() {
+
+        //存在的公告id，且是 test 发的
+        int bulletinId = 51;
+
+        CmsBulletinParam bulletinParam = new CmsBulletinParam () {{
+            setTitle("new title");
+            setBody("new content");
+        }};
+
+        //更新公告
+        Assertions.assertDoesNotThrow(() -> {
+            bulletinService.updateBulletin(bulletinId,bulletinParam);
+        }, " 公告更新异常 ");
+
+        //删除公告
+        Assertions.assertDoesNotThrow(() -> {
+            bulletinService.deleteBulletin(bulletinId);
+        }, " 公告删除异常 ");
     }
 
 }

@@ -92,5 +92,39 @@ public class FmsForumServiceImplTest {
     @Rollback
     public void TestAcceptedOperation() {
 
+        // 存在的帖子id 并且是 test 发的
+        Long personalPostId = 15L;
+        Long personalPostId2 = 47L;
+        // test 发表的评论
+        Long remarkId = 48L;
+
+        FmsPostParam postParam = new FmsPostParam() {{
+            setTitle("new title");
+            setContent("new content");
+        }};
+
+        // 更新帖子
+        Assertions.assertDoesNotThrow(() -> {
+            forumService.updatePost(personalPostId, postParam);
+        }, " 帖子更新异常 ");
+
+        // 删除帖子
+        Assertions.assertDoesNotThrow(() -> {
+            forumService.deletePost(personalPostId);
+        }, " 帖子删除异常 ");
+
+
+        // 发表评论
+        Assertions.assertDoesNotThrow(() -> {
+            FmsRemarkParam remarkParam = new FmsRemarkParam() {{
+                setPostId(personalPostId2);
+            }};
+            forumService.saveRemark(remarkParam);
+        }, " 发表评论异常 ");
+
+        // 删除评论
+        Assertions.assertDoesNotThrow(() -> {
+            forumService.deleteRemark(remarkId);
+        }, " 删除评论异常 ");
     }
 }

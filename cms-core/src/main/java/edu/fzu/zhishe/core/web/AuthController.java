@@ -6,6 +6,7 @@ import static org.springframework.http.ResponseEntity.ok;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.SysUserInfoDTO;
@@ -23,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -102,8 +107,8 @@ public class AuthController {
         SysUser user = userService.getByUsername(username);
 
         // MUST: reset current user role
-        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
-        userService.updateUserSelective(user);
+//        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
+//        userService.updateUserSelective(user);
 
         SysUserInfoDTO userInfoDTO = new SysUserInfoDTO();
         BeanUtils.copyProperties(user, userInfoDTO);
@@ -117,6 +122,10 @@ public class AuthController {
         return ok().body(userInfoDTO);
     }
 
+    /**
+     * 暂时没有用到
+     * @return
+     */
     @PreAuthorize("hasAuthority('sys:user:read')")
     @ApiOperation(" 获取用户列表 ")
     @GetMapping("/users")

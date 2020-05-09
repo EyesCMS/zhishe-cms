@@ -10,6 +10,7 @@ import edu.fzu.zhishe.core.dao.*;
 
 
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
@@ -156,17 +157,27 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
+        SysUser currentUser = sysUserService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listJoinClubApply(orderByParam, sysUserService.getCurrentUser().getId());
+        return clubDAO.listJoinClubApply(orderByParam, currentUser.getId());
     }
 
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
+        SysUser currentUser = sysUserService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listCreateClubApply(orderByParam, sysUserService.getCurrentUser().getId());
+        return clubDAO.listCreateClubApply(orderByParam, currentUser.getId());
     }
 
     @Override
@@ -220,14 +231,6 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public Integer deleteClubMember(Integer clubId, Integer userId){
 
-//        SysUser user = getCurrentUser();
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(user.getId()).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         userClubRelMapper.deleteByExample(example);
@@ -240,56 +243,18 @@ public class CmsClubServiceImpl implements CmsClubService {
     //修改社团信息接口
     @Override
     @CheckClubAuth("3")
-    public Integer alterClubInfo(Integer clubId, String slogan, String qqGroup, String type){
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-        if(type==null ||type.equals(""))
+    public int updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
+
+        if(clubInfoParam.getType() == null || clubInfoParam.getType().equals(""))
         {
             Asserts.notNull(null);
         }
-        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        club.setSlogan(slogan);
-        club.setQqGroup(qqGroup);
-        club.setType(type);
-        return clubMapper.updateByPrimaryKey(club);
-    }
-    /*
-    @Override
-    @CheckClubAuth("3")
-    public Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup){
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-
-        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        club.setQqGroup(qqGroup);
-        clubMapper.updateByPrimaryKey(club);
-        return 1;
+        CmsClub club = new CmsClub();
+        club.setId(clubId);
+        BeanUtils.copyProperties(clubInfoParam, club);
+        return clubMapper.updateByPrimaryKeySelective(club);
     }
 
-    @Override
-    @CheckClubAuth("3")
-    public Integer alterClubType(Integer clubId, Integer userId, String type){
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-
-        CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        club.setType(type);
-        clubMapper.updateByPrimaryKey(club);
-        return 1;
-    }
-*/
     @Override
     @CheckClubAuth("3")
     public Integer alterClubAvatarUrl(Integer clubId, String avatarUrl){
@@ -299,13 +264,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
-        if(avatarUrl==null ||avatarUrl.equals(""))
+        if(avatarUrl==null || avatarUrl.equals(""))
         {
             Asserts.notNull(null);
         }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setAvatarUrl(avatarUrl);
-        return clubMapper.updateByPrimaryKey(club);
+        return clubMapper.updateByPrimaryKeySelective(club);
     }
 
 }

@@ -3,7 +3,6 @@ package edu.fzu.zhishe.security.component;
 import cn.hutool.json.JSONUtil;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 

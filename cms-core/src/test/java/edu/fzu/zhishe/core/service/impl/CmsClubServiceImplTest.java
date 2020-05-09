@@ -1,16 +1,11 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.exception.AccessDeniedException;
 import edu.fzu.zhishe.common.exception.ApiException;
-import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.service.CmsActivityService;
-import edu.fzu.zhishe.core.service.CmsApplyAuditService;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.util.MockUtil;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class CmsClubServiceImplTest{
     Integer id1 = 10020;
-    Integer id2 = 10000;
+    Integer id2 = 10015;
 
     Logger log = LoggerFactory.getLogger(CmsClubServiceImplTest.class);
     @Autowired
@@ -49,7 +44,12 @@ public class CmsClubServiceImplTest{
 
         //修改社团信息
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            cmsClubService.alterClubInfo(id2,"","","");
+            CmsClubInfoParam param = new CmsClubInfoParam() {{
+                setQqGroup("");
+                setSlogan("");
+                setType("");
+            }};
+            cmsClubService.updateClubInfo(id2, param);
         }, " 社团类型不能为空");
 
         //修改社团头像
@@ -62,6 +62,22 @@ public class CmsClubServiceImplTest{
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
+        //修改社团信息
 
+        Assertions.assertDoesNotThrow(() -> {
+            CmsClubInfoParam param = new CmsClubInfoParam() {{
+                setQqGroup("");
+                setSlogan("");
+                setType("运动");
+            }};
+            cmsClubService.updateClubInfo(id2, param);
+        }, " 社团类型不能为空");
+
+
+        //修改社团头像
+        Assertions.assertDoesNotThrow(() -> {
+            cmsClubService.alterClubAvatarUrl(id2,
+                    "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        }, " 没有该权限 ");
     }
 }
