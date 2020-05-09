@@ -752,6 +752,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         }
         CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
+        example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = officialChangeApplyMapper.selectByExample(example);
         return cmsOfficialChangeApplyList;
@@ -769,6 +770,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         }
         CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
+        example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsChiefChangeApply> cmsChiefChangeApplyList = chiefChangeApplyMapper.selectByExample(example);
         return cmsChiefChangeApplyList;
@@ -786,6 +788,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         }
         CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
+        example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubDisbandApply> cmsClubDisbandApplyList = clubDisbandApplyMapper.selectByExample(example);
         return cmsClubDisbandApplyList;
