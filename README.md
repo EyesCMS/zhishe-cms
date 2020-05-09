@@ -1,4 +1,7 @@
 # zhishe-cms
+
+[![Build Status](https://travis-ci.com/EyesCMS/zhishe-cms.svg?branch=dev)](https://travis-ci.com/EyesCMS/zhishe-cms)
+
 backend code for zhishe cms
 
 ## 项目结构
