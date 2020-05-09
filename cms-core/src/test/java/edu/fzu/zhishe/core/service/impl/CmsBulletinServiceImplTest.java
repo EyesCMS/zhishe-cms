@@ -45,8 +45,8 @@ public class CmsBulletinServiceImplTest{
         int clubId = 10000;
 
         //发布公告
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            bulletinService.creatBulletin(clubId, new CmsBulletinParam());
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            bulletinService.creatBulletin(5000, new CmsBulletinParam());
         }, " 不是社长，却可以发布 ");
 
         // 更新公告
@@ -64,7 +64,8 @@ public class CmsBulletinServiceImplTest{
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             bulletinService.deleteBulletin(deletedBulletinId);
         }, " 公告不存在，却可以删除 ");
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
             bulletinService.deleteBulletin(1);
         }, " 不是社长，却可以删除 ");
 

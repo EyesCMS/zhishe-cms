@@ -7,6 +7,7 @@ import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dao.CmsBulletinDAO;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
@@ -67,6 +68,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public int creatBulletin(Integer clubId, CmsBulletinParam cmsBulletinParam) {
         CmsBulletin bulletin = new CmsBulletin(){{
             setClubId(clubId);//获取当前club_id 未实现，目前直接通过前端传递
@@ -80,6 +82,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
@@ -103,6 +106,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public int deleteBulletin(Integer bulletinId) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);

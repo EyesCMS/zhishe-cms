@@ -50,7 +50,6 @@ public class BulletinController {
     @ApiOperation(" 5.1发布公告 ")
     //@PreAuthorize("hasAuthority('cms:bulletin:create')")
     @PostMapping("/{club}/bulletins")
-    @CheckClubAuth("3")
     public ResponseEntity<Object> createBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
         @PathVariable("club") Integer clubId) {
@@ -99,7 +98,7 @@ public class BulletinController {
     @ApiOperation("5.4修改公告内容")
     //@PreAuthorize("hasAuthority('cms:bulletin:update')")
     @PutMapping("/{club}/bulletins/{bulletinId}")
-    @CheckClubAuth("3")
+
     public ResponseEntity<Object> updateBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
         @PathVariable("club") Integer clubId,
