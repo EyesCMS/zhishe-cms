@@ -56,7 +56,9 @@ public class CmsApplyAuditServiceImplTest{
     public void TestForbiddenOperation(){
         int clubIdNotExist = 9999;
         int applyIdNotExist = 9999;
+        int clubIdMine = 10013;
         int clubIdRepeat = 10014;
+        int clubIdNotMine = 10020;
         int applyIdHasAudited = 10001;
 
         String clubNameExisted = "7社";
@@ -98,8 +100,18 @@ public class CmsApplyAuditServiceImplTest{
             setReason("xx");
         }};
 
+        CmsClubsJoinParam cmsClubsJoinParamClubHasJoined= new CmsClubsJoinParam(){{
+            setClubId(clubIdMine);
+            setReason("xx");
+        }};
+
         CmsClubsQuitParam cmsClubsQuitParamClubIdNotExist = new CmsClubsQuitParam(){{
             setClubId(clubIdNotExist);
+            setReason("xx");
+        }};
+
+        CmsClubsQuitParam cmsClubsQuitParamClubIdNotMember = new CmsClubsQuitParam(){{
+            setClubId(clubIdNotMine);
             setReason("xx");
         }};
 
@@ -155,6 +167,10 @@ public class CmsApplyAuditServiceImplTest{
             cmsApplyAuditService.clubJoin(cmsClubsJoinParamClubIdNotExist);
         }, " 社团不存在，却可以加入 ");
 
+        Assertions.assertThrows(ApiException.class, () -> {
+            cmsApplyAuditService.clubJoin(cmsClubsJoinParamClubHasJoined);
+        }, " 已是社团成员，却可以加入 ");
+
         //查看社团加入申请列表
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             cmsApplyAuditService.listJoinClubApply(clubIdNotExist,new CmsClubsJoinQuery(),new PaginationParam());
@@ -169,6 +185,10 @@ public class CmsApplyAuditServiceImplTest{
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             cmsApplyAuditService.clubQuit(cmsClubsQuitParamClubIdNotExist);
         }, " 社团不存在，却可以退出 ");
+
+        Assertions.assertThrows(ApiException.class, () -> {
+            cmsApplyAuditService.clubQuit(cmsClubsQuitParamClubIdNotMember);
+        }, " 非社团成员，却可以退出 ");
 
         //查看社团退出信息列表
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
