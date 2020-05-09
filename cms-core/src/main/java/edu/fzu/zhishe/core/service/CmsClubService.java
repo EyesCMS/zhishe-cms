@@ -44,11 +44,6 @@ public interface CmsClubService {
 
     int updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam);
 
-    /*
-    Integer alterClubQqGroup(Integer clubId, Integer userId, String qqGroup);
-
-    Integer alterClubType(Integer clubId, Integer userId, String type);
-*/
     Integer alterClubAvatarUrl(Integer clubId, String avatarUrl);
 
 }

@@ -119,14 +119,6 @@ public class CmsClubController {
         return ok(clubService.showClubMemberInfo(clubId, userId));
     }
 
-/*    见：CmsClubServiceImpl       public Integer addClubMember(Integer clubId, Integer userId)
-    @ApiOperation(" 3.9添加社团成员 ")
-    public ResponseEntity<Integer> addClubMember(@PathVariable("clubId") Integer clubId,
-                                                 @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(clubService.addClubMember(clubId, userId));
-    }
-*/
-
     @ApiOperation(" 3.10 社长删除社团成员 ")
     @DeleteMapping("/{clubId}/members/{userId}")
     @CheckClubAuth("3")
