@@ -1,22 +1,31 @@
 package edu.fzu.zhishe.core.web;
 
 
+import static org.springframework.http.ResponseEntity.ok;
+
 import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
+import edu.fzu.zhishe.core.service.StorageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -30,8 +39,14 @@ public class CmsClubController {
 
     private final CmsClubService clubService;
 
-    public CmsClubController(CmsClubService clubService) {
+    @Autowired
+    private StorageService storageService;
+
+    private final Path imageRootLocation;
+
+    public CmsClubController(CmsClubService clubService, StorageProperties storageProperties) {
         this.clubService = clubService;
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
     }
 
     @ApiOperation(" 3.1 推荐社团列表 ")
@@ -39,7 +54,7 @@ public class CmsClubController {
     // @PreAuthorize("hasAuthority('cms:club:read')")
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(
             @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listHotClub(paginationParam, orderByParam)));
+        return ok(CommonPage.restPage(clubService.listHotClub(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.2 查看社团列表 ")
@@ -48,7 +63,7 @@ public class CmsClubController {
                                                                            @RequestParam(value = "keyword", required = false) String keyword,
                                                                            @RequestParam(value = "type", required = false) String type,
                                                                            @RequestParam(value = "state", required = false) Integer state){
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClub(paginationParam, orderByParam, keyword, type, state)));
+        return ok(CommonPage.restPage(clubService.listClub(paginationParam, orderByParam, keyword, type, state)));
     }
 
     @ApiOperation(" 3.3 查看学生加入/管理的社团列表 ")
@@ -57,16 +72,16 @@ public class CmsClubController {
                                                                     @PathVariable(value = "userId") Integer userId,
                                                                     @RequestParam(value = "status") String status){
         if("member".equals(status)){
-            return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
+            return ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
-            return ResponseEntity.ok(CommonPage.restPage(clubService.listManagedClub(paginationParam, orderByParam, userId)));
+            return ok(CommonPage.restPage(clubService.listManagedClub(paginationParam, orderByParam, userId)));
         }
     }
 
     @ApiOperation(" 3.4 查看某个社团详情 ")
     @GetMapping("/{id}")
     public ResponseEntity<CmsClubDetailDTO> searchClubById(@PathVariable("id") Integer id) {
-        return ResponseEntity.ok(clubService.getClubById(id));
+        return ok(clubService.getClubById(id));
     }
 
     /**
@@ -75,7 +90,7 @@ public class CmsClubController {
     @ApiOperation(" 3.5 学生查看自己的加入社团申请列表 ")
     @GetMapping("/users/joins")
     public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam)));
+        return ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam)));
     }
 
     /**
@@ -84,7 +99,7 @@ public class CmsClubController {
     @ApiOperation(" 3.6 学生查看自己的创建社团申请列表 ")
     @GetMapping("/users/creations")
     public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam)));
+        return ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.7 社员或社长查看社团成员列表 ")
@@ -93,7 +108,7 @@ public class CmsClubController {
     public ResponseEntity<CommonPage<CmsClubMemberBriefDTO>> listClubMember(@Validated PaginationParam paginationParam,
                                                                             @PathVariable(value = "clubId") Integer clubId,
                                                                             CmsClubMemberQuery clubMemberQuery) {
-        return ResponseEntity.ok(CommonPage.restPage(clubService.listClubMember(paginationParam, clubId, clubMemberQuery)));
+        return ok(CommonPage.restPage(clubService.listClubMember(paginationParam, clubId, clubMemberQuery)));
     }
 
     @ApiOperation(" 3.8 社员或社长查看某个社员详情 ")
@@ -101,7 +116,7 @@ public class CmsClubController {
     @IsClubMember
     public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
                                                                     @PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(clubService.showClubMemberInfo(clubId, userId));
+        return ok(clubService.showClubMemberInfo(clubId, userId));
     }
 
 /*    见：CmsClubServiceImpl       public Integer addClubMember(Integer clubId, Integer userId)
@@ -132,10 +147,25 @@ public class CmsClubController {
 
     @ApiOperation(" 3.12 社长修改社团头像 ")
     @RequestMapping(value = "/{clubId}/pic", method = RequestMethod.PUT)
-    @CheckClubAuth("3")
-    public ResponseEntity<Integer> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
+    public ResponseEntity<Object> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody JSONObject object) {
         clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(" 3.13 社长修改社团头像(上传） ")
+    @RequestMapping(value = "/{clubId}/info/avatar", method = RequestMethod.POST)
+    public ResponseEntity<Object> uploadAvatar(@PathVariable("clubId") Integer clubId,
+            @RequestParam("image") MultipartFile image) {
+
+        String url = storageService.store(image, imageRootLocation);
+
+        if (clubService.alterClubAvatarUrl(clubId, url) == 0) {
+            Asserts.fail("update avatar failed");
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("avatarUrl", url);
+        return ok().body(jsonObject);
     }
 }

@@ -50,6 +50,10 @@ public class CmsBulletinServiceImplTest{
         }, " 不是社长，却可以发布 ");
 
         // 更新公告
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            bulletinService.updateBulletin(1, new CmsBulletinParam());
+        }, " 不是社长，却可以更新 ");
+
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
             bulletinService.updateBulletin(bulletinIdNotExist, new CmsBulletinParam());
         }, " 公告不存在，却可以更新 ");
