@@ -5,6 +5,7 @@ import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
+import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dao.*;
 
@@ -181,6 +182,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
+    @IsClubMember
     public List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId,
             CmsClubMemberQuery clubMemberQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
@@ -188,6 +190,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
+    @IsClubMember
     public CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId) {
         //先判断社团里面是否有这个成员
 
