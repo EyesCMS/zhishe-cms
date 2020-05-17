@@ -12,7 +12,9 @@ redis:
   database: zhishe
   key:
     user: 'sys:user'
-    # resourceList: 'ums:resourceList'
+    post:
+      liked: 'post:liked'
+      liked-count: 'post:liked:count'
   expire:
     common: 86400 # 24 小时
 

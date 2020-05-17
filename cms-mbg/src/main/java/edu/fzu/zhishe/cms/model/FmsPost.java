@@ -25,6 +25,9 @@ public class FmsPost implements Serializable {
     @ApiModelProperty(value = "帖子类别：0 -> 个人帖；1 -> 社团活动帖")
     private Integer type;
 
+    @ApiModelProperty(value = "点赞数量")
+    private Integer likeCount;
+
     @ApiModelProperty(value = "删除状态：0 -> 未删除；1 -> 已删除")
     private Integer deleteState;
 
@@ -86,6 +89,14 @@ public class FmsPost implements Serializable {
         this.type = type;
     }
 
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
     public Integer getDeleteState() {
         return deleteState;
     }
@@ -107,6 +118,7 @@ public class FmsPost implements Serializable {
         sb.append(", imgUrl=").append(imgUrl);
         sb.append(", createAt=").append(createAt);
         sb.append(", type=").append(type);
+        sb.append(", likeCount=").append(likeCount);
         sb.append(", deleteState=").append(deleteState);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

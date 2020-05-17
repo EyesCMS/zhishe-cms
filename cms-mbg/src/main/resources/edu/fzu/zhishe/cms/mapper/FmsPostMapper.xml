@@ -9,6 +9,7 @@
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="like_count" jdbcType="INTEGER" property="likeCount" />
     <result column="delete_state" jdbcType="INTEGER" property="deleteState" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, poster_id, title, content, img_url, create_at, type, delete_state
+    id, poster_id, title, content, img_url, create_at, type, like_count, delete_state
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.FmsPostExample" resultMap="BaseResultMap">
     select
@@ -108,10 +109,10 @@
     </selectKey>
     insert into fms_post (poster_id, title, content, 
       img_url, create_at, type, 
-      delete_state)
+      like_count, delete_state)
     values (#{posterId,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{imgUrl,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}, 
-      #{deleteState,jdbcType=INTEGER})
+      #{likeCount,jdbcType=INTEGER}, #{deleteState,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.FmsPost">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
@@ -137,6 +138,9 @@
       <if test="type != null">
         type,
       </if>
+      <if test="likeCount != null">
+        like_count,
+      </if>
       <if test="deleteState != null">
         delete_state,
       </if>
@@ -159,6 +163,9 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
+      </if>
+      <if test="likeCount != null">
+        #{likeCount,jdbcType=INTEGER},
       </if>
       <if test="deleteState != null">
         #{deleteState,jdbcType=INTEGER},
@@ -195,6 +202,9 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
+      <if test="record.likeCount != null">
+        like_count = #{record.likeCount,jdbcType=INTEGER},
+      </if>
       <if test="record.deleteState != null">
         delete_state = #{record.deleteState,jdbcType=INTEGER},
       </if>
@@ -212,6 +222,7 @@
       img_url = #{record.imgUrl,jdbcType=VARCHAR},
       create_at = #{record.createAt,jdbcType=TIMESTAMP},
       type = #{record.type,jdbcType=INTEGER},
+      like_count = #{record.likeCount,jdbcType=INTEGER},
       delete_state = #{record.deleteState,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -238,6 +249,9 @@
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
+      <if test="likeCount != null">
+        like_count = #{likeCount,jdbcType=INTEGER},
+      </if>
       <if test="deleteState != null">
         delete_state = #{deleteState,jdbcType=INTEGER},
       </if>
@@ -252,6 +266,7 @@
       img_url = #{imgUrl,jdbcType=VARCHAR},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       type = #{type,jdbcType=INTEGER},
+      like_count = #{likeCount,jdbcType=INTEGER},
       delete_state = #{deleteState,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
