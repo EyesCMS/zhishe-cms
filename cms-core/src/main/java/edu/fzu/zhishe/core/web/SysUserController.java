@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.config.StorageProperties;
+import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
@@ -145,6 +146,23 @@ public class SysUserController {
             return ResponseEntity.badRequest().body(response);
         }
         return noContent().build();
+    }
+
+    @ApiOperation(value = " 查看当前用户对某一帖子的点赞情况 ")
+    @RequestMapping(value = "/like", method = RequestMethod.GET)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "postId", value = " 帖子 id"),
+    })
+    public ResponseEntity<Object> getLikeStatus(@RequestParam("postId") Long likedPostId) {
+
+        SysUser currentUser = userService.getCurrentUser();
+        JSONObject jsonObject = new JSONObject();
+        if (likeCacheService.hasLiked(currentUser.getId(), likedPostId)) {
+            jsonObject.put("status", LikedStatusEnum.LIKE.getCode());
+        } else {
+            jsonObject.put("status", LikedStatusEnum.UNLIKE.getCode());
+        }
+        return ok().body(jsonObject);
     }
 
     @ApiOperation(value = " 点赞 ")
