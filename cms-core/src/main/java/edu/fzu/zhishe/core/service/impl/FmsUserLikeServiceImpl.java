@@ -49,8 +49,12 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
     @Transactional(rollbackFor = RuntimeException.class)
     public int saveAll(List<FmsUserLikePost> records) {
 
-        // TODO
-        return 0;
+        return userLikePostDAO.insertList(records);
+    }
+
+    @Override
+    public Integer getPostLikeCount(Long postId) {
+        return likeCacheService.getLikeCount(postId);
     }
 
     @Override
@@ -87,7 +91,6 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
     public void transLikedFromRedis2DB() {
 
         // 1. truncate all data from table
-        //userLikePostMapper.deleteByExample(null);
         userLikePostDAO.truncateTable();
 
         // 2. insert all data from Redis to MySQL
@@ -95,23 +98,6 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
         if (!CollectionUtil.isEmpty(likePostList)) {
             userLikePostDAO.insertList(likePostList);
         }
-//        for (FmsUserLikePost redisRecord : likePostList) {
-//            save(redisRecord);
-//            FmsUserLikePost dbRecord = getByLikedUserIdAndLikedPostId(
-//                redisRecord.getUserId(), redisRecord.getPostId());
-//            if (dbRecord == null) {
-//                // store to db directly
-//                save(redisRecord);
-//            } else {
-//                // delete/update record in db
-//                if (redisRecord.getStatus().equals(LikedStatusEnum.UNLIKE.getCode())) {
-//                    userLikePostMapper.deleteByPrimaryKey(dbRecord.getId());
-//                } else {
-//                    dbRecord.setStatus(redisRecord.getStatus());
-//                    userLikePostMapper.updateByPrimaryKey(dbRecord);
-//                }
-//            }
-//        }
     }
 
     @Override

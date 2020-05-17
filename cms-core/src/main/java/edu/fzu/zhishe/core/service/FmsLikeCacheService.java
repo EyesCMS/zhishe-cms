@@ -28,6 +28,8 @@ public interface FmsLikeCacheService {
      */
     boolean hasUnLiked(Integer likedUserId, Long likedPostId);
 
+    Integer getLikeCount(Long postId);
+
     void saveLiked2Redis(Integer likedUserId, Long likedPostId);
 
     void unlikeFromRedis(Integer likedUserId, Long likedPostId);

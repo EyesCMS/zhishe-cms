@@ -23,6 +23,8 @@ public interface FmsUserLikeService {
      */
     int saveAll(List<FmsUserLikePost> records);
 
+    Integer getPostLikeCount(Long postId);
+
     /**
      * 根据被点赞帖子查询点赞列表
      * @param postId 被点赞帖子 id

@@ -28,14 +28,9 @@ public class QuartzConfig {
 
         // Every day at midnight - 12am
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 * * ?");
-//        SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
-            // 2 个小时执行一次
-//            .withIntervalInHours(2)
-            // 5 min 执行一次 -- 测试用
-//                .withIntervalInMinutes(2)
-            // 每 10 秒执行一次
-//                .withIntervalInSeconds(10)
-//            .repeatForever();
+        // 每 5 min 执行一次（测试用）
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */5 * ? * *");
+
         return TriggerBuilder.newTrigger().forJob(quartzDetail())
                 .withIdentity(LIKE_TASK_IDENTITY)
                 .withSchedule(scheduleBuilder)

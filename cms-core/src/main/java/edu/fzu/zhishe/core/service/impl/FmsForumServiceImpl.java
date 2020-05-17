@@ -18,6 +18,7 @@ import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
+import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
 import java.util.List;
@@ -48,26 +49,44 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Autowired
     private SysUserService userService;
 
+    @Autowired
+    FmsUserLikeService userLikeService;
+
+    private FmsPostDTO queryLikeCount(FmsPostDTO post) {
+        if (post == null) {
+            return null;
+        }
+        post.setLikeCount(userLikeService.getPostLikeCount(post.getId()));
+        return post;
+    }
+
+    private List<FmsPostDTO> queryLikeCount(List<FmsPostDTO> postList) {
+        postList.forEach(p -> {
+            p.setLikeCount(userLikeService.getPostLikeCount(p.getId()));
+        });
+        return postList;
+    }
+
     @Override
     public List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return postDAO.listPersonalPost(clubId, postQuery);
+        return queryLikeCount(postDAO.listPersonalPost(clubId, postQuery));
     }
 
     @Override
     public FmsPostDTO getPersonalPostById(Integer id) {
-        return postDAO.getPersonalPostById(id);
+        return queryLikeCount(postDAO.getPersonalPostById(id));
     }
 
     @Override
     public List<FmsPostDTO> listActivityPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return postDAO.listActivityPost(clubId, postQuery);
+        return queryLikeCount(postDAO.listActivityPost(clubId, postQuery));
     }
 
     @Override
     public FmsPostDTO getActivityPostById(Integer id) {
-        return postDAO.getActivityPostById(id);
+        return queryLikeCount(postDAO.getActivityPostById(id));
     }
 
     @Override

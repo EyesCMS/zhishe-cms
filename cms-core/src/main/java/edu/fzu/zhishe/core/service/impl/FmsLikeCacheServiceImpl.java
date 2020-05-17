@@ -58,6 +58,12 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     }
 
     @Override
+    public Integer getLikeCount(Long postId) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED_COUNT;
+        return (Integer) redisService.hGet(key, postId.toString());
+    }
+
+    @Override
     public void saveLiked2Redis(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
