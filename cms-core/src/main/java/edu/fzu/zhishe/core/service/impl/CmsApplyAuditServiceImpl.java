@@ -173,14 +173,6 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQuery);
     }
 
-    // @Override
-    public CommonList getClubCreateList(QueryParam queryParam) {
-        // TODO: 对照api添加jsonignore
-        int totalCount = clubCreateApplyMapper.selectByExample(null).size();
-        PageHelper.startPage(queryParam.getPage(), queryParam.getLimit());
-        return CommonList.getCommonList(clubCreateApplyMapper.selectByExample(null), totalCount);
-    }
-
     @Override
     public CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         // 查询是否已有该社团申请

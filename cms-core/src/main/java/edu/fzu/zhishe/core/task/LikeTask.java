@@ -22,7 +22,6 @@ public class LikeTask extends QuartzJobBean {
 
         log.info("--------- start LikeTask ----------");
 
-        // TODO: 打开注释
         // 将 Redis 里的点赞信息同步到数据库里
         likeService.transLikedFromRedis2DB();
         likeService.transLikedCountFromRedis2DB();

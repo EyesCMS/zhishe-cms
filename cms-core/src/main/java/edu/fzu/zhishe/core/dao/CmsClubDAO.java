@@ -12,11 +12,6 @@ import org.apache.ibatis.annotations.Param;
  * @
  */
 public interface CmsClubDAO {
-    /*
-     * 通过社团id获取社团的成员对象列表
-     */
-    // TODO: unused
-    // List<SysUser> listClubMember(Integer id);
 
     /**
      * 获取人气推荐社团
