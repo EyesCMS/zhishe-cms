@@ -72,8 +72,8 @@ public class AuthAspect {
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             CheckClubAuth annotation = signature.getMethod().getAnnotation(CheckClubAuth.class);
             if (!annotation.value().equals(userClubRel.getRoleId().toString())) {
-                Asserts.fail("CheckAuth failed, current role: " + userClubRel.getRoleId()
-                    + "required role: " + annotation.value());
+                Asserts.forbidden("CheckAuth failed, current role: " + userClubRel.getRoleId()
+                    + " required role: " + annotation.value());
             }
             // just need to find one
             break;
