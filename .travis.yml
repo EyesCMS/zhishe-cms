@@ -1,4 +1,4 @@
-language: java
+anguage: java
 jdk:
   - openjdk8
 install: mvn install -DskipTests=false -Dmaven.javadoc.skip=true

@@ -993,66 +993,6 @@ public class SysUserExample {
             addCriterion("is_admin not between", value1, value2, "isAdmin");
             return (Criteria) this;
         }
-
-        public Criteria andCurrentRoleIsNull() {
-            addCriterion("current_role is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleIsNotNull() {
-            addCriterion("current_role is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleEqualTo(Integer value) {
-            addCriterion("current_role =", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleNotEqualTo(Integer value) {
-            addCriterion("current_role <>", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleGreaterThan(Integer value) {
-            addCriterion("current_role >", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleGreaterThanOrEqualTo(Integer value) {
-            addCriterion("current_role >=", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleLessThan(Integer value) {
-            addCriterion("current_role <", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleLessThanOrEqualTo(Integer value) {
-            addCriterion("current_role <=", value, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleIn(List<Integer> values) {
-            addCriterion("current_role in", values, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleNotIn(List<Integer> values) {
-            addCriterion("current_role not in", values, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleBetween(Integer value1, Integer value2) {
-            addCriterion("current_role between", value1, value2, "currentRole");
-            return (Criteria) this;
-        }
-
-        public Criteria andCurrentRoleNotBetween(Integer value1, Integer value2) {
-            addCriterion("current_role not between", value1, value2, "currentRole");
-            return (Criteria) this;
-        }
     }
 
     public static class Criteria extends GeneratedCriteria {

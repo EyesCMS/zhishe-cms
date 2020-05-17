@@ -40,8 +40,6 @@ public interface SysUserService {
      */
     String generateAuthCode(String telephone);
 
-    List<SysPermission> listPermissionByRoleId(Integer roleId);
-
     /**
      * 修改密码
      */
@@ -68,11 +66,6 @@ public interface SysUserService {
      * 登录后获取 token
      */
     String login(String username, String password);
-
-    /**
-     * 刷新 token
-     */
-    String refreshToken(String token);
 
     /**
      * 获取所有用户

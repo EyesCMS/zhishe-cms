@@ -1,11 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.common.util.FieldUtil;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
@@ -24,7 +21,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,8 +45,6 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper userMapper;
     @Autowired
-    private SysRolePermissionDAO rolePermissionDAO;
-    @Autowired
     private SysUserCacheService userCacheService;
 //    @Value("${redis.key.authCode}")
 //    private String REDIS_KEY_PREFIX_AUTH_CODE;
@@ -63,10 +57,8 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUser getByUsername(String username) {
         SysUser user = userCacheService.getUser(username);
         if (user != null) {
-            //LOGGER.info("from redis get user");
             return user;
         }
-        //SysUser user;
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<SysUser> userList = userMapper.selectByExample(example);
@@ -103,11 +95,6 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public String generateAuthCode(String telephone) {
         return null;
-    }
-
-    @Override
-    public List<SysPermission> listPermissionByRoleId(Integer roleId) {
-        return rolePermissionDAO.listPermissionByRoleId(roleId);
     }
 
     @Override
@@ -156,8 +143,7 @@ public class SysUserServiceImpl implements SysUserService {
     public UserDetails loadUserByUsername(String username) {
         SysUser sysUser = getByUsername(username);
         if (sysUser != null) {
-            List<SysPermission> permissionList = this.listPermissionByRoleId(sysUser.getCurrentRole());
-            return new SysUserDetails(sysUser, permissionList);
+            return new SysUserDetails(sysUser);
         }
         throw new UsernameNotFoundException(" 用户名或密码错误 ");
     }
@@ -179,11 +165,6 @@ public class SysUserServiceImpl implements SysUserService {
             LOGGER.warn(" 登录异常:{}", e.getMessage());
         }
         return token;
-    }
-
-    @Override
-    public String refreshToken(String token) {
-        return jwtTokenUtil.refreshHeadToken(token);
     }
 
     @Override
