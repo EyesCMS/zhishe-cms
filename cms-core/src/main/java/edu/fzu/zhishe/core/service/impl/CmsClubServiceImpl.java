@@ -250,7 +250,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
         if(clubInfoParam.getType() == null || clubInfoParam.getType().equals(""))
         {
-            Asserts.notNull(null);
+            Asserts.fail("社团类型不能为空！");
         }
         CmsClub club = new CmsClub();
         club.setId(clubId);
@@ -267,9 +267,9 @@ public class CmsClubServiceImpl implements CmsClubService {
 //        if (CollectionUtils.isEmpty(userClubList)) {
 //            Asserts.fail("非社长，您没有该权限");
 //        }
-        if(avatarUrl==null || avatarUrl.equals(""))
+        if(avatarUrl == null || avatarUrl.equals(""))
         {
-            Asserts.notNull(null);
+            Asserts.fail("输入不能为空！");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setAvatarUrl(avatarUrl);

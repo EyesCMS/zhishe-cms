@@ -56,7 +56,7 @@ public class CmsClubServiceImplTest{
         }, " 没有该权限");
 
         //修改社团信息
-        Assertions.assertThrows(ApiException.class, () -> {
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
             CmsClubInfoParam param = new CmsClubInfoParam() {{
                 setQqGroup("");
                 setSlogan("");
@@ -72,7 +72,7 @@ public class CmsClubServiceImplTest{
             }};
             cmsClubService.updateClubInfo(notJoinedClubId, param);
         }, " 没有该权限");
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+        Assertions.assertThrows(ApiException.class, () -> {
             CmsClubInfoParam param = new CmsClubInfoParam() {{
                 setQqGroup("");
                 setSlogan("");
@@ -82,11 +82,11 @@ public class CmsClubServiceImplTest{
         }, " 社团类型不能为空");
 
         //修改社团头像
-        Assertions.assertThrows(EntityNotFoundException.class, () -> {
+        Assertions.assertThrows(ApiException.class, () -> {
             cmsClubService.alterClubAvatarUrl(managedClubId,
                     "");
         }, " 头像不能为空");
-        Assertions.assertThrows(ApiException.class, () -> {
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
             cmsClubService.alterClubAvatarUrl(joinedClubId,
                     "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
         }, " 没有该权限");
