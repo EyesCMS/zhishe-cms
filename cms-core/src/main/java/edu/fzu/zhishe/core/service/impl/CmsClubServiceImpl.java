@@ -283,6 +283,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     public CmsClubPictureDTO getClubPicture(Integer clubId){
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
+        List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
+        if(pictureList.size() == 0){
+            Asserts.fail("club is not existed");
+        }
         CmsClubPicture picture = pictureMapper.selectByExample(pictureExample).get(0);
         CmsClubPictureDTO data = new CmsClubPictureDTO();
         if(!picture.getClubId().equals(null)) {
