@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.cms.model.SysUser;
@@ -12,6 +11,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户管理
@@ -77,6 +77,8 @@ public interface SysUserService {
      */
     @Transactional
     void updateUserByParam(SysUserUpdateParam updateParam);
+
+    String updateAvatar(MultipartFile avatarImg);
 
     /**
      * 选择性更新非空字段

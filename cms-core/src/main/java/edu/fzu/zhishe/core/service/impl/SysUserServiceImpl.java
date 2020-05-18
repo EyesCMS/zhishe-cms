@@ -2,19 +2,24 @@ package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import edu.fzu.zhishe.security.util.JwtTokenUtil;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,11 +34,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/19/2020.
  * @version 1.0
  */
+@Slf4j
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
@@ -46,6 +53,16 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper userMapper;
     @Autowired
     private SysUserCacheService userCacheService;
+
+    @Autowired
+    StorageService storageService;
+
+    private final Path imageRootLocation;
+
+    @Autowired
+    public SysUserServiceImpl(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
+    }
 //    @Value("${redis.key.authCode}")
 //    private String REDIS_KEY_PREFIX_AUTH_CODE;
 //    @Value("${redis.expire.authCode}")
@@ -190,6 +207,38 @@ public class SysUserServiceImpl implements SysUserService {
             Asserts.fail("修改信息更新数据库出现错误");
         }
         userCacheService.delUser(updatedUser.getId());
+    }
+
+    @Override
+    public String updateAvatar(MultipartFile avatarImg) {
+
+        SysUser currentUser = this.getCurrentUser();
+        String avatarUrl = currentUser.getAvatarUrl();
+        // FIXME: hard code here
+        String rootLocation = "http://101.200.193.180:9520/files/images";
+        if (avatarUrl != null) {
+            // delete if avatar is uploaded to server before
+            int index = avatarUrl.lastIndexOf('/');
+            if (rootLocation.equals(avatarUrl.substring(0, index))) {
+                String filename = avatarUrl.substring(index);
+                Path oldAvatarPath = Paths.get(imageRootLocation.toAbsolutePath() + filename);
+                storageService.deleteFile(oldAvatarPath);
+            }
+        }
+
+        // 1. upload avatar
+        String url = storageService.store(avatarImg, imageRootLocation);
+        log.info("You successfully uploaded " + avatarImg.getOriginalFilename() + "!");
+
+        // 2. update user info
+        SysUser user = new SysUser() {{
+            setId(currentUser.getId());
+            setAvatarUrl(url);
+        }};
+        if (userMapper.updateByPrimaryKeySelective(user) == 0) {
+            Asserts.fail("update avatar failed");
+        }
+        return url;
     }
 
     @Override
