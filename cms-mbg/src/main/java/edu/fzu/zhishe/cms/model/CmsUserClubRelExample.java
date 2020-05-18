@@ -465,6 +465,66 @@ public class CmsUserClubRelExample {
             return (Criteria) this;
         }
 
+        public Criteria andCheckInDateIsNull() {
+            addCriterion("check_in_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateIsNotNull() {
+            addCriterion("check_in_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateEqualTo(Date value) {
+            addCriterion("check_in_date =", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateNotEqualTo(Date value) {
+            addCriterion("check_in_date <>", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateGreaterThan(Date value) {
+            addCriterion("check_in_date >", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("check_in_date >=", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateLessThan(Date value) {
+            addCriterion("check_in_date <", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateLessThanOrEqualTo(Date value) {
+            addCriterion("check_in_date <=", value, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateIn(List<Date> values) {
+            addCriterion("check_in_date in", values, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateNotIn(List<Date> values) {
+            addCriterion("check_in_date not in", values, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateBetween(Date value1, Date value2) {
+            addCriterion("check_in_date between", value1, value2, "checkInDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andCheckInDateNotBetween(Date value1, Date value2) {
+            addCriterion("check_in_date not between", value1, value2, "checkInDate");
+            return (Criteria) this;
+        }
+
         public Criteria andJoinDateIsNull() {
             addCriterion("join_date is null");
             return (Criteria) this;

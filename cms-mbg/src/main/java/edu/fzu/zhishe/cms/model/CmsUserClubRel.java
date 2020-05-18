@@ -20,6 +20,9 @@ public class CmsUserClubRel implements Serializable {
     @ApiModelProperty(value = "用户头衔 id")
     private Integer honorId;
 
+    @ApiModelProperty(value = "上次签到时间")
+    private Date checkInDate;
+
     @ApiModelProperty(value = "加入时间")
     private Date joinDate;
 
@@ -73,6 +76,14 @@ public class CmsUserClubRel implements Serializable {
         this.honorId = honorId;
     }
 
+    public Date getCheckInDate() {
+        return checkInDate;
+    }
+
+    public void setCheckInDate(Date checkInDate) {
+        this.checkInDate = checkInDate;
+    }
+
     public Date getJoinDate() {
         return joinDate;
     }
@@ -93,6 +104,7 @@ public class CmsUserClubRel implements Serializable {
         sb.append(", roleId=").append(roleId);
         sb.append(", credit=").append(credit);
         sb.append(", honorId=").append(honorId);
+        sb.append(", checkInDate=").append(checkInDate);
         sb.append(", joinDate=").append(joinDate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

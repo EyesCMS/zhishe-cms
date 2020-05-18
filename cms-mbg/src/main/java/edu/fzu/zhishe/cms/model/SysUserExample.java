@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.cms.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SysUserExample {
@@ -991,6 +992,66 @@ public class SysUserExample {
 
         public Criteria andIsAdminNotBetween(Integer value1, Integer value2) {
             addCriterion("is_admin not between", value1, value2, "isAdmin");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateIsNull() {
+            addCriterion("register_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateIsNotNull() {
+            addCriterion("register_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateEqualTo(Date value) {
+            addCriterion("register_date =", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateNotEqualTo(Date value) {
+            addCriterion("register_date <>", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateGreaterThan(Date value) {
+            addCriterion("register_date >", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("register_date >=", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateLessThan(Date value) {
+            addCriterion("register_date <", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateLessThanOrEqualTo(Date value) {
+            addCriterion("register_date <=", value, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateIn(List<Date> values) {
+            addCriterion("register_date in", values, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateNotIn(List<Date> values) {
+            addCriterion("register_date not in", values, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateBetween(Date value1, Date value2) {
+            addCriterion("register_date between", value1, value2, "registerDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andRegisterDateNotBetween(Date value1, Date value2) {
+            addCriterion("register_date not between", value1, value2, "registerDate");
             return (Criteria) this;
         }
     }
