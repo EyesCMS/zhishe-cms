@@ -31,4 +31,6 @@ public interface CmsActivityService {
 
     List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
         PaginationParam paginationParam, OrderByParam orderByParam);
+
+    int finishExpiredActivity();
 }

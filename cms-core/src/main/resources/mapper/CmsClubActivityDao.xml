@@ -91,4 +91,12 @@
         id ASC
     </select>
 
+    <update id="finishActivityBatch">
+        UPDATE cms_activity
+        SET state = 4
+        WHERE
+            state = 2
+            AND end_date &lt; #{nowDate}
+    </update>
+
 </mapper>

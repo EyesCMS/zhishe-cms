@@ -1,8 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
@@ -22,15 +20,11 @@ import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsActivityService;
 import edu.fzu.zhishe.core.service.SysUserService;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.swing.*;
 
 /*
  * @author PSF 2020/04/27
@@ -240,5 +234,14 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
 
         return activityDAO.listActivityApplyForAdmin(param.getState(), param.getClubName());
+    }
+
+    /**
+     * update activity state: published -> finished
+     */
+    @Override
+    public int finishExpiredActivity() {
+
+        return activityDAO.finishActivityBatch(new Date());
     }
 }

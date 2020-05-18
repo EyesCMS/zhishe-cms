@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.dao;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO;
 import edu.fzu.zhishe.core.param.CmsActivityQuery;
+import java.util.Date;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface CmsClubActivityDAO {
                                                         CmsActivityQuery queryParam);
 
     List<CmsActivityApplyListDTO> listActivityApplyForAdmin(Integer state, String clubName);
+
+    int finishActivityBatch(@Param("nowDate") Date finishDate);
 }
