@@ -310,7 +310,11 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
-        CmsClubPicture picture = pictureMapper.selectByExample(pictureExample).get(0);
+        List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
+        if(pictureList.size() == 0){
+            Asserts.fail("club is not existed");
+        }
+        CmsClubPicture picture = pictureList.get(0);
         if(index == 1){
             picture.setPic1Url(pictureUrl);
         }
