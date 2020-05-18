@@ -160,4 +160,28 @@ public class CmsClubController {
         jsonObject.put("avatarUrl", url);
         return ok().body(jsonObject);
     }
+
+    @ApiOperation(" 3.14 查看社团走马灯 ")
+    @GetMapping("/{clubId}/pictures")
+    public ResponseEntity<CmsClubPictureDTO> getClubPic(@PathVariable("clubId") Integer clubId) {
+        return ok(clubService.getClubPicture(clubId));
+    }
+
+    @ApiOperation(" 3.15 社长修改社团走马灯(上传） ")
+    @PostMapping("/{clubId}/pictures")
+    public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
+                                               @RequestParam("image") MultipartFile image,
+                                               @RequestParam("index") Integer index) {
+
+        String url = storageService.store(image, imageRootLocation);
+
+        if (clubService.alterClubPictureUrl(clubId, url, index) == 0) {
+            Asserts.fail("update picture failed");
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("pictureUrl", url);
+        return ok().body(jsonObject);
+    }
+
 }

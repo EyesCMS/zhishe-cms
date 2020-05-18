@@ -42,8 +42,11 @@ public interface CmsClubService {
 
     Integer deleteClubMember(Integer clubId, Integer userId);
 
-    int updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam);
+    Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam);
 
     Integer alterClubAvatarUrl(Integer clubId, String avatarUrl);
 
+    CmsClubPictureDTO getClubPicture(Integer clubId);
+
+    Integer alterClubPictureUrl(Integer clubId, String avatarUrl, Integer index);
 }

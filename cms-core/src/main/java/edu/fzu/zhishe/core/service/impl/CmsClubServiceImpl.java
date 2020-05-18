@@ -77,6 +77,9 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Autowired
     SysRoleMapper roleMapper;
 
+    @Autowired
+    CmsClubPictureMapper pictureMapper;
+
     @Override
     public boolean isClubMember(Integer clubId) {
         ClubStatueEnum clubStatue = getClubStatue(clubId);
@@ -246,7 +249,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     //修改社团信息接口
     @Override
     @CheckClubAuth("3")
-    public int updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
+    public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
 
         if(clubInfoParam.getType() == null || clubInfoParam.getType().equals(""))
         {
@@ -276,4 +279,56 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKeySelective(club);
     }
 
+    @Override
+    public CmsClubPictureDTO getClubPicture(Integer clubId){
+        CmsClubPictureExample pictureExample = new CmsClubPictureExample();
+        pictureExample.createCriteria().andClubIdEqualTo(clubId);
+        CmsClubPicture picture = pictureMapper.selectByExample(pictureExample).get(0);
+        CmsClubPictureDTO data = new CmsClubPictureDTO();
+        if(!picture.getClubId().equals(null)) {
+            data.setUrl1(picture.getPic1Url());
+            data.setUrl2(picture.getPic2Url());
+            data.setUrl3(picture.getPic3Url());
+            data.setUrl4(picture.getPic4Url());
+            data.setUrl5(picture.getPic5Url());
+        }
+        return data;
+    }
+
+    @Override
+    @CheckClubAuth("3")
+    public Integer alterClubPictureUrl(Integer clubId, String pictureUrl, Integer index){
+//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
+//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
+//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+//        if (CollectionUtils.isEmpty(userClubList)) {
+//            Asserts.fail("非社长，您没有该权限");
+//        }
+        if(pictureUrl == null || pictureUrl.equals(""))
+        {
+            Asserts.fail("输入不能为空！");
+        }
+        CmsClubPictureExample pictureExample = new CmsClubPictureExample();
+        pictureExample.createCriteria().andClubIdEqualTo(clubId);
+        CmsClubPicture picture = pictureMapper.selectByExample(pictureExample).get(0);
+        if(index == 1){
+            picture.setPic1Url(pictureUrl);
+        }
+        else if(index == 2){
+            picture.setPic2Url(pictureUrl);
+        }
+        else if(index == 3){
+            picture.setPic3Url(pictureUrl);
+        }
+        else if(index == 4){
+            picture.setPic4Url(pictureUrl);
+        }
+        else if(index == 5){
+            picture.setPic5Url(pictureUrl);
+        }
+        else{
+            Asserts.fail("输入参数有误！");
+        }
+        return pictureMapper.updateByPrimaryKeySelective(picture);
+    }
 }
