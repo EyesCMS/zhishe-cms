@@ -1,9 +1,13 @@
 package edu.fzu.zhishe.core.web;
 
+import edu.fzu.zhishe.cms.model.CmsClubExample;
 import edu.fzu.zhishe.core.dto.SysAdminAuditedDTO;
 import edu.fzu.zhishe.core.dto.SysAdminClubSpeciesDTO;
 import edu.fzu.zhishe.core.dto.SysAdminNewUsersDTO;
+import edu.fzu.zhishe.core.service.SysAdminService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +21,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminHomeController {
 
-    /*
-     * TODO
-     */
-    //@ApiOperation(" 待审核事项 ")
-    @GetMapping("/audited")
-    public ResponseEntity<Object> audited() {
+    @Autowired
+    private SysAdminService adminService;
 
-
-        return ResponseEntity.ok(new SysAdminAuditedDTO());
+    @ApiOperation(" 待审核事项 ")
+    @GetMapping("/unaudited")
+    public ResponseEntity<Object> unaudited() {
+        return ResponseEntity.ok(adminService.unaudited());
     }
 
     /*
@@ -36,7 +38,7 @@ public class AdminHomeController {
     public ResponseEntity<Object> newUsers() {
 
 
-        return ResponseEntity.ok(new SysAdminNewUsersDTO());
+        return ResponseEntity.ok(adminService.newUsers());
     }
 
     /*
@@ -45,9 +47,10 @@ public class AdminHomeController {
     //@ApiOperation(" 社团类别数 ")
     @GetMapping("/clubspecies")
     public ResponseEntity<Object> clubSpecies() {
+        CmsClubExample example = new CmsClubExample();
 
 
-        return ResponseEntity.ok(new SysAdminClubSpeciesDTO());
+        return ResponseEntity.ok(adminService.clubSpecies());
     }
 
 
