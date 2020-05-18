@@ -1,33 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import com.github.pagehelper.PageHelper;
-import edu.fzu.zhishe.cms.mapper.CmsChiefChangeApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubCreateApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubDisbandApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubJoinApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
-import edu.fzu.zhishe.cms.mapper.CmsOfficialChangeApplyMapper;
-import edu.fzu.zhishe.cms.mapper.CmsQuitNoticeMapper;
-import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
-import edu.fzu.zhishe.cms.mapper.SysUserMapper;
-import edu.fzu.zhishe.cms.model.CmsChiefChangeApply;
-import edu.fzu.zhishe.cms.model.CmsChiefChangeApplyExample;
-import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.cms.model.CmsClubCreateApply;
-import edu.fzu.zhishe.cms.model.CmsClubCreateApplyExample;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
-import edu.fzu.zhishe.cms.model.CmsClubDisbandApplyExample;
-import edu.fzu.zhishe.cms.model.CmsClubExample;
-import edu.fzu.zhishe.cms.model.CmsClubJoinApply;
-import edu.fzu.zhishe.cms.model.CmsClubJoinApplyExample;
-import edu.fzu.zhishe.cms.model.CmsOfficialChangeApply;
-import edu.fzu.zhishe.cms.model.CmsOfficialChangeApplyExample;
-import edu.fzu.zhishe.cms.model.CmsQuitNotice;
-import edu.fzu.zhishe.cms.model.CmsQuitNoticeExample;
-import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
-import edu.fzu.zhishe.cms.model.SysUser;
-import edu.fzu.zhishe.cms.model.SysUserExample;
+import edu.fzu.zhishe.cms.mapper.*;
+import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.util.CommonList;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
@@ -125,6 +100,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     @Autowired
     private CmsUserClubRelMapper userClubRelMapper;
 
+    @Autowired
+    CmsClubPictureMapper pictureMapper;
+
 
     //一下三个函数用于社团创建
     @Override
@@ -195,7 +173,6 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.ACTIVE.getValue()) {
             //创建社团
             CmsClub cmsClub = new CmsClub();
-
             cmsClub.setName(cmsClubCreateApply.getClubName());
             cmsClub.setChiefId(cmsClubCreateApply.getUserId());
             cmsClub.setMemberCount(1);
@@ -224,6 +201,11 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsUserClubRel.setHonorId(1);
             cmsUserClubRel.setJoinDate(handleAt);
             userClubRelMapper.insert(cmsUserClubRel);
+
+            //更新社团走马灯图片表
+            CmsClubPicture cmsClubPicture = new CmsClubPicture();
+            cmsClubPicture.setClubId(cmsClubs.get(0).getId());
+            pictureMapper.insert(cmsClubPicture);
 
             return cmsClubCreateApply;
         }
