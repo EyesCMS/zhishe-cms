@@ -4,7 +4,12 @@ public enum CreditEnum {
     /**
      * 签到（暂定一分）
      */
-    CHECKIN(1);
+    CHECKIN(1),
+
+    /**
+     * 评论（暂定两分）
+     */
+    COMMENT(2);
 
     private int value;
     CreditEnum(int value) {

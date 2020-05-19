@@ -2,10 +2,12 @@ package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.date.DateUtil;
 import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
-import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
+import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
+import edu.fzu.zhishe.cms.mapper.FmsPostRemarkMapper;
+import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.CreditEnum;
+import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -30,6 +32,15 @@ public class CreditServiceImpl implements CreditService {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    private FmsPostMapper fmsPostMapper;
+
+    @Autowired
+    private FmsPostRemarkMapper fmsPostRemarkMapper;
+
+    //最高可获得积分评论数
+    private final int maxCommentCreditNum = 2;
 
     @Override
     public void creditAdd(CmsUserClubRel cmsUserClubRel, int credit) {
@@ -65,5 +76,37 @@ public class CreditServiceImpl implements CreditService {
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
         }
+    }
+
+    @Override
+    public void comment(Integer postId) {
+        FmsPostRemarkExample example = new FmsPostRemarkExample();
+        example.createCriteria().andPostIdEqualTo(postId)
+                .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
+        List<FmsPostRemark> remarkList = fmsPostRemarkMapper.selectByExample(example);
+        //没有评论或者同一帖子评论超过两条不增加积分
+        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() >= maxCommentCreditNum){
+            System.out.println("没有评论或者同一帖子评论超过两条不增加积分");
+            return;
+        }
+        FmsPost post = fmsPostMapper.selectByPrimaryKey(postId.longValue());
+        //个人贴不加积分
+        if(post.getType().equals(PostTypeEnum.PERSONAL.getValue())){
+            System.out.println("个人贴不加积分");
+            return;
+        }
+        //非用户已加入社团不加积分
+        int clubId = post.getPosterId();
+        CmsUserClubRelExample example1 = new CmsUserClubRelExample();
+        example1.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
+                .andClubIdEqualTo(clubId);
+        List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example1);
+        if (CollectionUtils.isEmpty(userClubRelList)) {
+            System.out.println("非用户已加入社团不加积分");
+            return;
+        }
+        //种种情况考虑之后进行加分
+        CmsUserClubRel userClubRel = userClubRelList.get(0);
+        creditAdd(userClubRel, CreditEnum.COMMENT.getValue());
     }
 }

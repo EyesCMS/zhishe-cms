@@ -10,6 +10,7 @@ import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.param.QueryParam;
+import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import io.swagger.annotations.Api;
@@ -43,6 +44,9 @@ public class FmsForumController {
 
     @Autowired
     private SysUserService userService;
+
+    @Autowired
+    CreditService creditService;
 
     @ApiOperation(" 7.1 帖子列表(个人/活动) ")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
@@ -146,6 +150,7 @@ public class FmsForumController {
         if (forumService.saveRemark(remarkParam) == 0) {
             Asserts.fail();
         }
+        creditService.comment(remarkParam.getPostId().intValue());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

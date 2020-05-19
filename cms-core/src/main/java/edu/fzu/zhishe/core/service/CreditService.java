@@ -21,5 +21,10 @@ public interface CreditService {
      */
     void checkin(Integer clubId);
 
+    /**
+     * 获取评论积分
+     */
+    void comment(Integer postId);
+
 
 }
