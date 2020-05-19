@@ -159,7 +159,7 @@ public class FmsForumServiceImpl implements FmsForumService {
 
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        if (post == null || post.getDeleteState() == 1) {
+        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
             Asserts.notFound();
         }
 

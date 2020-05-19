@@ -20,7 +20,7 @@ public class CmsClubsAuditParam {
     @NotNull(message = " 申请id不能为空 ")
     private Integer id;
     @ApiModelProperty(value = " 审核状态 ", required = true)
-    @FlagValidator(value = {"0", "1", "2"}, message = " 审核状态范围错误 ")
+    @FlagValidator(value = {"0", "1", "2"}, message = " 申请状态码范围错误 ")
     @NotNull(message = " 审核不能为空 ")
     private Integer state;
 

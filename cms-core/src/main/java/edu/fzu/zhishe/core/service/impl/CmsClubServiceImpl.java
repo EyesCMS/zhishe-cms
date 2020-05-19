@@ -1,5 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
@@ -23,6 +26,7 @@ import java.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -132,7 +136,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             CmsClub club = clubMapper.selectByPrimaryKey(id);
             SysUser user = sysUserMapper.selectByPrimaryKey(club.getChiefId());
             CmsClubDetailDTO data = new CmsClubDetailDTO();
-            if(!club.getId().equals(null)) {
+            if (club.getId() != null) {
                 data.setId(club.getId());
                 data.setName(club.getName());
                 data.setChiefName(user.getNickname());
@@ -142,7 +146,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                 data.setMemberCount(club.getMemberCount());
                 data.setQqGroup(club.getQqGroup());
             }
-            return data ;
+            return data;
     }
 
     @Override
@@ -195,14 +199,10 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     @IsClubMember
     public CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId) {
-        //先判断社团里面是否有这个成员
 
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//       if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.forbidden();
-//        }
 
         SysUser user = sysUserMapper.selectByPrimaryKey(userId);
         CmsClubMemberDetailDTO data = new CmsClubMemberDetailDTO();
@@ -220,6 +220,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
+    @Transactional
     public Integer addClubMember(Integer clubId, Integer userId){
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
@@ -235,15 +236,15 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public Integer deleteClubMember(Integer clubId, Integer userId){
+    @Transactional
+    public Integer deleteClubMember(Integer clubId, Integer userId) {
 
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         userClubRelMapper.deleteByExample(example);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        club.setMemberCount(club.getMemberCount()-1);
-        clubMapper.updateByPrimaryKey(club);
-        return 1;
+        club.setMemberCount(club.getMemberCount() - 1);
+        return clubMapper.updateByPrimaryKey(club);
     }
 
     //修改社团信息接口
@@ -251,8 +252,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     @CheckClubAuth("3")
     public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
 
-        if(clubInfoParam.getType() == null || clubInfoParam.getType().equals(""))
-        {
+        if (StrUtil.isEmpty(clubInfoParam.getType())) {
             Asserts.fail("社团类型不能为空！");
         }
         CmsClub club = new CmsClub();
@@ -264,14 +264,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     @CheckClubAuth("3")
     public Integer alterClubAvatarUrl(Integer clubId, String avatarUrl){
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-        if(avatarUrl == null || avatarUrl.equals(""))
-        {
+
+        if (StrUtil.isEmpty(avatarUrl)) {
             Asserts.fail("输入不能为空！");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
@@ -280,16 +274,16 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CmsClubPictureDTO getClubPicture(Integer clubId){
+    public CmsClubPictureDTO getClubPicture(Integer clubId) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
-        if(pictureList.size() == 0){
+        if (CollUtil.isEmpty(pictureList)) {
             Asserts.fail("club is not existed");
         }
-        CmsClubPicture picture = pictureMapper.selectByExample(pictureExample).get(0);
+        CmsClubPicture picture = pictureList.get(0);
         CmsClubPictureDTO data = new CmsClubPictureDTO();
-        if(!picture.getClubId().equals(null)) {
+        if (picture.getClubId() != null) {
             data.setUrl1(picture.getPic1Url());
             data.setUrl2(picture.getPic2Url());
             data.setUrl3(picture.getPic3Url());
@@ -301,42 +295,38 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     @Override
     @CheckClubAuth("3")
-    public Integer alterClubPictureUrl(Integer clubId, String pictureUrl, Integer index){
-//        CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
-//        userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId).andRoleIdEqualTo(3);
-//        List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
-//        if (CollectionUtils.isEmpty(userClubList)) {
-//            Asserts.fail("非社长，您没有该权限");
-//        }
-        if(pictureUrl == null || pictureUrl.equals(""))
-        {
+    public Integer alterClubPictureUrl(Integer clubId, String pictureUrl, Integer index) {
+
+        if (StrUtil.isEmpty(pictureUrl)) {
             Asserts.fail("输入不能为空！");
         }
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
-        if(pictureList.size() == 0){
+        if (pictureList.size() == 0) {
             Asserts.fail("club is not existed");
         }
         CmsClubPicture picture = pictureList.get(0);
-        if(index == 1){
-            picture.setPic1Url(pictureUrl);
+        switch (index) {
+            case 1:
+                picture.setPic1Url(pictureUrl);
+                break;
+            case 2:
+                picture.setPic2Url(pictureUrl);
+                break;
+            case 3:
+                picture.setPic3Url(pictureUrl);
+                break;
+            case 4:
+                picture.setPic4Url(pictureUrl);
+                break;
+            case 5:
+                picture.setPic5Url(pictureUrl);
+                break;
+            default:
+                Asserts.fail("输入参数有误！");
         }
-        else if(index == 2){
-            picture.setPic2Url(pictureUrl);
-        }
-        else if(index == 3){
-            picture.setPic3Url(pictureUrl);
-        }
-        else if(index == 4){
-            picture.setPic4Url(pictureUrl);
-        }
-        else if(index == 5){
-            picture.setPic5Url(pictureUrl);
-        }
-        else{
-            Asserts.fail("输入参数有误！");
-        }
+
         return pictureMapper.updateByPrimaryKeySelective(picture);
     }
 }

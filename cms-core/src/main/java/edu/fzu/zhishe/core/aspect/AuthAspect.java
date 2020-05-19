@@ -1,6 +1,8 @@
 package edu.fzu.zhishe.core.aspect;
 
+import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
 import edu.fzu.zhishe.cms.model.SysUser;
@@ -36,10 +38,13 @@ import org.springframework.util.CollectionUtils;
 public class AuthAspect {
 
     @Autowired
-    private SysUserService userService;
+    SysUserService userService;
 
     @Autowired
-    private CmsUserClubRelMapper userClubRelMapper;
+    CmsClubMapper clubMapper;
+
+    @Autowired
+    CmsUserClubRelMapper userClubRelMapper;
 
     @Pointcut("@annotation(edu.fzu.zhishe.core.annotation.CheckClubAuth)")
     public void checkAuth() { }
@@ -59,10 +64,17 @@ public class AuthAspect {
             if (!"CLUBID".equals(codeSignature.getParameterNames()[i].toUpperCase())) {
                 continue;
             }
+
+            Integer clubId = (Integer) joinPoint.getArgs()[i];
+            CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+            if (club == null) {
+                Asserts.notFound("社团不存在");
+            }
+
             CmsUserClubRelExample example = new CmsUserClubRelExample();
             example.createCriteria()
                 .andUserIdEqualTo(currentUser.getId())
-                .andClubIdEqualTo((Integer) joinPoint.getArgs()[i]);
+                .andClubIdEqualTo(clubId);
             List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example);
             if (CollectionUtils.isEmpty(userClubRels)) {
                 Asserts.forbidden();

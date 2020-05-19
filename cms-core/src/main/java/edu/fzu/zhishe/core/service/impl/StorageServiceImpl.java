@@ -72,7 +72,6 @@ public class StorageServiceImpl implements StorageService {
             methodName = "";
             Asserts.fail("error file type");
         }
-//        String filename1 = resource.getFilename();
         String serveFile = MvcUriComponentsBuilder
             .fromMethodName(FileUploadController.class, methodName, resource.getFilename())
             .build()

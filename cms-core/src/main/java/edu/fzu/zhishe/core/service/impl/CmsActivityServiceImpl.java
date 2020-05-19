@@ -80,7 +80,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         activity.setBody(param.getContent());
         activity.setCreateAt(new Date());
 
-        activity.setState(0);
+        activity.setState(ActivityStateEnum.PENDING.getValue());
         if (activityMapper.insert(activity) == 0) {
             Asserts.fail("数据库插入失败创建申请活动失败");
         }
@@ -90,7 +90,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     public void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
         SysUser user = userService.getCurrentUser();
-        if (activity == null || user == null) {
+        if (activity == null) {
             Asserts.notFound("找不到活动");
         }
         if (user == null) {

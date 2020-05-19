@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
@@ -33,20 +34,9 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public void creditAdd(CmsUserClubRel cmsUserClubRel, int credit) {
         int oldCredit = cmsUserClubRel.getCredit();
-        oldCredit+=credit;
+        oldCredit += credit;
         cmsUserClubRel.setCredit(oldCredit);
         cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel);
-    }
-
-    @Override
-    public boolean isSameDay(Date date1, Date date2) {
-        Calendar c1 = Calendar.getInstance();
-        Calendar c2 = Calendar.getInstance();
-        c1.setTime(date1);
-        c2.setTime(date2);
-        return (c1.get(Calendar.YEAR) == c2.get(Calendar.YEAR))
-                && (c1.get(Calendar.MONTH) == c2.get(Calendar.MONTH))
-                && (c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
@@ -63,18 +53,17 @@ public class CreditServiceImpl implements CreditService {
         Date date = new Date();
         Date lastCheckinDate = userClubRel.getCheckInDate();
 
-        if(lastCheckinDate == null){
+        if (lastCheckinDate == null) {
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
             return;
         }
 
-        if(isSameDay(date,lastCheckinDate)){
+        if (DateUtil.isSameDay(date, lastCheckinDate)) {
             Asserts.forbidden("今天您已签到过，同一天不可重复签到");
-        }else{
+        } else {
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
-            return;
         }
     }
 }

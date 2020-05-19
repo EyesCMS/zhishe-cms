@@ -4,7 +4,7 @@ import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.common.util.CommonList;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.constant.ApplyStateEnum;
 import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
@@ -36,7 +36,6 @@ import edu.fzu.zhishe.core.param.CmsClubsJoinQuery;
 import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
 import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
-import edu.fzu.zhishe.core.param.QueryParam;
 import edu.fzu.zhishe.core.service.CmsApplyAuditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
@@ -44,6 +43,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -103,6 +103,41 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     @Autowired
     CmsClubPictureMapper pictureMapper;
 
+    public boolean notExistClub(CmsClub club) {
+        return club == null
+            || club.getDeleteStatus() == DeleteStateEnum.Deleted.getValue();
+    }
+
+    public void checkNotExistOrAudited(Object auditObject) {
+
+        if (auditObject == null) {
+            Asserts.notFound("该申请不存在");
+        }
+
+        Integer state = ApplyStateEnum.PENDING.getValue();
+        if (auditObject instanceof CmsClubCreateApply) {
+            // 创建社团
+            state = ((CmsClubCreateApply) auditObject).getState();
+        } else if (auditObject instanceof CmsClubDisbandApply) {
+            // 解散社团
+            state = ((CmsClubDisbandApply) auditObject).getState();
+        } else if (auditObject instanceof CmsClubJoinApply) {
+            // 加入社团
+            state = ((CmsClubJoinApply) auditObject).getState();
+        } else if (auditObject instanceof CmsChiefChangeApply) {
+            // 社长换届
+            state = ((CmsChiefChangeApply) auditObject).getState();
+        } else if (auditObject instanceof CmsOfficialChangeApply) {
+            // 社团认证
+            state = ((CmsOfficialChangeApply) auditObject).getState();
+        } else {
+            Asserts.fail("不是申请");
+        }
+
+        if (state != ApplyStateEnum.PENDING.getValue()) {
+            Asserts.fail(" 该申请已经审核完毕 ");
+        }
+    }
 
     //一下三个函数用于社团创建
     @Override
@@ -129,11 +164,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         SysUser sysUser = sysUserService.getCurrentUser();
         CmsClubCreateApply cmsClubCreateApply = new CmsClubCreateApply();
 
+        // clubName, type, officialState, reason
+        BeanUtils.copyProperties(clubsCreationsParam, cmsClubCreateApply);
         cmsClubCreateApply.setApplicant(sysUser.getUsername());
-        cmsClubCreateApply.setClubName(clubsCreationsParam.getClubName());
-        cmsClubCreateApply.setType(clubsCreationsParam.getType());
-        cmsClubCreateApply.setOfficialState(clubsCreationsParam.getOfficialState());
-        cmsClubCreateApply.setReason(clubsCreationsParam.getReason());
         cmsClubCreateApply.setCreateAt(new Date());
         cmsClubCreateApply.setHandleAt(null);
         cmsClubCreateApply.setState(ApplyStateEnum.PENDING.getValue());
@@ -147,24 +180,18 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     @IsAdmin
     public List<CmsClubsCreationsDTO> listClubCreationApply(
         CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam paginationParam) {
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return cmsClubCreationDAO.listClubCreationApply(cmsClubsCreationsQuery);
     }
 
     @Override
+    @Transactional
     public CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         // 查询是否已有该社团申请
         CmsClubCreateApply cmsClubCreateApply = clubCreateApplyMapper
             .selectByPrimaryKey(cmsClubsAuditParam.getId());
-        if (cmsClubCreateApply == null) {
-            Asserts.notFound(" 该社团创建申请不存在 ");
-        }
-        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
-            Asserts.fail(" 该申请状态码不正确 ");
-        }
-        if (cmsClubCreateApply.getState() != ApplyStateEnum.PENDING.getValue()) {
-            Asserts.fail(" 该申请已经审核完毕 ");
-        }
+        checkNotExistOrAudited(cmsClubCreateApply);
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
             return cmsClubCreateApply;
@@ -259,30 +286,20 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @IsAdmin
     public List<CmsClubsDisbandDTO> listClubDisbandApply(
         CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam paginationParam) {
-        if(sysUserService.getCurrentUser().getIsAdmin()==0){
-            Asserts.forbidden(" 您不是社团管理员无权查看 ");
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = cmsClubDisbandDAO.listClubDisbandApply(
-            cmsClubsDisbandQuery);
-        return cmsClubsDisbandDTOList;
+        return cmsClubDisbandDAO.listClubDisbandApply(cmsClubsDisbandQuery);
     }
 
     @Override
+    @Transactional
     public CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         CmsClubDisbandApply cmsClubDisbandApply = clubDisbandApplyMapper
             .selectByPrimaryKey(cmsClubsAuditParam.getId());
-        if (cmsClubDisbandApply == null) {
-            Asserts.notFound(" 该社团解散申请不存在 ");
-        }
-        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
-            Asserts.fail(" 该申请状态码不正确 ");
-        }
-        if (cmsClubDisbandApply.getState() != ApplyStateEnum.PENDING.getValue()) {
-            Asserts.fail(" 该申请已经审核完毕 ");
-        }
+        checkNotExistOrAudited(cmsClubDisbandApply);
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
             return cmsClubDisbandApply;
@@ -345,8 +362,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     public CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsJoinParam.getClubId());
-        //System.out.println(cmsClub.getDeleteStatus());
-        if (cmsClub == null||cmsClub.getDeleteStatus()== DeleteStateEnum.Deleted.getValue()) {
+        if (notExistClub(cmsClub)) {
             Asserts.notFound(" 该社团不存在 ");
         }
         // 查询是否已经是社团成员
@@ -381,39 +397,24 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId,
         CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
-        // 查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null||cmsClub.getDeleteStatus()==DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound(" 该社团不存在 ");
-        }
-        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
-            Asserts.forbidden(" 您不是该社团社长无权查看 ");
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubsJoinDTO> cmsClubsJoinDTOList = cmsClubJoinDAO.listClubJoinApply(
-            cmsClubsJoinQuery,clubId);
-        return cmsClubsJoinDTOList;
+        return cmsClubJoinDAO.listClubJoinApply(cmsClubsJoinQuery, clubId);
     }
 
     @Override
     public CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         CmsClubJoinApply cmsClubJoinApply = clubJoinApplyMapper
             .selectByPrimaryKey(cmsClubsAuditParam.getId());
-        if (cmsClubJoinApply == null) {
-            Asserts.notFound(" 该社团加入申请不存在 ");
-        }
-        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
-            Asserts.fail(" 该申请状态码不正确 ");
-        }
+        checkNotExistOrAudited(cmsClubJoinApply);
+
         //增加社长判定，只有社长才能审核加入申请
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubJoinApply.getClubId());
         if(!sysUserService.getCurrentUser().getId().equals(cmsClub.getChiefId())){
             Asserts.forbidden(" 您不是该社社长无权进行加入申请审核 ");
-        }
-        if (cmsClubJoinApply.getState() != ApplyStateEnum.PENDING.getValue()) {
-            Asserts.fail(" 该申请已经审核完毕 ");
         }
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
@@ -457,7 +458,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         //由于不用审核，就不需要重复申请判断
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId());
-        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
+        if (notExistClub(cmsClub)) {
             Asserts.notFound(" 该社团不存在 ");
         }
         //前端页面社长没有退社按钮就不需要验证了
@@ -487,19 +488,12 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,
         CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam) {
-        // 查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null||cmsClub.getDeleteStatus()==DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound(" 该社团不存在 ");
-        }
-        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
-            Asserts.forbidden(" 您不是该社团社长无权查看 ");
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubsQuitDTO> cmsClubsQuitDTOList = cmsClubQuitDAO.listClubQuit(cmsClubsQuitQuery,clubId);
-        return cmsClubsQuitDTOList;
+        return cmsClubQuitDAO.listClubQuit(cmsClubsQuitQuery,clubId);
     }
 
     //以下三个函数用于社长换届
@@ -539,13 +533,6 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             Asserts.fail(" 该社团已经申请换届，请等待审核 ");
         }
 
-
-
-
-        //形成申请
-//        SysUserExample example3 = new SysUserExample();
-//        example3.createCriteria().andUsernameEqualTo(cmsClubsChiefChangeParam.getNewChiefName());
-
         CmsChiefChangeApply cmsChiefChangeApply = new CmsChiefChangeApply();
         cmsChiefChangeApply.setClubId(cmsClubsChiefChangeParam.getClubId());
         cmsChiefChangeApply.setOldChiefId(sysUserService.getCurrentUser().getId());
@@ -559,30 +546,20 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @IsAdmin
     public List<CmsClubsChiefChangeDTO> listClubChiefChangeApply(
         CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, PaginationParam paginationParam) {
-        if(sysUserService.getCurrentUser().getIsAdmin()==0){
-            Asserts.forbidden(" 您不是社团管理员无权查看 ");
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = cmsClubChiefChangeDAO.listClubChiefChangeApply(
-            cmsClubsChiefChangeQuery);
-        return cmsClubsChiefChangeDTOList;
+        return cmsClubChiefChangeDAO.listClubChiefChangeApply(cmsClubsChiefChangeQuery);
     }
 
     @Override
+    @Transactional
     public CmsChiefChangeApply clubChiefChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         CmsChiefChangeApply cmsChiefChangeApply = chiefChangeApplyMapper
             .selectByPrimaryKey(cmsClubsAuditParam.getId());
-        if (cmsChiefChangeApply == null) {
-            Asserts.notFound(" 该社团换届申请不存在 ");
-        }
-        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
-            Asserts.fail(" 该申请状态码不正确 ");
-        }
-        if (cmsChiefChangeApply.getState() != ApplyStateEnum.PENDING.getValue()) {
-            Asserts.fail(" 该申请已经审核完毕 ");
-        }
+        checkNotExistOrAudited(cmsChiefChangeApply);
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
             return cmsChiefChangeApply;
@@ -664,30 +641,19 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @IsAdmin
     public List<CmsClubsCertificationsDTO> listClubOfficialChange(
         CmsClubsCertificationsQuery cmsClubsCertificationsQuery, PaginationParam paginationParam) {
-        if(sysUserService.getCurrentUser().getIsAdmin()==0){
-            Asserts.forbidden(" 您不是社团管理员无权查看 ");
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = cmsClubCertificationDAO.listClubCertificationApply(
-            cmsClubsCertificationsQuery);
-        return cmsClubsCertificationsDTOList;
+        return cmsClubCertificationDAO.listClubCertificationApply(cmsClubsCertificationsQuery);
     }
 
     @Override
     public CmsOfficialChangeApply clubOfficialChangeAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         CmsOfficialChangeApply cmsOfficialChangeApply = officialChangeApplyMapper
             .selectByPrimaryKey(cmsClubsAuditParam.getId());
-        if (cmsOfficialChangeApply == null) {
-            Asserts.notFound(" 该社团认证申请不存在 ");
-        }
-        if (!ApplyStateEnum.isLegal(cmsClubsAuditParam.getState())) {
-            Asserts.fail(" 该申请状态码不正确 ");
-        }
-        if (cmsOfficialChangeApply.getState() != ApplyStateEnum.PENDING.getValue()) {
-            Asserts.fail(" 该申请已经审核完毕 ");
-        }
+        checkNotExistOrAudited(cmsOfficialChangeApply);
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
             return cmsOfficialChangeApply;
@@ -715,56 +681,35 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
+    @CheckClubAuth("3")
     public List<CmsOfficialChangeApply> listMyClubOfficialChange(Integer clubId, PaginationParam paginationParam) {
-        // 查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound(" 该社团不存在 ");
-        }
-        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
-            Asserts.forbidden(" 您不是该社团社长无权查看 ");
-        }
+
         CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
         example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = officialChangeApplyMapper.selectByExample(example);
-        return cmsOfficialChangeApplyList;
+        return officialChangeApplyMapper.selectByExample(example);
     }
 
     @Override
+    @CheckClubAuth("3")
     public List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam paginationParam) {
-        // 查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound(" 该社团不存在 ");
-        }
-        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
-            Asserts.forbidden(" 您不是该社团社长无权查看 ");
-        }
+
         CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
         example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsChiefChangeApply> cmsChiefChangeApplyList = chiefChangeApplyMapper.selectByExample(example);
-        return cmsChiefChangeApplyList;
+        return chiefChangeApplyMapper.selectByExample(example);
     }
 
     @Override
+    @CheckClubAuth("3")
     public List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam paginationParam) {
-        // 查询是否已存在该社团
-        CmsClub cmsClub = clubMapper.selectByPrimaryKey(clubId);
-        if ( cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound(" 该社团不存在 ");
-        }
-        if(!cmsClub.getChiefId().equals(sysUserService.getCurrentUser().getId())){
-            Asserts.forbidden(" 您不是该社团社长无权查看 ");
-        }
+
         CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
         example.createCriteria().andClubIdEqualTo(clubId);
         example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        List<CmsClubDisbandApply> cmsClubDisbandApplyList = clubDisbandApplyMapper.selectByExample(example);
-        return cmsClubDisbandApplyList;
+        return clubDisbandApplyMapper.selectByExample(example);
     }
 }

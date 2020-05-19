@@ -15,10 +15,6 @@ public interface CreditService {
      * 累加积分
      */
     void creditAdd(CmsUserClubRel cmsUserClubRel,int credit);
-    /**
-     * 判断是否同一天
-     */
-    boolean isSameDay(Date date1,Date date2);
 
     /**
      * 获取签到积分

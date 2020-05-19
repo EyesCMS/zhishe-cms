@@ -79,7 +79,7 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<SysUser> userList = userMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(userList)) {
+        if (!CollUtil.isEmpty(userList)) {
             user = userList.get(0);
             userCacheService.setUser(user);
             return user;
@@ -98,7 +98,7 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(userRegisterParam.getUsername());
         List<SysUser> sysUsers = userMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(sysUsers)) {
+        if (!CollUtil.isEmpty(sysUsers)) {
             Asserts.fail(" 该用户名已经存在 ");
         }
         SysUser sysUser = new SysUser();
@@ -116,10 +116,6 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public UpdatePasswordResultEnum updatePassword(UpdateUserPasswordParam param) {
-        // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
-        if (param.getNewPassword().length() < 6 || param.getNewPassword().length() > 20) {
-            return UpdatePasswordResultEnum.UPDATE_ERROR;
-        }
 
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(param.getUsername());
@@ -254,7 +250,7 @@ public class SysUserServiceImpl implements SysUserService {
         userExample.createCriteria().andUsernameEqualTo(param.getUsername());
 
         List<SysUser> users = userMapper.selectByExample(userExample);
-        if (users.isEmpty()) {
+        if (CollUtil.isEmpty(users)) {
             Asserts.fail("没有该用户，更新失败");
         }
         SysUser user = users.get(0);
