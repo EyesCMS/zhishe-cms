@@ -4,6 +4,8 @@
   <resultMap id="BaseResultMap" type="edu.fzu.zhishe.cms.model.CmsMemberHonor">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="lower_limit" jdbcType="INTEGER" property="lowerLimit" />
+    <result column="upper_limit" jdbcType="INTEGER" property="upperLimit" />
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -65,7 +67,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, description
+    id, name, lower_limit, upper_limit, description
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsMemberHonorExample" resultMap="BaseResultMap">
     select
@@ -101,8 +103,10 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cms_member_honor (name, description)
-    values (#{name,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
+    insert into cms_member_honor (name, lower_limit, upper_limit, 
+      description)
+    values (#{name,jdbcType=VARCHAR}, #{lowerLimit,jdbcType=INTEGER}, #{upperLimit,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsMemberHonor">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -113,6 +117,12 @@
       <if test="name != null">
         name,
       </if>
+      <if test="lowerLimit != null">
+        lower_limit,
+      </if>
+      <if test="upperLimit != null">
+        upper_limit,
+      </if>
       <if test="description != null">
         description,
       </if>
@@ -120,6 +130,12 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lowerLimit != null">
+        #{lowerLimit,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null">
+        #{upperLimit,jdbcType=INTEGER},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
@@ -141,6 +157,12 @@
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
       </if>
+      <if test="record.lowerLimit != null">
+        lower_limit = #{record.lowerLimit,jdbcType=INTEGER},
+      </if>
+      <if test="record.upperLimit != null">
+        upper_limit = #{record.upperLimit,jdbcType=INTEGER},
+      </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
       </if>
@@ -153,6 +175,8 @@
     update cms_member_honor
     set id = #{record.id,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
+      lower_limit = #{record.lowerLimit,jdbcType=INTEGER},
+      upper_limit = #{record.upperLimit,jdbcType=INTEGER},
       description = #{record.description,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -164,6 +188,12 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="lowerLimit != null">
+        lower_limit = #{lowerLimit,jdbcType=INTEGER},
+      </if>
+      <if test="upperLimit != null">
+        upper_limit = #{upperLimit,jdbcType=INTEGER},
+      </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
@@ -173,6 +203,8 @@
   <update id="updateByPrimaryKey" parameterType="edu.fzu.zhishe.cms.model.CmsMemberHonor">
     update cms_member_honor
     set name = #{name,jdbcType=VARCHAR},
+      lower_limit = #{lowerLimit,jdbcType=INTEGER},
+      upper_limit = #{upperLimit,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

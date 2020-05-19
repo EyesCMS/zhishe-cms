@@ -12,6 +12,8 @@
     <result column="official_state" jdbcType="INTEGER" property="officialState" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
+    <result column="grade_id" jdbcType="INTEGER" property="gradeId" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="delete_status" jdbcType="INTEGER" property="deleteStatus" />
   </resultMap>
@@ -75,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, name, chief_id, member_count, qq_group, slogan, avatar_url, official_state, type, 
-    grade, create_at, delete_status
+    grade, credit, grade_id, create_at, delete_status
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsClubExample" resultMap="BaseResultMap">
     select
@@ -114,11 +116,13 @@
     insert into cms_club (name, chief_id, member_count, 
       qq_group, slogan, avatar_url, 
       official_state, type, grade, 
-      create_at, delete_status)
+      credit, grade_id, create_at, 
+      delete_status)
     values (#{name,jdbcType=VARCHAR}, #{chiefId,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER}, 
       #{qqGroup,jdbcType=VARCHAR}, #{slogan,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
       #{officialState,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, 
-      #{createAt,jdbcType=TIMESTAMP}, #{deleteStatus,jdbcType=INTEGER})
+      #{credit,jdbcType=INTEGER}, #{gradeId,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{deleteStatus,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsClub">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -152,6 +156,12 @@
       </if>
       <if test="grade != null">
         grade,
+      </if>
+      <if test="credit != null">
+        credit,
+      </if>
+      <if test="gradeId != null">
+        grade_id,
       </if>
       <if test="createAt != null">
         create_at,
@@ -187,6 +197,12 @@
       </if>
       <if test="grade != null">
         #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="credit != null">
+        #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="gradeId != null">
+        #{gradeId,jdbcType=INTEGER},
       </if>
       <if test="createAt != null">
         #{createAt,jdbcType=TIMESTAMP},
@@ -235,6 +251,12 @@
       <if test="record.grade != null">
         grade = #{record.grade,jdbcType=INTEGER},
       </if>
+      <if test="record.credit != null">
+        credit = #{record.credit,jdbcType=INTEGER},
+      </if>
+      <if test="record.gradeId != null">
+        grade_id = #{record.gradeId,jdbcType=INTEGER},
+      </if>
       <if test="record.createAt != null">
         create_at = #{record.createAt,jdbcType=TIMESTAMP},
       </if>
@@ -258,6 +280,8 @@
       official_state = #{record.officialState,jdbcType=INTEGER},
       type = #{record.type,jdbcType=VARCHAR},
       grade = #{record.grade,jdbcType=INTEGER},
+      credit = #{record.credit,jdbcType=INTEGER},
+      grade_id = #{record.gradeId,jdbcType=INTEGER},
       create_at = #{record.createAt,jdbcType=TIMESTAMP},
       delete_status = #{record.deleteStatus,jdbcType=INTEGER}
     <if test="_parameter != null">
@@ -294,6 +318,12 @@
       <if test="grade != null">
         grade = #{grade,jdbcType=INTEGER},
       </if>
+      <if test="credit != null">
+        credit = #{credit,jdbcType=INTEGER},
+      </if>
+      <if test="gradeId != null">
+        grade_id = #{gradeId,jdbcType=INTEGER},
+      </if>
       <if test="createAt != null">
         create_at = #{createAt,jdbcType=TIMESTAMP},
       </if>
@@ -314,6 +344,8 @@
       official_state = #{officialState,jdbcType=INTEGER},
       type = #{type,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=INTEGER},
+      credit = #{credit,jdbcType=INTEGER},
+      grade_id = #{gradeId,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       delete_status = #{deleteStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
