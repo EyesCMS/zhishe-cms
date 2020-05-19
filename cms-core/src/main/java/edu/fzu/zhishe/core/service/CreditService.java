@@ -5,6 +5,7 @@ import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import io.swagger.models.auth.In;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yang on 5/18/2020.
@@ -19,7 +20,12 @@ public interface CreditService {
     /**
      * 获取签到积分
      */
-    void checkin(Integer clubId);
+    void checkin(Integer clubId,Date date);
+
+    /**
+     * 是否已经签到
+     */
+    int isCheckin(Integer clubId,Date date,List<CmsUserClubRel> userClubRelList);
 
     /**
      * 获取评论积分

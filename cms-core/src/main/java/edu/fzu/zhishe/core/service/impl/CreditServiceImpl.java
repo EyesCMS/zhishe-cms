@@ -51,31 +51,45 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public void checkin(Integer clubId) {
+    public void checkin(Integer clubId,Date date) {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
                 .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
-        if (CollectionUtils.isEmpty(userClubRelList)) {
+        int state = isCheckin(clubId,date,userClubRelList);
+        if (state == 2) {
             Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
         }
-        CmsUserClubRel userClubRel = userClubRelList.get(0);
-
-        Date date = new Date();
-        Date lastCheckinDate = userClubRel.getCheckInDate();
-
-        if (lastCheckinDate == null) {
-            userClubRel.setCheckInDate(date);
-            creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
-            return;
-        }
-
-        if (DateUtil.isSameDay(date, lastCheckinDate)) {
+        if (state == 0) {
             Asserts.forbidden("今天您已签到过，同一天不可重复签到");
-        } else {
+        }
+        if (state == 1){
+            CmsUserClubRel userClubRel = userClubRelList.get(0);
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
         }
+
+    }
+
+    @Override
+    public int isCheckin(Integer clubId,Date date,List<CmsUserClubRel> userClubRelList) {
+        //0：今天签过到不可签到，1：可以签到，2：没有相关userclubrel表记录
+        //没有记录
+        if (CollectionUtils.isEmpty(userClubRelList)) {
+            return 2;
+        }
+        CmsUserClubRel userClubRel = userClubRelList.get(0);
+        Date lastCheckinDate = userClubRel.getCheckInDate();
+        //从来没签到过
+        if (lastCheckinDate == null) {
+            return 1;
+        }
+        //今天已经签过到
+        if (DateUtil.isSameDay(date, lastCheckinDate)) {
+            return 0;
+        }
+
+        return 1;
     }
 
     @Override
