@@ -4,6 +4,7 @@ import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
 import edu.fzu.zhishe.common.api.CommonPage;
+import edu.fzu.zhishe.core.dto.CreditDTO;
 import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
 import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import edu.fzu.zhishe.core.service.CreditService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yang on 5/18/2020.
@@ -50,6 +52,6 @@ public class CreditController {
                 .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         int state = creditService.isCheckin(clubId,new Date(),userClubRelList);
-        return ResponseEntity.ok().body(state);
+        return ResponseEntity.ok().body(new CreditDTO(state));
     }
 }
