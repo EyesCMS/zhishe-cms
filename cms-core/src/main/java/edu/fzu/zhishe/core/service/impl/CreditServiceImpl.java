@@ -6,6 +6,7 @@ import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostRemarkMapper;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.param.CreditForCheckinParam;
@@ -57,13 +58,13 @@ public class CreditServiceImpl implements CreditService {
                 .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         int state = isCheckin(clubId,date,userClubRelList);
-        if (state == 2) {
+        if (state == CheckinStateEnum.DENIED.getValue()) {
             Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
         }
-        if (state == 0) {
+        if (state == CheckinStateEnum.DONE.getValue()) {
             Asserts.forbidden("今天您已签到过，同一天不可重复签到");
         }
-        if (state == 1){
+        if (state == CheckinStateEnum.GRANTED.getValue()){
             CmsUserClubRel userClubRel = userClubRelList.get(0);
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
