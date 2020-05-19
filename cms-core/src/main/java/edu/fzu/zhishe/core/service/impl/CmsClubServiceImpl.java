@@ -329,8 +329,6 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
 
-
-
     /*
     @Override
     @CheckClubAuth("3")
