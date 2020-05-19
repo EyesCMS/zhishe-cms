@@ -167,6 +167,34 @@ public class CmsClubController {
         return ok(clubService.getClubPicture(clubId));
     }
 
+    @ApiOperation(" 3.15 社长修改社团头像 (url)")
+    @PostMapping("/{clubId}/pictureUrls")
+    public ResponseEntity<Object> alterClubPictureUrl(@PathVariable("clubId") Integer clubId,
+                                                     @RequestBody JSONObject object) {
+        clubService.alterClubPictureUrl(clubId, (String[])object.get("pictureUrls"));
+        return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(" 3.16 社长修改社团走马灯(上传） ")
+    @PostMapping("/{clubId}/pictures")
+    public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
+                                                @RequestParam("image") MultipartFile[] image) {
+        String[] url = {null,null,null,null,null};
+        for(int i = 0; i < url.length; i++){
+            url[i] = storageService.store(image[i], imageRootLocation);
+        }
+        if (clubService.alterClubPictureUrl(clubId, url) == 0) {
+            Asserts.fail("update picture failed");
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("url", url);
+        return ok().body(jsonObject);
+    }
+
+    /*
+
+    暂时保留
+
     @ApiOperation(" 3.15 社长修改社团走马灯(上传） ")
     @PostMapping("/{clubId}/pictures")
     public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
@@ -183,5 +211,5 @@ public class CmsClubController {
         jsonObject.put("pictureUrl", url);
         return ok().body(jsonObject);
     }
-
+     */
 }

@@ -48,5 +48,5 @@ public interface CmsClubService {
 
     CmsClubPictureDTO getClubPicture(Integer clubId);
 
-    Integer alterClubPictureUrl(Integer clubId, String avatarUrl, Integer index);
+    Integer alterClubPictureUrl(Integer clubId, String[] avatarUrl);
 }
