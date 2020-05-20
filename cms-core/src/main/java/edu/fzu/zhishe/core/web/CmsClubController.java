@@ -137,7 +137,7 @@ public class CmsClubController {
         return ResponseEntity.noContent().build();
     }
 
-    @ApiOperation(" 3.12 社长修改社团头像 ")
+    @ApiOperation(" 3.12 社长修改社团头像（url） ")
     @RequestMapping(value = "/{clubId}/pic", method = RequestMethod.PUT)
     public ResponseEntity<Object> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
                                                  @RequestBody JSONObject object) {
@@ -171,7 +171,7 @@ public class CmsClubController {
 
     //JSONArray 转 String[] 没弄清楚  虽然没有用到，但是暂时保留
 
-    @ApiOperation(" 3.15 社长修改社团头像 (url)")
+    @ApiOperation(" 3.15 社长修改社团走马灯 (url)")
     @PostMapping("/{clubId}/pictureUrls")
     public ResponseEntity<Object> alterClubPictureUrl(@PathVariable("clubId") Integer clubId,
                                                      @RequestBody JSONObject object) {
