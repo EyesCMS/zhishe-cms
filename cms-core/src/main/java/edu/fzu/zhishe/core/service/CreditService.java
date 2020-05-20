@@ -16,6 +16,10 @@ public interface CreditService {
      * 累加积分
      */
     void creditAdd(CmsUserClubRel cmsUserClubRel,int credit);
+    /**
+     * 计算活跃度
+     */
+    CmsUserClubRel honorCalculate(CmsUserClubRel cmsUserClubRel);
 
     /**
      * 获取签到积分

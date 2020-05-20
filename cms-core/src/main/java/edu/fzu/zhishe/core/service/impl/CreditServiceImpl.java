@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.date.DateUtil;
+import edu.fzu.zhishe.cms.mapper.CmsMemberHonorMapper;
 import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostRemarkMapper;
@@ -40,6 +41,9 @@ public class CreditServiceImpl implements CreditService {
     @Autowired
     private FmsPostRemarkMapper fmsPostRemarkMapper;
 
+    @Autowired
+    private CmsMemberHonorMapper cmsMemberHonorMapper;
+
     //最高可获得积分评论数
     private final int maxCommentCreditNum = 2;
 
@@ -48,7 +52,22 @@ public class CreditServiceImpl implements CreditService {
         int oldCredit = cmsUserClubRel.getCredit();
         oldCredit += credit;
         cmsUserClubRel.setCredit(oldCredit);
-        cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel);
+        CmsUserClubRel newUserClubRel = honorCalculate(cmsUserClubRel);
+        cmsUserClubRelMapper.updateByPrimaryKeySelective(newUserClubRel);
+    }
+
+    @Override
+    public CmsUserClubRel honorCalculate(CmsUserClubRel cmsUserClubRel) {
+        int credit = cmsUserClubRel.getCredit();
+        List<CmsMemberHonor> memberHonorList = cmsMemberHonorMapper.selectByExample(null);
+        for(CmsMemberHonor memberHonor:memberHonorList){
+            if(memberHonor.getLowerLimit()<=credit&&credit<memberHonor.getUpperLimit()){
+                cmsUserClubRel.setHonorId(memberHonor.getId());
+                return cmsUserClubRel;
+            }
+        }
+        Asserts.fail("无法计算活跃度，积分不在任何一个规定活跃度的区间");
+        return null;
     }
 
     @Override
@@ -77,20 +96,20 @@ public class CreditServiceImpl implements CreditService {
         //0：今天签过到不可签到，1：可以签到，2：没有相关userclubrel表记录
         //没有记录
         if (CollectionUtils.isEmpty(userClubRelList)) {
-            return 2;
+            return CheckinStateEnum.DENIED.getValue();
         }
         CmsUserClubRel userClubRel = userClubRelList.get(0);
         Date lastCheckinDate = userClubRel.getCheckInDate();
         //从来没签到过
         if (lastCheckinDate == null) {
-            return 1;
+            return CheckinStateEnum.GRANTED.getValue();
         }
         //今天已经签过到
         if (DateUtil.isSameDay(date, lastCheckinDate)) {
-            return 0;
+            return CheckinStateEnum.DONE.getValue();
         }
 
-        return 1;
+        return CheckinStateEnum.GRANTED.getValue();
     }
 
     @Override
