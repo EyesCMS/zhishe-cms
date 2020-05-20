@@ -10,6 +10,7 @@ import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
+import edu.fzu.zhishe.core.dto.UserHonorDTO;
 import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -142,5 +143,30 @@ public class CreditServiceImpl implements CreditService {
         //种种情况考虑之后进行加分
         CmsUserClubRel userClubRel = userClubRelList.get(0);
         creditAdd(userClubRel, CreditEnum.COMMENT.getValue());
+    }
+
+    @Override
+    public UserHonorDTO getUserHonor(Integer clubId) {
+        CmsUserClubRelExample example = new CmsUserClubRelExample();
+        example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
+                .andClubIdEqualTo(clubId);
+        List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
+        if (CollectionUtils.isEmpty(userClubRelList)) {
+            Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
+        }
+        CmsUserClubRel userClubRel = userClubRelList.get(0);
+        CmsMemberHonor myHonor = cmsMemberHonorMapper.selectByPrimaryKey(userClubRel.getHonorId());
+        String grade = myHonor.getName();
+        int score = userClubRel.getCredit();
+        double total = myHonor.getUpperLimit()-myHonor.getLowerLimit();
+        double numerator = score-myHonor.getLowerLimit();
+        double percent = (numerator/total)*100;
+        int percentage = new Double(percent).intValue();
+        UserHonorDTO userHonorDTO = new UserHonorDTO(){{
+            setGrade(grade);
+            setScore(score);
+            setPercentage(percentage);
+        }};
+        return userHonorDTO;
     }
 }

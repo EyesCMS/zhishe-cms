@@ -54,4 +54,10 @@ public class CreditController {
         int state = creditService.isCheckin(clubId,new Date(),userClubRelList);
         return ResponseEntity.ok().body(new CreditDTO(state));
     }
+
+    @ApiOperation(" 10.3获取当前用户活跃度 ")
+    @GetMapping("/{clubId}/userhonor")
+    public ResponseEntity<Object> getUserHonor( @PathVariable("clubId") Integer clubId){
+        return ResponseEntity.ok().body(creditService.getUserHonor(clubId));
+    }
 }

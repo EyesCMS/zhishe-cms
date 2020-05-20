@@ -4,7 +4,7 @@ public enum CreditEnum {
     /**
      * 签到（暂定一分）
      */
-    CHECKIN(100),
+    CHECKIN(1),
 
     /**
      * 评论（暂定两分）

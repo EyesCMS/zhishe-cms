@@ -1,8 +1,7 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.core.param.CreditForCheckinParam;
-import io.swagger.models.auth.In;
+import edu.fzu.zhishe.core.dto.UserHonorDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -35,6 +34,8 @@ public interface CreditService {
      * 获取评论积分
      */
     void comment(Integer postId);
+
+    UserHonorDTO getUserHonor(Integer clubId);
 
 
 }
