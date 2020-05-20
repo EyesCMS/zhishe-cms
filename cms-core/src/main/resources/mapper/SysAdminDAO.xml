@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.fzu.zhishe.core.dao.SysAdminDAO">
+    <resultMap id="BaseResultMap" type="edu.fzu.zhishe.core.dto.SysAdminClubTypeAmount">
+        <result column="types" property="type" />
+        <result column="number" property="number" />
+    </resultMap>
+
+  <select id="listClubTypes" resultType="java.lang.String">
+    SELECT
+      distinct c.type
+    FROM
+      cms_club c
+  </select>
+
+    <select id="getClubTypes" resultMap="BaseResultMap">
+      SELECT
+        c.type types,
+        count(c.type) number
+      FROM
+        `cms_club` c
+      GROUP BY c.type
+  </select>
+</mapper>

@@ -4,6 +4,7 @@ import edu.fzu.zhishe.cms.model.CmsClubExample;
 import edu.fzu.zhishe.core.dto.SysAdminAuditedDTO;
 import edu.fzu.zhishe.core.dto.SysAdminClubSpeciesDTO;
 import edu.fzu.zhishe.core.dto.SysAdminNewUsersDTO;
+import edu.fzu.zhishe.core.param.SysAdminNewUsersQuery;
 import edu.fzu.zhishe.core.service.SysAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,21 +36,15 @@ public class AdminHomeController {
      */
     //@ApiOperation(" 注册人数 ")
     @GetMapping("/newusers")
-    public ResponseEntity<Object> newUsers() {
+    public ResponseEntity<Object> newUsers(SysAdminNewUsersQuery query) {
 
 
-        return ResponseEntity.ok(adminService.newUsers());
+        return ResponseEntity.ok(adminService.newUsers(query));
     }
 
-    /*
-     * TODO
-     */
-    //@ApiOperation(" 社团类别数 ")
+    @ApiOperation(" 社团类别数 ")
     @GetMapping("/clubspecies")
     public ResponseEntity<Object> clubSpecies() {
-        CmsClubExample example = new CmsClubExample();
-
-
         return ResponseEntity.ok(adminService.clubSpecies());
     }
 

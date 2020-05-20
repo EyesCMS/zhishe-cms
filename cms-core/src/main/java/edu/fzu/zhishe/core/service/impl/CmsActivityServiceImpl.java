@@ -141,10 +141,13 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void delActivity(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (activity == null || club == null
-                || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+        if (activity == null) {
             Asserts.notFound("活动ID不存在");
+        }
+
+        CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+        if (club == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+            Asserts.notFound("活动对应社团不存在");
         }
         SysUser user = userService.getCurrentUser();
         if (user.getIsAdmin() == 1 || user.getId().equals(club.getChiefId())) {
