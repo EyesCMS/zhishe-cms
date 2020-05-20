@@ -186,8 +186,10 @@ public class CmsClubController {
     public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam("image") MultipartFile[] image) {
         String[] url = {null,null,null,null,null};
-        for(int i = 0; i < url.length; i++){
-            url[i] = storageService.store(image[i], imageRootLocation);
+        for(int i = 0; i < image.length; i++){
+            if(image[i] != null) {
+                url[i] = storageService.store(image[i], imageRootLocation);
+            }
         }
         if (clubService.alterClubPictureUrl(clubId, url) == 0) {
             Asserts.fail("update picture failed");
