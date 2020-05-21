@@ -52,14 +52,15 @@ public class CmsClubController {
     @ApiOperation(" 3.1 推荐社团列表 ")
     @GetMapping("/recommended")
     // @PreAuthorize("hasAuthority('cms:club:read')")
-    public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(
-            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(@Validated PaginationParam paginationParam,
+                                                                       OrderByParam orderByParam) {
         return ok(CommonPage.restPage(clubService.listHotClub(paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 3.2 查看社团列表 ")
     @GetMapping
-    public ResponseEntity<CommonPage<CmsClubBriefDTO>> searchClubByKeyword(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> searchClubByKeyword(@Validated PaginationParam paginationParam,
+                                                                           OrderByParam orderByParam,
                                                                            @RequestParam(value = "keyword", required = false) String keyword,
                                                                            @RequestParam(value = "type", required = false) String type,
                                                                            @RequestParam(value = "state", required = false) Integer state){
@@ -68,9 +69,10 @@ public class CmsClubController {
 
     @ApiOperation(" 3.3 查看学生加入/管理的社团列表 ")
     @GetMapping("/users/{userId}/clubs")
-    public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam, OrderByParam orderByParam,
-                                                                    @PathVariable(value = "userId") Integer userId,
-                                                                    @RequestParam(value = "status") String status){
+    public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam,
+                                                                      OrderByParam orderByParam,
+                                                                      @PathVariable(value = "userId") Integer userId,
+                                                                      @RequestParam(value = "status") String status){
         if("member".equals(status)){
             return ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
@@ -89,7 +91,8 @@ public class CmsClubController {
      */
     @ApiOperation(" 3.5 学生查看自己的加入社团申请列表 ")
     @GetMapping("/users/joins")
-    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+    public ResponseEntity<CommonPage<CmsClubJoinApplyDTO>> joinedApplyList(@Validated PaginationParam paginationParam,
+                                                                           OrderByParam orderByParam) {
         return ok(CommonPage.restPage(clubService.listJoinClubApply(paginationParam, orderByParam)));
     }
 
@@ -98,7 +101,8 @@ public class CmsClubController {
      */
     @ApiOperation(" 3.6 学生查看自己的创建社团申请列表 ")
     @GetMapping("/users/creations")
-    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam, OrderByParam orderByParam) {
+    public ResponseEntity<CommonPage<CmsClubCreateApplyDTO>> createClubApplyList(@Validated PaginationParam paginationParam,
+                                                                                 OrderByParam orderByParam) {
         return ok(CommonPage.restPage(clubService.listCreateClubApply(paginationParam, orderByParam)));
     }
 
@@ -115,7 +119,7 @@ public class CmsClubController {
     @GetMapping("/{clubId}/members/{userId}")
     @IsClubMember
     public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
-                                                                    @PathVariable("userId") Integer userId) {
+                                                                     @PathVariable("userId") Integer userId) {
         return ok(clubService.showClubMemberInfo(clubId, userId));
     }
 
@@ -140,7 +144,7 @@ public class CmsClubController {
     @ApiOperation(" 3.12 社长修改社团头像（url） ")
     @RequestMapping(value = "/{clubId}/pic", method = RequestMethod.PUT)
     public ResponseEntity<Object> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
-                                                 @RequestBody JSONObject object) {
+                                                     @RequestBody JSONObject object) {
         clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
         return ResponseEntity.noContent().build();
     }
@@ -148,14 +152,11 @@ public class CmsClubController {
     @ApiOperation(" 3.13 社长修改社团头像(上传） ")
     @RequestMapping(value = "/{clubId}/info/avatar", method = RequestMethod.POST)
     public ResponseEntity<Object> uploadAvatar(@PathVariable("clubId") Integer clubId,
-            @RequestParam("image") MultipartFile image) {
-
+                                               @RequestParam("image") MultipartFile image) {
         String url = storageService.store(image, imageRootLocation);
-
         if (clubService.alterClubAvatarUrl(clubId, url) == 0) {
             Asserts.fail("update avatar failed");
         }
-
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("avatarUrl", url);
         return ok().body(jsonObject);
@@ -163,13 +164,13 @@ public class CmsClubController {
 
     @ApiOperation(" 3.14 查看社团走马灯 ")
     @GetMapping("/{clubId}/pictures")
-    public ResponseEntity<CmsClubPictureDTO> getClubPic(@PathVariable("clubId") Integer clubId) {
+    public ResponseEntity<String[]> getClubPic(@PathVariable("clubId") Integer clubId) {
         return ok(clubService.getClubPicture(clubId));
     }
 
     /*
-
-    //JSONArray 转 String[] 没弄清楚  虽然没有用到，但是暂时保留
+    //该接口没有被用到，但是暂时保留
+    //JSONArray 转 String[] 没弄清楚
 
     @ApiOperation(" 3.15 社长修改社团走马灯 (url)")
     @PostMapping("/{clubId}/pictureUrls")
@@ -199,9 +200,7 @@ public class CmsClubController {
         return ok().body(jsonObject);
     }
 
-    /*
-
-    暂时保留
+    /*暂时保留
 
     @ApiOperation(" 3.15 社长修改社团走马灯(上传） ")
     @PostMapping("/{clubId}/pictures")

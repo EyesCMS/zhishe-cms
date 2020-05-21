@@ -274,7 +274,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CmsClubPictureDTO getClubPicture(Integer clubId) {
+    public String[] getClubPicture(Integer clubId) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
@@ -282,15 +282,15 @@ public class CmsClubServiceImpl implements CmsClubService {
             Asserts.fail("club is not existed");
         }
         CmsClubPicture picture = pictureList.get(0);
-        CmsClubPictureDTO data = new CmsClubPictureDTO();
+        String urls[] = {null,null,null,null,null};
         if (picture.getClubId() != null) {
-            data.setUrl1(picture.getPic1Url());
-            data.setUrl2(picture.getPic2Url());
-            data.setUrl3(picture.getPic3Url());
-            data.setUrl4(picture.getPic4Url());
-            data.setUrl5(picture.getPic5Url());
+            urls[0] = picture.getPic1Url();
+            urls[1] = picture.getPic2Url();
+            urls[2] = picture.getPic3Url();
+            urls[3] = picture.getPic4Url();
+            urls[4] = picture.getPic5Url();
         }
-        return data;
+        return urls;
     }
 
     @Override
