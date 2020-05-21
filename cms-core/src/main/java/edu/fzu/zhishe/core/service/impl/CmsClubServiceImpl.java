@@ -328,42 +328,4 @@ public class CmsClubServiceImpl implements CmsClubService {
         return pictureMapper.updateByPrimaryKeySelective(picture);
     }
 
-
-    /*
-    @Override
-    @CheckClubAuth("3")
-    public Integer alterClubPictureUrl(Integer clubId, String pictureUrl, Integer index) {
-        if (StrUtil.isEmpty(pictureUrl)) {
-            Asserts.fail("输入不能为空！");
-        }
-        CmsClubPictureExample pictureExample = new CmsClubPictureExample();
-        pictureExample.createCriteria().andClubIdEqualTo(clubId);
-        List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
-        if (pictureList.size() == 0) {
-            Asserts.fail("club is not existed");
-        }
-        CmsClubPicture picture = pictureList.get(0);
-        switch (index) {
-            case 1:
-                picture.setPic1Url(pictureUrl);
-                break;
-            case 2:
-                picture.setPic2Url(pictureUrl);
-                break;
-            case 3:
-                picture.setPic3Url(pictureUrl);
-                break;
-            case 4:
-                picture.setPic4Url(pictureUrl);
-                break;
-            case 5:
-                picture.setPic5Url(pictureUrl);
-                break;
-            default:
-                Asserts.fail("输入参数有误！");
-        }
-
-        return pictureMapper.updateByPrimaryKeySelective(picture);
-    }
-     */
 }

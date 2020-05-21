@@ -200,21 +200,4 @@ public class CmsClubController {
         return ok().body(jsonObject);
     }
 
-    /*暂时保留
-
-    @ApiOperation(" 3.15 社长修改社团走马灯(上传） ")
-    @PostMapping("/{clubId}/pictures")
-    public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
-                                               @RequestParam("image") MultipartFile image,
-                                               @RequestParam("index") Integer index) {
-        String url = storageService.store(image, imageRootLocation);
-
-        if (clubService.alterClubPictureUrl(clubId, url, index) == 0) {
-            Asserts.fail("update picture failed");
-        }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("pictureUrl", url);
-        return ok().body(jsonObject);
-    }
-     */
 }
