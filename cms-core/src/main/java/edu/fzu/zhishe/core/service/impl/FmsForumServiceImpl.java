@@ -140,7 +140,7 @@ public class FmsForumServiceImpl implements FmsForumService {
             Asserts.fail("can't delete activity post");
         }
         if (!currentUser.getId().equals(post.getPosterId())) {
-            Asserts.forbidden();
+            Asserts.forbidden("你不是该贴的发帖人");
         }
 
         FmsPost newPost = new FmsPost() {{

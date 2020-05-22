@@ -18,7 +18,7 @@ public class Asserts {
     public static void hasFiled(Object object) {
         try {
             if (!FieldUtil.hasNotNullFiled(object)) {
-                Asserts.fail("all fields is empty");
+                Asserts.fail("all fields are empty");
             }
         } catch (IllegalAccessException e) {
             Asserts.fail("check field failed");
@@ -27,7 +27,7 @@ public class Asserts {
 
     public static void notNull(@Nullable Object object) {
         if (object == null) {
-            throw new EntityNotFoundException("Object isn't exist");
+            throw new EntityNotFoundException("Object doesn't exist");
         }
     }
 
@@ -49,7 +49,7 @@ public class Asserts {
 
     public static void notFound(boolean condition) {
         if (condition) {
-            throw new EntityNotFoundException("not found");
+            throw new EntityNotFoundException("Entity is not found");
         }
     }
 
