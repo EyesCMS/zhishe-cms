@@ -194,9 +194,8 @@ public class SysUserServiceImpl implements SysUserService {
 
         Asserts.hasFiled(updateParam);
 
-        SysUser updatedUser = new SysUser() {{
-            setId(user.getId());
-        }};
+        SysUser updatedUser = new SysUser();
+        updatedUser.setId(user.getId());
         BeanUtils.copyProperties(updateParam, updatedUser);
 
         if (userMapper.updateByPrimaryKeySelective(updatedUser) == 0) {
@@ -227,10 +226,9 @@ public class SysUserServiceImpl implements SysUserService {
         log.info("You successfully uploaded " + avatarImg.getOriginalFilename() + "!");
 
         // 2. update user info
-        SysUser user = new SysUser() {{
-            setId(currentUser.getId());
-            setAvatarUrl(url);
-        }};
+        SysUser user = new SysUser();
+        user.setId(currentUser.getId());
+        user.setAvatarUrl(url);
         if (userMapper.updateByPrimaryKeySelective(user) == 0) {
             Asserts.fail("update avatar failed");
         }

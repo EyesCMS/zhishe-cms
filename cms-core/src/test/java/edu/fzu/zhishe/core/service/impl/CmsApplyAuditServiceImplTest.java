@@ -64,67 +64,57 @@ public class CmsApplyAuditServiceImplTest{
         String clubNameExisted = "7社";
         String clubNameRepeat = "单元测试";
 
-        CmsClubsCreationsParam cmsClubsCreationsParam = new CmsClubsCreationsParam(){{
-            setClubName(clubNameExisted);
-            setOfficialState(1);
-            setReason("xx");
-            setType("xx");
-        }};
-        CmsClubsCreationsParam cmsClubsCreationsParamRepeat = new CmsClubsCreationsParam(){{
-            setClubName(clubNameRepeat);
-            setOfficialState(1);
-            setReason("xx");
-            setType("xx");
-        }};
+        CmsClubsCreationsParam cmsClubsCreationsParam = new CmsClubsCreationsParam();
+        cmsClubsCreationsParam.setClubName(clubNameExisted);
+        cmsClubsCreationsParam.setOfficialState(1);
+        cmsClubsCreationsParam.setReason("xx");
+        cmsClubsCreationsParam.setType("xx");
+        CmsClubsCreationsParam cmsClubsCreationsParamRepeat = new CmsClubsCreationsParam();
+        cmsClubsCreationsParamRepeat.setClubName(clubNameRepeat);
+        cmsClubsCreationsParamRepeat.setOfficialState(1);
+        cmsClubsCreationsParamRepeat.setReason("xx");
+        cmsClubsCreationsParamRepeat.setType("xx");
 
-        CmsClubsAuditParam cmsClubsAuditParamApplyIdNotExist = new CmsClubsAuditParam(){{
-            setId(applyIdNotExist);
-            setState(ApplyStateEnum.PENDING.getValue());
-        }};
-        CmsClubsAuditParam cmsClubsAuditParamHasAudited = new CmsClubsAuditParam(){{
-            setId(applyIdHasAudited);
-            setState(ApplyStateEnum.PENDING.getValue());
-        }};
+        CmsClubsAuditParam cmsClubsAuditParamApplyIdNotExist = new CmsClubsAuditParam();
+        cmsClubsAuditParamApplyIdNotExist.setId(applyIdNotExist);
+        cmsClubsAuditParamApplyIdNotExist.setState(ApplyStateEnum.PENDING.getValue());
 
-        CmsClubsDisbandParam cmsClubsDisbandParamClubIdNotExist = new CmsClubsDisbandParam(){{
-            setClubId(clubIdNotExist);
-            setReason("xx");
-        }};
-        CmsClubsDisbandParam cmsClubsDisbandParamClubIdRePeat = new CmsClubsDisbandParam(){{
-            setClubId(clubIdRepeat);
-            setReason("xx");
-        }};
+        CmsClubsAuditParam cmsClubsAuditParamHasAudited = new CmsClubsAuditParam();
+        cmsClubsAuditParamHasAudited.setId(applyIdHasAudited);
+        cmsClubsAuditParamHasAudited.setState(ApplyStateEnum.PENDING.getValue());
 
-        CmsClubsJoinParam cmsClubsJoinParamClubIdNotExist= new CmsClubsJoinParam(){{
-            setClubId(clubIdNotExist);
-            setReason("xx");
-        }};
+        CmsClubsDisbandParam cmsClubsDisbandParamClubIdNotExist = new CmsClubsDisbandParam();
+        cmsClubsDisbandParamClubIdNotExist.setClubId(clubIdNotExist);
+        cmsClubsDisbandParamClubIdNotExist.setReason("xx");
 
-        CmsClubsJoinParam cmsClubsJoinParamClubHasJoined= new CmsClubsJoinParam(){{
-            setClubId(clubIdMine);
-            setReason("xx");
-        }};
+        CmsClubsDisbandParam cmsClubsDisbandParamClubIdRePeat = new CmsClubsDisbandParam();
+        cmsClubsDisbandParamClubIdRePeat.setClubId(clubIdRepeat);
+        cmsClubsDisbandParamClubIdRePeat.setReason("xx");
 
-        CmsClubsQuitParam cmsClubsQuitParamClubIdNotExist = new CmsClubsQuitParam(){{
-            setClubId(clubIdNotExist);
-            setReason("xx");
-        }};
+        CmsClubsJoinParam cmsClubsJoinParamClubIdNotExist= new CmsClubsJoinParam();
+        cmsClubsJoinParamClubIdNotExist.setClubId(clubIdNotExist);
+        cmsClubsJoinParamClubIdNotExist.setReason("xx");
 
-        CmsClubsQuitParam cmsClubsQuitParamClubIdNotMember = new CmsClubsQuitParam(){{
-            setClubId(clubIdNotMine);
-            setReason("xx");
-        }};
+        CmsClubsJoinParam cmsClubsJoinParamClubHasJoined= new CmsClubsJoinParam();
+        cmsClubsJoinParamClubHasJoined.setClubId(clubIdMine);
+        cmsClubsJoinParamClubHasJoined.setReason("xx");
 
-        CmsClubsChiefChangeParam cmsClubsChiefChangeParamClubIdNotExist = new CmsClubsChiefChangeParam(){{
-            setClubId(clubIdNotExist);
-            setNewChiefName("xx");
-            setReason("xx");
-        }};
+        CmsClubsQuitParam cmsClubsQuitParamClubIdNotExist = new CmsClubsQuitParam();
+        cmsClubsQuitParamClubIdNotExist.setClubId(clubIdNotExist);
+        cmsClubsQuitParamClubIdNotExist.setReason("xx");
 
-        CmsClubsCertificationsParam cmsClubsCertificationsParamClubIdNotExist = new CmsClubsCertificationsParam(){{
-            setClubId(clubIdNotExist);
-            setReason("xx");
-        }};
+        CmsClubsQuitParam cmsClubsQuitParamClubIdNotMember = new CmsClubsQuitParam();
+        cmsClubsQuitParamClubIdNotMember.setClubId(clubIdNotMine);
+        cmsClubsQuitParamClubIdNotMember.setReason("xx");
+
+        CmsClubsChiefChangeParam cmsClubsChiefChangeParamClubIdNotExist = new CmsClubsChiefChangeParam();
+        cmsClubsChiefChangeParamClubIdNotExist.setClubId(clubIdNotExist);
+        cmsClubsChiefChangeParamClubIdNotExist.setNewChiefName("xx");
+        cmsClubsChiefChangeParamClubIdNotExist.setReason("xx");
+
+        CmsClubsCertificationsParam cmsClubsCertificationsParamClubIdNotExist = new CmsClubsCertificationsParam();
+        cmsClubsCertificationsParamClubIdNotExist.setClubId(clubIdNotExist);
+        cmsClubsCertificationsParamClubIdNotExist.setReason("xx");
 
         //提交创建社团申请
         Assertions.assertThrows(ApiException.class, () -> {
@@ -237,42 +227,36 @@ public class CmsApplyAuditServiceImplTest{
         String clubNameNotExisted = "还不存在社";
 
 
-        CmsClubsCreationsParam cmsClubsCreationsParam = new CmsClubsCreationsParam(){{
-            setClubName(clubNameNotExisted);
-            setOfficialState(1);
-            setReason("xx");
-            setType("xx");
-        }};
+        CmsClubsCreationsParam cmsClubsCreationsParam = new CmsClubsCreationsParam();
+        cmsClubsCreationsParam.setClubName(clubNameNotExisted);
+        cmsClubsCreationsParam.setOfficialState(1);
+        cmsClubsCreationsParam.setReason("xx");
+        cmsClubsCreationsParam.setType("xx");
 
-        CmsClubsAuditParam cmsClubsAuditParamHasNotAudited = new CmsClubsAuditParam(){{
-            setId(applyIdHasNotAudited);
-            setState(ApplyStateEnum.PENDING.getValue());
-        }};
+        CmsClubsAuditParam cmsClubsAuditParamHasNotAudited = new CmsClubsAuditParam();
+        cmsClubsAuditParamHasNotAudited.setId(applyIdHasNotAudited);
+        cmsClubsAuditParamHasNotAudited.setState(ApplyStateEnum.PENDING.getValue());
 
-        CmsClubsDisbandParam cmsClubsDisbandParamClubIdExisted = new CmsClubsDisbandParam(){{
-            setClubId(clubIdExisted);
-            setReason("xx");
-        }};
-        CmsClubsJoinParam cmsClubsJoinParamClubIdExisted= new CmsClubsJoinParam(){{
-            setClubId(clubIdHasNotJoined);
-            setReason("xx");
-        }};
+        CmsClubsDisbandParam cmsClubsDisbandParamClubIdExisted = new CmsClubsDisbandParam();
+        cmsClubsDisbandParamClubIdExisted.setClubId(clubIdExisted);
+        cmsClubsDisbandParamClubIdExisted.setReason("xx");
 
-        CmsClubsQuitParam cmsClubsQuitParamClubIdExisted = new CmsClubsQuitParam(){{
-            setClubId(clubIdHasJoin);
-            setReason("xx");
-        }};
+        CmsClubsJoinParam cmsClubsJoinParamClubIdExisted= new CmsClubsJoinParam();
+        cmsClubsJoinParamClubIdExisted.setClubId(clubIdHasNotJoined);
+        cmsClubsJoinParamClubIdExisted.setReason("xx");
 
-        CmsClubsChiefChangeParam cmsClubsChiefChangeParamClubIdExisted = new CmsClubsChiefChangeParam(){{
-            setClubId(clubIdMine);
-            setNewChiefName("test");
-            setReason("xx");
-        }};
+        CmsClubsQuitParam cmsClubsQuitParamClubIdExisted = new CmsClubsQuitParam();
+        cmsClubsQuitParamClubIdExisted.setClubId(clubIdHasJoin);
+        cmsClubsQuitParamClubIdExisted.setReason("xx");
 
-        CmsClubsCertificationsParam cmsClubsCertificationsParamClubIdExisted = new CmsClubsCertificationsParam(){{
-            setClubId(clubIdMine);
-            setReason("xx");
-        }};
+        CmsClubsChiefChangeParam cmsClubsChiefChangeParamClubIdExisted = new CmsClubsChiefChangeParam();
+        cmsClubsChiefChangeParamClubIdExisted.setClubId(clubIdMine);
+        cmsClubsChiefChangeParamClubIdExisted.setNewChiefName("test");
+        cmsClubsChiefChangeParamClubIdExisted.setReason("xx");
+
+        CmsClubsCertificationsParam cmsClubsCertificationsParamClubIdExisted = new CmsClubsCertificationsParam();
+        cmsClubsCertificationsParamClubIdExisted.setClubId(clubIdMine);
+        cmsClubsCertificationsParamClubIdExisted.setReason("xx");
 
         //提交创建社团申请
         Assertions.assertDoesNotThrow(() -> {

@@ -57,27 +57,24 @@ public class CmsClubServiceImplTest{
 
         //修改社团信息
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            CmsClubInfoParam param = new CmsClubInfoParam() {{
-                setQqGroup("");
-                setSlogan("");
-                setType("运动");
-            }};
+            CmsClubInfoParam param = new CmsClubInfoParam();
+            param.setQqGroup("");
+            param.setSlogan("");
+            param.setType("运动");
             cmsClubService.updateClubInfo(joinedClubId, param);
         }, " 没有该权限");
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            CmsClubInfoParam param = new CmsClubInfoParam() {{
-                setQqGroup("");
-                setSlogan("");
-                setType("运动");
-            }};
+            CmsClubInfoParam param = new CmsClubInfoParam();
+            param.setQqGroup("");
+            param.setSlogan("");
+            param.setType("运动");
             cmsClubService.updateClubInfo(notJoinedClubId, param);
         }, " 没有该权限");
         Assertions.assertThrows(ApiException.class, () -> {
-            CmsClubInfoParam param = new CmsClubInfoParam() {{
-                setQqGroup("");
-                setSlogan("");
-                setType("");
-            }};
+            CmsClubInfoParam param = new CmsClubInfoParam();
+            param.setQqGroup("");
+            param.setSlogan("");
+            param.setType("");
             cmsClubService.updateClubInfo(managedClubId, param);
         }, " 社团类型不能为空");
 
@@ -113,11 +110,10 @@ public class CmsClubServiceImplTest{
 
         //修改社团信息
         Assertions.assertDoesNotThrow(() -> {
-            CmsClubInfoParam param = new CmsClubInfoParam() {{
-                setQqGroup("");
-                setSlogan("");
-                setType("运动");
-            }};
+            CmsClubInfoParam param = new CmsClubInfoParam();
+            param.setQqGroup("");
+            param.setSlogan("");
+            param.setType("运动");
             cmsClubService.updateClubInfo(managedClubId, param);
         }, " 社团类型不能为空");
 

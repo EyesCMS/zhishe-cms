@@ -162,11 +162,10 @@ public class CreditServiceImpl implements CreditService {
         double numerator = score-myHonor.getLowerLimit();
         double percent = (numerator/total)*100;
         int percentage = new Double(percent).intValue();
-        UserHonorDTO userHonorDTO = new UserHonorDTO(){{
-            setGrade(grade);
-            setScore(score);
-            setPercentage(percentage);
-        }};
+        UserHonorDTO userHonorDTO = new UserHonorDTO();
+        userHonorDTO.setGrade(grade);
+        userHonorDTO.setScore(score);
+        userHonorDTO.setPercentage(percentage);
         return userHonorDTO;
     }
 }

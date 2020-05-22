@@ -92,15 +92,14 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Override
     public int savePost(FmsPostParam postParam) {
         SysUser currentUser = userService.getCurrentUser();
-        FmsPost post = new FmsPost() {{
-            setPosterId(currentUser.getId());
-            setType(PostTypeEnum.PERSONAL.getValue());
-            setTitle(postParam.getTitle());
-            setContent(postParam.getContent());
-            setImgUrl(postParam.getImgUrl());
-            setCreateAt(new Date());
-            setDeleteState(DeleteStateEnum.Existence.getValue());
-        }};
+        FmsPost post = new FmsPost();
+        post.setPosterId(currentUser.getId());
+        post.setType(PostTypeEnum.PERSONAL.getValue());
+        post.setTitle(postParam.getTitle());
+        post.setContent(postParam.getContent());
+        post.setImgUrl(postParam.getImgUrl());
+        post.setCreateAt(new Date());
+        post.setDeleteState(DeleteStateEnum.Existence.getValue());
         return postMapper.insertSelective(post);
     }
 
@@ -117,12 +116,11 @@ public class FmsForumServiceImpl implements FmsForumService {
             Asserts.forbidden();
         }
 
-        FmsPost post = new FmsPost() {{
-            setId(id);
-            setTitle(postParam.getTitle());
-            setContent(postParam.getContent());
-            setImgUrl(postParam.getImgUrl());
-        }};
+        FmsPost post = new FmsPost();
+        post.setId(id);
+        post.setTitle(postParam.getTitle());
+        post.setContent(postParam.getContent());
+        post.setImgUrl(postParam.getImgUrl());
         return postMapper.updateByPrimaryKeySelective(post);
     }
 
@@ -143,10 +141,9 @@ public class FmsForumServiceImpl implements FmsForumService {
             Asserts.forbidden("你不是该贴的发帖人");
         }
 
-        FmsPost newPost = new FmsPost() {{
-            setId(id);
-            setDeleteState(1);
-        }};
+        FmsPost newPost = new FmsPost();
+        newPost.setId(id);
+        newPost.setDeleteState(1);
         return postMapper.updateByPrimaryKeySelective(newPost);
     }
 
@@ -164,13 +161,12 @@ public class FmsForumServiceImpl implements FmsForumService {
         }
 
         SysUser user = userService.getCurrentUser();
-        FmsPostRemark remark = new FmsPostRemark() {{
-            setUserId(user.getId());
-            setPostId(remarkParam.getPostId().intValue());
-            setContent(remarkParam.getContent());
-            setCreateAt(new Date());
-            setUpdateAt(null);
-        }};
+        FmsPostRemark remark = new FmsPostRemark();
+        remark.setUserId(user.getId());
+        remark.setPostId(remarkParam.getPostId().intValue());
+        remark.setContent(remarkParam.getContent());
+        remark.setCreateAt(new Date());
+        remark.setUpdateAt(null);
         return remarkMapper.insertSelective(remark);
     }
 

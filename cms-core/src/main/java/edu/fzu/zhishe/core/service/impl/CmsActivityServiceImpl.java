@@ -119,15 +119,14 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
                 //创建一个帖子
-                FmsPost post = new FmsPost() {{
-                    setPosterId(club.getId());
-                    setType(PostTypeEnum.ACTIVITY.getValue());
-                    setTitle(activity.getTitle());
-                    setContent(activity.getBody());
-                    setImgUrl(activity.getImgUrl());
-                    setCreateAt(new Date());
-                    setDeleteState(DeleteStateEnum.Existence.getValue());
-                }};
+                FmsPost post = new FmsPost();
+                post.setPosterId(club.getId());
+                post.setType(PostTypeEnum.ACTIVITY.getValue());
+                post.setTitle(activity.getTitle());
+                post.setContent(activity.getBody());
+                post.setImgUrl(activity.getImgUrl());
+                post.setCreateAt(new Date());
+                post.setDeleteState(DeleteStateEnum.Existence.getValue());
                 if (postMapper.insertSelective(post) == 0) {
                     Asserts.fail("发布活动时创建帖子失败");
                 }

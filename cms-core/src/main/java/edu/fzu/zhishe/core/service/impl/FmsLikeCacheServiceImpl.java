@@ -117,11 +117,10 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
             Integer status = (Integer) v;
             if (status.equals(LikedStatusEnum.LIKE.getCode())) {
                 // 组装成 FmsUserLikePost 对象
-                FmsUserLikePost fmsUserLikePost = new FmsUserLikePost() {{
-                    setUserId(likedUserId);
-                    setPostId(likedPostId);
-                    setStatus(status);
-                }};
+                FmsUserLikePost fmsUserLikePost = new FmsUserLikePost();
+                fmsUserLikePost.setUserId(likedUserId);
+                fmsUserLikePost.setPostId(likedPostId);
+                fmsUserLikePost.setStatus(status);
                 likePostList.add(fmsUserLikePost);
             } else {
                 // 删除取消点赞的记录
@@ -143,10 +142,9 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
         Map<Object, Object> entries = redisService.hGetAll(constKey);
         entries.forEach((k, v) -> {
             String key = (String) k;
-            FmsLikedCountDTO likedCountDTO = new FmsLikedCountDTO() {{
-                setId(Long.valueOf(key));
-                setCount((Integer) v);
-            }};
+            FmsLikedCountDTO likedCountDTO = new FmsLikedCountDTO();
+            likedCountDTO.setId(Long.valueOf(key));
+            likedCountDTO.setCount((Integer) v);
             likePostList.add(likedCountDTO);
 
             // 存到 list 后从 redis 删除

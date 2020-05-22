@@ -70,14 +70,12 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     @Override
     @CheckClubAuth("3")
     public int creatBulletin(Integer clubId, CmsBulletinParam cmsBulletinParam) {
-        CmsBulletin bulletin = new CmsBulletin(){{
-            setClubId(clubId);//获取当前club_id 未实现，目前直接通过前端传递
-            setTitle(cmsBulletinParam.getTitle());
-            setBody(cmsBulletinParam.getBody());
-            setCreateAt(new Date());
-            setUpdateAt(new Date());
-        }
-        };
+        CmsBulletin bulletin = new CmsBulletin();
+        bulletin.setClubId(clubId);//获取当前club_id 未实现，目前直接通过前端传递
+        bulletin.setTitle(cmsBulletinParam.getTitle());
+        bulletin.setBody(cmsBulletinParam.getBody());
+        bulletin.setCreateAt(new Date());
+        bulletin.setUpdateAt(new Date());
         return bulletinMapper.insert(bulletin);
     }
 

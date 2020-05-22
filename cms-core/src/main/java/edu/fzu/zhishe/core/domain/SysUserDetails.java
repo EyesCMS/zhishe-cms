@@ -25,9 +25,8 @@ public class SysUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 返回当前用户的权限
-        List<String> authorities = new ArrayList<String>() {{
-            add("cms:club:read");
-        }};
+        List<String> authorities = new ArrayList<String>();
+        authorities.add("cms:club:read");
         // 返回当前用户的权限
         return authorities
             .stream()
