@@ -18,6 +18,7 @@ import edu.fzu.zhishe.cms.model.SysUserExample;
 import edu.fzu.zhishe.security.util.JwtTokenUtil;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -105,6 +106,7 @@ public class SysUserServiceImpl implements SysUserService {
         BeanUtils.copyProperties(userRegisterParam, sysUser);
         sysUser.setPassword(passwordEncoder.encode(userRegisterParam.getPassword()));
         sysUser.setIsAdmin(0);
+        sysUser.setRegisterDate(new Date());
         userMapper.insert(sysUser);
         return sysUser;
     }

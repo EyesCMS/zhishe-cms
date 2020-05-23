@@ -33,6 +33,9 @@ public class SysAdminServiceImpl implements SysAdminService {
     SysUserService userService;
 
     @Autowired
+    SysUserMapper userMapper;
+
+    @Autowired
     CmsClubCreateApplyMapper createApplyMapper;
 
     @Autowired
@@ -87,18 +90,36 @@ public class SysAdminServiceImpl implements SysAdminService {
 
     @Override
     public SysAdminNewUsersDTO newUsers(SysAdminNewUsersQuery query) {
+        SysUser user = userService.getCurrentUser();
+        if (user == null || user.getIsAdmin() == 0) {
+            Asserts.forbidden("非管理员无法获取统计数据");
+        }
+
         SysAdminNewUsersDTO dto = new SysAdminNewUsersDTO();
         SysUserExample example = new SysUserExample();
-        SysUserExample.Criteria cri = example.createCriteria();
-        if (query.endDate != null) {
-            cri.andRegisterDateLessThanOrEqualTo(query.endDate);
-        }
-        if (query.startDate != null) {
-            cri.andRegisterDateGreaterThan(query.startDate);
-        }
+        example.createCriteria().andRegisterDateLessThanOrEqualTo(DateUtil.endOfDay(query.endDate))
+            .andRegisterDateGreaterThan(DateUtil.beginOfDay(query.startDate));
         example.setOrderByClause("register_date desc");
-        //DateUtil.betweenDay()query.startDate
+        List<SysUser> users = userMapper.selectByExample(example);
+        if (users.isEmpty()) {
+            Asserts.notFound("所查询日期内无注册用户");
+        }
 
+        List<String> dates = new ArrayList<>();
+        List<Integer> newUsers = new ArrayList<>();
+        Date end = query.getEndDate();
+        while (end.after(query.getStartDate())) {
+            dates.add(DateUtil.format(end, "yyyy-MM-dd"));
+            newUsers.add(0);
+            end = DateUtil.offsetDay(end, -1);
+        }
+
+        for (SysUser usertest : users) {
+            int days = (int)DateUtil.betweenDay(usertest.getRegisterDate(), query.getEndDate(), false);
+            newUsers.set(days, newUsers.get(days) + 1);
+        }
+        dto.setDate(dates);
+        dto.setNewUsers(newUsers);
         return dto;
     }
 
