@@ -10,6 +10,7 @@
     <result column="poster_name" jdbcType="VARCHAR" property="posterName" />
     <result column="poster_avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="comment_count" jdbcType="INTEGER" property="commentCount" />
 </resultMap>
 
   <select id="listActivityPost" parameterType="java.lang.Integer" resultMap="PostResultMap">
@@ -20,7 +21,8 @@
      p.img_url,
      c.`name` AS poster_name,
      c.avatar_url AS poster_avatar_url,
-     p.create_at
+     p.create_at,
+     (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
     FROM
      fms_post AS p
      LEFT JOIN cms_club AS c ON p.poster_id = c.id
@@ -54,7 +56,8 @@
      p.img_url,
      c.`name` AS poster_name,
      c.avatar_url AS poster_avatar_url,
-     p.create_at
+     p.create_at,
+     (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
     FROM
      fms_post AS p
      LEFT JOIN cms_club AS c ON p.poster_id = c.id
@@ -72,7 +75,8 @@
      p.img_url,
      u.username AS poster_name,
      u.avatar_url AS poster_avatar_url,
-     p.create_at
+     p.create_at,
+    (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
     FROM
      fms_post AS p
      LEFT JOIN sys_user AS u ON p.poster_id = u.id
@@ -113,7 +117,8 @@
      p.img_url,
      u.username AS poster_name,
      u.avatar_url AS poster_avatar_url,
-     p.create_at
+     p.create_at,
+     (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
     FROM
      fms_post AS p
      LEFT JOIN sys_user AS u ON p.poster_id = u.id

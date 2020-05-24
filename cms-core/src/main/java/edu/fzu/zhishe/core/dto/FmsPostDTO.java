@@ -14,6 +14,7 @@ public class FmsPostDTO {
      * imgUrl : 131231241241.jpg
      * avatarUrl : e312312312312.jpg
      * likeCount: 4
+     * commentCount: 5
      */
 
     private Long id;
@@ -24,6 +25,7 @@ public class FmsPostDTO {
     private String imgUrl;
     private String avatarUrl;
     private Integer likeCount;
+    private Integer commentCount;
 
     public Long getId() {
         return id;
@@ -89,6 +91,14 @@ public class FmsPostDTO {
         this.likeCount = likeCount;
     }
 
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
     @Override
     public String toString() {
         return "FmsPostDTO{" +
@@ -100,6 +110,7 @@ public class FmsPostDTO {
             ", imgUrl='" + imgUrl + '\'' +
             ", avatarUrl='" + avatarUrl + '\'' +
             ", likeCount=" + likeCount +
+            ", commentCount=" + commentCount +
             '}';
     }
 }

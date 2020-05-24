@@ -92,6 +92,9 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Override
     public int savePost(FmsPostParam postParam) {
         SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
         FmsPost post = new FmsPost();
         post.setPosterId(currentUser.getId());
         post.setType(PostTypeEnum.PERSONAL.getValue());
@@ -175,7 +178,12 @@ public class FmsForumServiceImpl implements FmsForumService {
         FmsPostRemark remark = remarkMapper.selectByPrimaryKey(id);
         Asserts.notNull(remark);
 
-        Integer userId = userService.getCurrentUser().getId();
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+
+        Integer userId = currentUser.getId();
         if (!remark.getUserId().equals(userId)) {
             Asserts.unAuthorized();
         }
