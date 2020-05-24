@@ -1,10 +1,7 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.date.DateUtil;
-import edu.fzu.zhishe.cms.mapper.CmsMemberHonorMapper;
-import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
-import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
-import edu.fzu.zhishe.cms.mapper.FmsPostRemarkMapper;
+import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.CheckinStateEnum;
@@ -45,8 +42,11 @@ public class CreditServiceImpl implements CreditService {
     @Autowired
     private CmsMemberHonorMapper cmsMemberHonorMapper;
 
+    @Autowired
+    private CmsClubGradeMapper cmsClubGradeMapper;
+
     //最高可获得积分评论数
-    private final int maxCommentCreditNum = 2;
+    private final int maxCommentCreditNum = 1;
 
     @Override
     public void creditAdd(CmsUserClubRel cmsUserClubRel, int credit) {
@@ -120,7 +120,7 @@ public class CreditServiceImpl implements CreditService {
                 .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
         List<FmsPostRemark> remarkList = fmsPostRemarkMapper.selectByExample(example);
         //没有评论或者同一帖子评论超过两条不增加积分
-        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() >= maxCommentCreditNum){
+        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() > maxCommentCreditNum){
             System.out.println("没有评论或者同一帖子评论超过两条不增加积分");
             return;
         }
@@ -167,5 +167,15 @@ public class CreditServiceImpl implements CreditService {
         userHonorDTO.setScore(score);
         userHonorDTO.setPercentage(percentage);
         return userHonorDTO;
+    }
+
+    @Override
+    public List<CmsMemberHonor> listMemberHonor() {
+        return cmsMemberHonorMapper.selectByExample(null);
+    }
+
+    @Override
+    public List<CmsClubGrade> listClubGrade() {
+        return cmsClubGradeMapper.selectByExample(null);
     }
 }

@@ -1,5 +1,7 @@
 package edu.fzu.zhishe.core.service;
 
+import edu.fzu.zhishe.cms.model.CmsClubGrade;
+import edu.fzu.zhishe.cms.model.CmsMemberHonor;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.core.dto.UserHonorDTO;
 
@@ -34,8 +36,17 @@ public interface CreditService {
      * 获取评论积分
      */
     void comment(Integer postId);
-
+    /**
+     * 获取当前用户活跃度
+     */
     UserHonorDTO getUserHonor(Integer clubId);
-
+    /**
+     * 获取用户活跃度规则信息
+     */
+    List<CmsMemberHonor> listMemberHonor();
+    /**
+     * 获取社团等级规则信息
+     */
+    List<CmsClubGrade> listClubGrade();
 
 }
