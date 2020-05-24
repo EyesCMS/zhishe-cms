@@ -54,7 +54,8 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
             Integer value = (Integer) redisService.hGet(key, likedKey);
             return value.equals(LikedStatusEnum.UNLIKE.getCode());
         }
-        return false;
+        // redis 中没有该键，说明还未点赞
+        return true;
     }
 
     @Override
