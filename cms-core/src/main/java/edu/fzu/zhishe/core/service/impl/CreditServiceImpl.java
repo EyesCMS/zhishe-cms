@@ -178,4 +178,19 @@ public class CreditServiceImpl implements CreditService {
     public List<CmsClubGrade> listClubGrade() {
         return cmsClubGradeMapper.selectByExample(null);
     }
+
+    @Override
+    public CmsClub clubCreditCalculate(CmsClub cmsClub) {
+        int credit = cmsClub.getCredit();
+        List<CmsClubGrade> clubGradeList = cmsClubGradeMapper.selectByExample(null);
+        for(CmsClubGrade clubGrade : clubGradeList){
+            if(clubGrade.getLowerLimit()<=credit && credit<=clubGrade.getUpperLimit()){
+                cmsClub.setGradeId(clubGrade.getId());
+                return cmsClub;
+        }
+        }
+        Asserts.fail("无法计算，积分不在任何一个规定的区间");
+        return null;
+    }
+
 }

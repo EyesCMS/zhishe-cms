@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.service;
 
+import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubGrade;
 import edu.fzu.zhishe.cms.model.CmsMemberHonor;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
@@ -48,5 +49,10 @@ public interface CreditService {
      * 获取社团等级规则信息
      */
     List<CmsClubGrade> listClubGrade();
+
+    /**
+     *社团等级计算
+     */
+    CmsClub clubCreditCalculate(CmsClub cmsClub);
 
 }
