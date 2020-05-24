@@ -236,11 +236,16 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
+    @CheckClubAuth("3")
     @Transactional
     public Integer deleteClubMember(Integer clubId, Integer userId) {
 
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
+        List<CmsUserClubRel> rel = userClubRelMapper.selectByExample(example);
+        if(rel.size() == 0) {
+            Asserts.fail("the user is not a member of this club");
+        }
         userClubRelMapper.deleteByExample(example);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setMemberCount(club.getMemberCount() - 1);
