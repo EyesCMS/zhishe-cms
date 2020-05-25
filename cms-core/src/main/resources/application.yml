@@ -71,6 +71,10 @@ logging:
 #  path: /var/logs #配置日志文件名称
 
 storage:
+  path:
+    str:
+      image: images
+      file: files
   location:
     images: /cms-core/src/main/resources/static/upload-dir/images
     files: /cms-core/src/main/resources/static/upload-dir/files

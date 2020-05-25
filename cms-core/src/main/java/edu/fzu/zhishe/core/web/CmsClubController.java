@@ -9,6 +9,7 @@ import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.config.StorageProperties;
+import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
@@ -71,7 +72,7 @@ public class CmsClubController {
                                                                       OrderByParam orderByParam,
                                                                       @PathVariable(value = "userId") Integer userId,
                                                                       @RequestParam(value = "status") String status){
-        if("member".equals(status)){
+        if(ClubStatueEnum.MEMBER.getMsg().equals(status)){
             return ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
             return ok(CommonPage.restPage(clubService.listManagedClub(paginationParam, orderByParam, userId)));
