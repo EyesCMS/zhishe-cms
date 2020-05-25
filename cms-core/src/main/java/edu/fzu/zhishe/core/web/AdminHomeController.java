@@ -31,10 +31,7 @@ public class AdminHomeController {
         return ResponseEntity.ok(adminService.unaudited());
     }
 
-    /*
-     * TODO
-     */
-    //@ApiOperation(" 注册人数 ")
+    @ApiOperation(" 注册人数 ")
     @GetMapping("/newusers")
     public ResponseEntity<Object> newUsers(SysAdminNewUsersQuery query) {
         return ResponseEntity.ok(adminService.newUsers(query));

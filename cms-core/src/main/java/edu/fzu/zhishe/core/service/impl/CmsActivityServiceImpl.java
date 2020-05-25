@@ -183,13 +183,16 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
         if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
-            Asserts.fail("申请ID错误，获取申请活动失败");
+            Asserts.notFound("申请ID错误，获取申请活动失败");
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
+        if (club == null) {
+            Asserts.notFound("获取活动的社团失败");
+        }
         SysUser user = userService.getCurrentUser();
         if (user == null || !user.getId().equals(club.getChiefId())) {
-            Asserts.fail("非社长无法查看申请活动");
+            Asserts.forbidden("非社长无法查看申请活动");
         }
 
         return activity;

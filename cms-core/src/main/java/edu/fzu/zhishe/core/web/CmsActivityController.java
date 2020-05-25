@@ -90,8 +90,7 @@ public class CmsActivityController {
     @GetMapping("/{clubId}/activities/apply")
     public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
                                            CmsActivityQuery param,
-            @Validated PaginationParam paginationParam, OrderByParam orderByParam,
-            @RequestParam(value = "keyword", required = false) String keyword) {
+            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
         return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, param,paginationParam, orderByParam)));
     }
 
