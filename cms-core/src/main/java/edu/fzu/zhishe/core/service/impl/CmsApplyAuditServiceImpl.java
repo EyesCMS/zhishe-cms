@@ -206,6 +206,8 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsClub.setOfficialState(cmsClubCreateApply.getOfficialState());
             cmsClub.setType(cmsClubCreateApply.getType());
             cmsClub.setCreateAt(new Date());
+            cmsClub.setCredit(0);
+            cmsClub.setGradeId(1);
             cmsClub.setDeleteStatus(DeleteStateEnum.Existence.getValue());
             if(clubMapper.insert(cmsClub) == 0){
                 Asserts.fail();

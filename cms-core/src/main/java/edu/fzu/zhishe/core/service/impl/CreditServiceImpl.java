@@ -191,8 +191,13 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public CmsClub getCreditByActivity(CmsClub cmsClub) {
-        return null;
+    public CmsClub getCreditByActivity(Integer clubId) {
+        CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
+        if(cmsClub == null){
+            Asserts.fail();
+        }
+        clubCreditAdd(cmsClub,CreditEnum.ACTIVITY.getValue());
+        return cmsClub;
     }
 
     @Override

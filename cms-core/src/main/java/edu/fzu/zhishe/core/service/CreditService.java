@@ -54,7 +54,7 @@ public interface CreditService {
     /**
      *社团活动获取积分
      */
-    CmsClub getCreditByActivity(CmsClub cmsClub);
+    CmsClub getCreditByActivity(Integer clubId);
     /**
      *社团积分累加
      */

@@ -9,7 +9,12 @@ public enum CreditEnum {
     /**
      * 评论（暂定两分）
      */
-    COMMENT(2);
+    COMMENT(2),
+
+    /**
+     * 社团发布活动（暂定三分）
+     */
+    ACTIVITY(3);
 
     private int value;
     CreditEnum(int value) {
