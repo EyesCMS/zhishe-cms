@@ -3,22 +3,17 @@ package edu.fzu.zhishe.core.web;
 import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
 import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
-import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.core.dto.CreditDTO;
-import edu.fzu.zhishe.core.param.CmsClubsCreationsParam;
-import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yang on 5/18/2020.

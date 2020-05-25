@@ -6,14 +6,12 @@ import static org.springframework.http.ResponseEntity.ok;
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.FmsUserLikeService;
-import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -21,13 +19,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

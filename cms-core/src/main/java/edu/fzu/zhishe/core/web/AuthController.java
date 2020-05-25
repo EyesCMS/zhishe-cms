@@ -4,11 +4,8 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import edu.fzu.zhishe.common.api.AjaxResponse;
-import edu.fzu.zhishe.common.api.Error;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
-import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.SysUserInfoDTO;
 import edu.fzu.zhishe.core.param.SysUserLoginParam;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
@@ -21,24 +18,17 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -56,6 +46,11 @@ public class AuthController {
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+
+    @Value("${role.admin}")
+    private String roleAdmin;
+    @Value("${role.student}")
+    private String roleStudent;
 
     public AuthController(SysUserService userService) {
         this.userService = userService;
@@ -86,13 +81,7 @@ public class AuthController {
     @ApiOperation(value = " 登出功能 ")
     @PostMapping(value = "/logout")
     public ResponseEntity<Object> logout() {
-        SysUser currentUser = userService.getCurrentUser();
-        // 不需要切换角色了
-        // 不是管理员时，重置当前角色
-//        if (currentUser != null && currentUser.getIsAdmin() == 0) {
-//            currentUser.setCurrentRole(UserRoleEnum.NORMAL.getValue());
-//            userService.updateUserSelective(currentUser);
-//        }
+
         return noContent().build();
     }
 
@@ -102,37 +91,19 @@ public class AuthController {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponseBody.unauthorized());
         }
-        //SysUser user = userService.getCurrentMember();
         String username = principal.getName();
         SysUser user = userService.getByUsername(username);
-
-        // MUST: reset current user role
-//        user.setCurrentRole(UserRoleEnum.NORMAL.getValue());
-//        userService.updateUserSelective(user);
 
         SysUserInfoDTO userInfoDTO = new SysUserInfoDTO();
         BeanUtils.copyProperties(user, userInfoDTO);
         userInfoDTO.setAvatar(user.getAvatarUrl());
         userInfoDTO.setUserId(user.getId());
         if (user.getIsAdmin() == 1) {
-            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("admin")));
+            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton(roleAdmin)));
         } else {
-            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton("student")));
+            userInfoDTO.setRoles(new ArrayList<>(Collections.singleton(roleStudent)));
         }
         return ok().body(userInfoDTO);
-    }
-
-    /**
-     * 暂时没有用到
-     * @return
-     */
-    @PreAuthorize("hasAuthority('sys:user:read')")
-    @ApiOperation(" 获取用户列表 ")
-    @GetMapping("/users")
-    public ResponseEntity<Object> users() {
-        List<SysUser> users = userService.users();
-        List<SysUser> userList = users.stream().limit(3).collect(Collectors.toList());
-        return ok().body(userList);
     }
 
 //    @ApiOperation(" 获取验证码 ")
@@ -149,7 +120,6 @@ public class AuthController {
         UpdatePasswordResultEnum result = userService.updatePassword(updateUserPasswordParam);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {
-            Error error = new Error("", "", "");
             AjaxResponse response = new AjaxResponse();
             response.setMessage(result.getMessage());
             return ResponseEntity.badRequest().body(response);
@@ -157,17 +127,4 @@ public class AuthController {
         return noContent().build();
     }
 
-//    @ApiOperation(value = " 刷新 token ")
-//    @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
-//    public CommonResult refreshToken(HttpServletRequest request) {
-//        String token = request.getHeader(tokenHeader);
-//        String refreshToken = memberService.refreshToken(token);
-//        if (refreshToken == null) {
-//            return CommonResult.failed("token 已经过期！");
-//        }
-//        Map<String, String> tokenMap = new HashMap<>();
-//        tokenMap.put("token", refreshToken);
-//        tokenMap.put("tokenHead", tokenHead);
-//        return CommonResult.success(tokenMap);
-//    }
 }

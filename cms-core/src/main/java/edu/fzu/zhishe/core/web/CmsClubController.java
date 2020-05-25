@@ -4,7 +4,6 @@ package edu.fzu.zhishe.core.web;
 import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
@@ -51,7 +50,6 @@ public class CmsClubController {
 
     @ApiOperation(" 3.1 推荐社团列表 ")
     @GetMapping("/recommended")
-    // @PreAuthorize("hasAuthority('cms:club:read')")
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> recommendedClub(@Validated PaginationParam paginationParam,
                                                                        OrderByParam orderByParam) {
         return ok(CommonPage.restPage(clubService.listHotClub(paginationParam, orderByParam)));

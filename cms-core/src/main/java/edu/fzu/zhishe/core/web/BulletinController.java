@@ -48,7 +48,6 @@ public class BulletinController {
     private CmsBulletinService bulletinService;
 
     @ApiOperation(" 5.1发布公告 ")
-    //@PreAuthorize("hasAuthority('cms:bulletin:create')")
     @PostMapping("/{club}/bulletins")
     public ResponseEntity<Object> createBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
@@ -61,7 +60,6 @@ public class BulletinController {
     }
 
     @ApiOperation(" 5.2查看某个社团所有公告 ")
-    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins")
     @IsClubMember
     public ResponseEntity<Object> listClubBulletin(
@@ -69,8 +67,6 @@ public class BulletinController {
         CmsBulletinQuery bulletinQuery,
         @PathVariable("club") Integer clubId) {
 
-        /**return ok()
-            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, paginationParam)));*/
         List<CmsBulletinsDTO> bulletinList = null;
         bulletinList = bulletinService.listClubBulletin(clubId,paginationParam,bulletinQuery);
         return ResponseEntity.ok().body(CommonPage.restPage(bulletinList));
@@ -78,7 +74,6 @@ public class BulletinController {
 
 
     @ApiOperation("5.3查看公告详情")
-    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins/{bulletinId}")
     @IsClubMember
     public ResponseEntity<CmsBulletinDTO> getBulletin(
@@ -96,7 +91,6 @@ public class BulletinController {
     }
 
     @ApiOperation("5.4修改公告内容")
-    //@PreAuthorize("hasAuthority('cms:bulletin:update')")
     @PutMapping("/{club}/bulletins/{bulletinId}")
 
     public ResponseEntity<Object> updateBulletin(
@@ -110,7 +104,6 @@ public class BulletinController {
     }
 
     @ApiOperation("5.5删除公告")
-    //@PreAuthorize("hasAuthority('cms:bulletin:delete')")
     @DeleteMapping("/bulletins/{bulletinId}")
     public ResponseEntity<Object> deleteBulletin(@PathVariable("bulletinId") Integer bulletinId) {
         if (bulletinService.deleteBulletin(bulletinId) == 0) {
