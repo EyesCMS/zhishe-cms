@@ -25,9 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest
 public class CmsClubServiceImplTest{
-    Integer joinedClubId = 10014;
-    Integer managedClubId = 10015;
-    Integer notJoinedClubId = 10020;
+    Integer joinedClubId = 10014;      //测试类登录的用户加入的社团ID
+    Integer managedClubId = 10015;     //测试类登录的用户创建的社团ID
+    Integer notJoinedClubId = 10020;   //测试类登录的用户未加入的社团ID
+    Integer notExistedClubId = 101;    //不存在的社团ID
+
+    Integer managerId = 10088;      //测试类用户登录的用户ID
+    Integer memberId = 10089;       //加入 ID = joinedClubId 的用户
+    Integer notMemberId = 10100;     //未加入任何社团的用户ID
+
+    String [] urls = {null,null,null,null,null};  //社团走马灯图片url
 
     Logger log = LoggerFactory.getLogger(CmsClubServiceImplTest.class);
     @Autowired
@@ -43,72 +50,122 @@ public class CmsClubServiceImplTest{
     @Transactional
     @Rollback
     public void TestForbiddenOperation(){
-        //查看成员列表
+        //3.7查看成员列表
         Assertions.assertThrows(AccessDeniedException.class, () -> {
             PaginationParam paginationParam = new PaginationParam();
             CmsClubMemberQuery clubMemberQuery = new CmsClubMemberQuery();
             cmsClubService.listClubMember(paginationParam, notJoinedClubId, clubMemberQuery);
-        }, " 没有该权限");
+        }, " 非社员，没有该权限，无法查看成员列表。");
 
-        //查看成员详情
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            cmsClubService.showClubMemberInfo(notJoinedClubId, 10088);
-        }, " 没有该权限");
+            PaginationParam paginationParam = new PaginationParam();
+            CmsClubMemberQuery clubMemberQuery = new CmsClubMemberQuery();
+            cmsClubService.listClubMember(paginationParam, notExistedClubId, clubMemberQuery);
+        }, " 该社团不存在，无法查看成员列表。");
 
-        //修改社团信息
+        //3.8查看成员详情
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.getClubMemberInfo(notJoinedClubId, managerId);
+        }, " 没有该权限，无法查看成员详情。");
+
+        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+            cmsClubService.getClubMemberInfo(joinedClubId, notMemberId);
+        }, " 用户不存在，无法查看成员详情。");
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.getClubMemberInfo(notExistedClubId, managerId);
+        }, " 该社团不存在，无法查看成员详情。");
+
+        //3.10删除成员
+        Assertions.assertThrows(ApiException.class, () -> {
+            cmsClubService.deleteClubMember(managedClubId,
+                    notMemberId);
+        }, " 不存在该成员。");
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.deleteClubMember(notJoinedClubId,
+                    managerId);
+        }, " 非社员，没有该权限。");
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.deleteClubMember(joinedClubId,
+                    memberId);
+        }, " 非社长，没有该权限。");
+
+        //3.11修改社团信息
         Assertions.assertThrows(AccessDeniedException.class, () -> {
             CmsClubInfoParam param = new CmsClubInfoParam();
             param.setQqGroup("");
             param.setSlogan("");
             param.setType("运动");
             cmsClubService.updateClubInfo(joinedClubId, param);
-        }, " 没有该权限");
+        }, " 非社长，无法修改社团信息。");
+
         Assertions.assertThrows(AccessDeniedException.class, () -> {
             CmsClubInfoParam param = new CmsClubInfoParam();
             param.setQqGroup("");
             param.setSlogan("");
             param.setType("运动");
             cmsClubService.updateClubInfo(notJoinedClubId, param);
-        }, " 没有该权限");
+        }, " 非社团成员，没有权限。");
+
         Assertions.assertThrows(ApiException.class, () -> {
             CmsClubInfoParam param = new CmsClubInfoParam();
             param.setQqGroup("");
             param.setSlogan("");
             param.setType("");
             cmsClubService.updateClubInfo(managedClubId, param);
-        }, " 社团类型不能为空");
+        }, " 社团类型不能为空。");
 
-        //修改社团头像
+        //3.12修改社团头像
         Assertions.assertThrows(ApiException.class, () -> {
-            cmsClubService.alterClubAvatarUrl(managedClubId,
+            cmsClubService.updateClubAvatarUrl(managedClubId,
                     "");
-        }, " 头像不能为空");
+        }, " 头像不能为空。");
+
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            cmsClubService.alterClubAvatarUrl(joinedClubId,
+            cmsClubService.updateClubAvatarUrl(joinedClubId,
                     "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        }, " 没有该权限");
+        }, " 非社长，没有该权限。");
+
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            cmsClubService.alterClubAvatarUrl(notJoinedClubId,
+            cmsClubService.updateClubAvatarUrl(notJoinedClubId,
                     "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
-        }, " 没有该权限");
+        }, " 非社员，没有该权限。");
+
+        //3.15修改社团走马灯
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.updateClubPictureUrl(joinedClubId, urls);
+        }, " 非社长，没有该权限。");
+
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            cmsClubService.updateClubPictureUrl(notJoinedClubId, urls);
+        }, " 非社员，没有该权限。");
+
     }
     @Test
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
-        //查看成员列表
+        //3.7查看成员列表
         Assertions.assertDoesNotThrow(() -> {
             PaginationParam paginationParam = new PaginationParam();
             CmsClubMemberQuery clubMemberQuery = new CmsClubMemberQuery();
             cmsClubService.listClubMember(paginationParam, joinedClubId, clubMemberQuery);
         }, " 没有该权限");
 
-        //查看成员详情
+        //3.8查看成员详情
         Assertions.assertDoesNotThrow(() -> {
-            cmsClubService.showClubMemberInfo(joinedClubId, 10088);
+            cmsClubService.getClubMemberInfo(joinedClubId, managerId);
         }, " 没有该权限");
 
-        //修改社团信息
+        //3.10删除社员
+        Assertions.assertDoesNotThrow(() -> {
+            cmsClubService.deleteClubMember(managedClubId,
+                    memberId);
+        }, " 没有该权限");
+
+        //3.11修改社团信息
         Assertions.assertDoesNotThrow(() -> {
             CmsClubInfoParam param = new CmsClubInfoParam();
             param.setQqGroup("");
@@ -117,11 +174,15 @@ public class CmsClubServiceImplTest{
             cmsClubService.updateClubInfo(managedClubId, param);
         }, " 社团类型不能为空");
 
-
-        //修改社团头像
+        //3.12修改社团头像
         Assertions.assertDoesNotThrow(() -> {
-            cmsClubService.alterClubAvatarUrl(managedClubId,
+            cmsClubService.updateClubAvatarUrl(managedClubId,
                     "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+        }, " 没有该权限 ");
+
+        //3.15修改社员走马灯
+        Assertions.assertDoesNotThrow(() -> {
+            cmsClubService.updateClubPictureUrl(managedClubId, urls);
         }, " 没有该权限 ");
     }
 }
