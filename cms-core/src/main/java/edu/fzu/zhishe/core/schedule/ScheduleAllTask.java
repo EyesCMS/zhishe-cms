@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.schedule;
 
 import edu.fzu.zhishe.core.schedule.task.ActivityTask;
+import edu.fzu.zhishe.core.schedule.task.CreditTodayTask;
 import edu.fzu.zhishe.core.schedule.task.LikeTask;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -23,6 +24,7 @@ public class ScheduleAllTask {
 
     private static final String LIKE_TASK_IDENTITY = "LikeTaskQuartz";
     private static final String ACTIVITY_TASK_IDENTITY = "ActivityTaskQuartz";
+    private static final String CREDIT_TASK_IDENTITY = "CreditTaskQuartz";
 
     @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
@@ -37,6 +39,7 @@ public class ScheduleAllTask {
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         likeTask(scheduler);
+        creditTask(scheduler);
         activityTask(scheduler);
     }
 
@@ -67,6 +70,22 @@ public class ScheduleAllTask {
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(ACTIVITY_TASK_IDENTITY)
+            .withSchedule(scheduleBuilder)
+            .build();
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+    }
+
+    private void creditTask(Scheduler scheduler) throws SchedulerException {
+
+        JobDetail jobDetail = JobBuilder.newJob(CreditTodayTask.class).withIdentity("job3")
+            .storeDurably().build();
+        // start at 12:05 am
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 5 0 * * ?");
+        // start every 1 min (used for test)
+//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
+
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+            .withIdentity(CREDIT_TASK_IDENTITY)
             .withSchedule(scheduleBuilder)
             .build();
         scheduler.scheduleJob(jobDetail, cronTrigger);

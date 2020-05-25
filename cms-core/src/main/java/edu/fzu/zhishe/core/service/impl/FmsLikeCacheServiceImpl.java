@@ -4,7 +4,7 @@ import edu.fzu.zhishe.cms.model.FmsUserLikePost;
 import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.dto.FmsLikedCountDTO;
 import edu.fzu.zhishe.core.service.FmsLikeCacheService;
-import edu.fzu.zhishe.core.util.RedisKeyUtils;
+import edu.fzu.zhishe.core.util.RedisKeyUtil;
 import edu.fzu.zhishe.security.service.RedisService;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public boolean hasLiked(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
-        String likedKey = RedisKeyUtils.getLikedKey(likedUserId, likedPostId);
+        String likedKey = RedisKeyUtil.getLikedKey(likedUserId, likedPostId);
         if (redisService.hHasKey(key, likedKey)) {
             Integer value = (Integer) redisService.hGet(key, likedKey);
             return value.equals(LikedStatusEnum.LIKE.getCode());
@@ -49,7 +49,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public boolean hasUnLiked(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
-        String likedKey = RedisKeyUtils.getLikedKey(likedUserId, likedPostId);
+        String likedKey = RedisKeyUtil.getLikedKey(likedUserId, likedPostId);
         if (redisService.hHasKey(key, likedKey)) {
             Integer value = (Integer) redisService.hGet(key, likedKey);
             return value.equals(LikedStatusEnum.UNLIKE.getCode());
@@ -69,7 +69,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public void saveLiked2Redis(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
-        String likedKey = RedisKeyUtils.getLikedKey(likedUserId, likedPostId);
+        String likedKey = RedisKeyUtil.getLikedKey(likedUserId, likedPostId);
         redisService.hSet(key, likedKey, LikedStatusEnum.LIKE.getCode());
     }
 
@@ -77,7 +77,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public void unlikeFromRedis(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
-        String likedKey = RedisKeyUtils.getLikedKey(likedUserId, likedPostId);
+        String likedKey = RedisKeyUtil.getLikedKey(likedUserId, likedPostId);
         redisService.hSet(key, likedKey, LikedStatusEnum.UNLIKE.getCode());
     }
 
@@ -85,7 +85,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public void deleteLikedFromRedis(Integer likedUserId, Long likedPostId) {
 
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED;
-        String likedKey = RedisKeyUtils.getLikedKey(likedUserId, likedPostId);
+        String likedKey = RedisKeyUtil.getLikedKey(likedUserId, likedPostId);
         redisService.hDel(key, likedKey);
     }
 

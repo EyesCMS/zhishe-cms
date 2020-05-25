@@ -48,6 +48,9 @@ public class CreditServiceImpl implements CreditService {
     @Autowired
     private CmsClubGradeMapper cmsClubGradeMapper;
 
+    @Autowired
+    CmsCreditCacheServiceImpl creditCacheService;
+
     //最高可获得积分评论数
     private final int maxCommentCreditNum = 1;
 
@@ -93,6 +96,11 @@ public class CreditServiceImpl implements CreditService {
             CmsUserClubRel userClubRel = userClubRelList.get(0);
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
+
+            // store today's credit to cache
+            creditCacheService.incrTodayCredit(
+                userClubRel.getClubId(), userClubRel.getUserId(),
+                (long) CreditEnum.CHECKIN.getValue());
         }
 
     }
