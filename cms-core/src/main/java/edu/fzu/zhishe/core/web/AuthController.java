@@ -72,7 +72,7 @@ public class AuthController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Map<String, String> tokenMap = new HashMap<>();
+        Map<String, String> tokenMap = new HashMap<>(2);
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
         return ok(tokenMap);
