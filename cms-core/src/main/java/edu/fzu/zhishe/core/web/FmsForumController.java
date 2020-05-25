@@ -148,7 +148,7 @@ public class FmsForumController {
         if (forumService.saveRemark(remarkParam) == 0) {
             Asserts.fail();
         }
-        creditService.comment(remarkParam.getPostId().intValue());
+        creditService.getCreditByComment(remarkParam.getPostId().intValue());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface CreditService {
     /**
-     * 累加积分
+     * 个人累加积分
      */
     void creditAdd(CmsUserClubRel cmsUserClubRel,int credit);
     /**
@@ -36,7 +36,7 @@ public interface CreditService {
     /**
      * 获取评论积分
      */
-    void comment(Integer postId);
+    void getCreditByComment(Integer postId);
     /**
      * 获取当前用户活跃度
      */
@@ -50,6 +50,15 @@ public interface CreditService {
      */
     List<CmsClubGrade> listClubGrade();
 
+
+    /**
+     *社团活动获取积分
+     */
+    CmsClub getCreditByActivity(CmsClub cmsClub);
+    /**
+     *社团积分累加
+     */
+    void clubCreditAdd(CmsClub cmsClub,int credit);
     /**
      *社团等级计算
      */

@@ -28,6 +28,9 @@ import java.util.zip.DataFormatException;
 public class CreditServiceImpl implements CreditService {
 
     @Autowired
+    private CmsClubMapper cmsClubMapper;
+
+    @Autowired
     private CmsUserClubRelMapper cmsUserClubRelMapper;
 
     @Autowired
@@ -54,7 +57,9 @@ public class CreditServiceImpl implements CreditService {
         oldCredit += credit;
         cmsUserClubRel.setCredit(oldCredit);
         CmsUserClubRel newUserClubRel = honorCalculate(cmsUserClubRel);
-        cmsUserClubRelMapper.updateByPrimaryKeySelective(newUserClubRel);
+        if(cmsUserClubRelMapper.updateByPrimaryKeySelective(newUserClubRel) == 0){
+            Asserts.fail();
+        }
     }
 
     @Override
@@ -114,7 +119,7 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public void comment(Integer postId) {
+    public void getCreditByComment(Integer postId) {
         FmsPostRemarkExample example = new FmsPostRemarkExample();
         example.createCriteria().andPostIdEqualTo(postId)
                 .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
@@ -125,6 +130,9 @@ public class CreditServiceImpl implements CreditService {
             return;
         }
         FmsPost post = fmsPostMapper.selectByPrimaryKey(postId.longValue());
+        if(post == null){
+            Asserts.fail();
+        }
         //个人贴不加积分
         if(post.getType().equals(PostTypeEnum.PERSONAL.getValue())){
             System.out.println("个人贴不加积分");
@@ -156,6 +164,9 @@ public class CreditServiceImpl implements CreditService {
         }
         CmsUserClubRel userClubRel = userClubRelList.get(0);
         CmsMemberHonor myHonor = cmsMemberHonorMapper.selectByPrimaryKey(userClubRel.getHonorId());
+        if(myHonor == null){
+            Asserts.fail();
+        }
         String grade = myHonor.getName();
         int score = userClubRel.getCredit();
         double total = myHonor.getUpperLimit()-myHonor.getLowerLimit();
@@ -180,6 +191,22 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
+    public CmsClub getCreditByActivity(CmsClub cmsClub) {
+        return null;
+    }
+
+    @Override
+    public void clubCreditAdd(CmsClub cmsClub, int credit) {
+        int oldCredit = cmsClub.getCredit();
+        oldCredit += credit;
+        cmsClub.setCredit(oldCredit);
+        CmsClub newCmsClub = clubCreditCalculate(cmsClub);
+        if(cmsClubMapper.updateByPrimaryKeySelective(newCmsClub) == 0){
+            Asserts.fail();
+        }
+    }
+
+    @Override
     public CmsClub clubCreditCalculate(CmsClub cmsClub) {
         int credit = cmsClub.getCredit();
         List<CmsClubGrade> clubGradeList = cmsClubGradeMapper.selectByExample(null);
@@ -187,7 +214,7 @@ public class CreditServiceImpl implements CreditService {
             if(clubGrade.getLowerLimit()<=credit && credit<=clubGrade.getUpperLimit()){
                 cmsClub.setGradeId(clubGrade.getId());
                 return cmsClub;
-        }
+            }
         }
         Asserts.fail("无法计算，积分不在任何一个规定的区间");
         return null;
