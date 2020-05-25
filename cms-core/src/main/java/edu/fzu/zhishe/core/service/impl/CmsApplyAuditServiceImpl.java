@@ -294,7 +294,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsClubDisbandApply.setReason(clubsDisbandParam.getReason());
         cmsClubDisbandApply.setState(ApplyStateEnum.PENDING.getValue());
 
-        clubDisbandApplyMapper.insert(cmsClubDisbandApply);
+        if(clubDisbandApplyMapper.insert(cmsClubDisbandApply)==0){
+            Asserts.fail();
+        }
         return cmsClubDisbandApply;
     }
 
@@ -324,38 +326,52 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //删除相关user_club表记录
             CmsUserClubRelExample example = new CmsUserClubRelExample();
             example.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            userClubRelMapper.deleteByExample(example);
+            if(userClubRelMapper.deleteByExample(example)==0){
+                Asserts.fail();
+            }
+
 
             //删除相关joinApply表记录
             CmsClubJoinApplyExample example1 = new CmsClubJoinApplyExample();
             example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            clubJoinApplyMapper.deleteByExample(example1);
+            if(clubJoinApplyMapper.deleteByExample(example1)==0){
+                Asserts.fail();
+            }
 
             //删除相关quitNotice记录
             CmsQuitNoticeExample example2 = new CmsQuitNoticeExample();
             example2.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            quitNoticeMapper.deleteByExample(example2);
+            if(quitNoticeMapper.deleteByExample(example2)==0){
+                Asserts.fail();
+            }
 
             //删除相关社团换届记录
             CmsChiefChangeApplyExample example3 = new CmsChiefChangeApplyExample();
             example3.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            chiefChangeApplyMapper.deleteByExample(example3);
+            if(chiefChangeApplyMapper.deleteByExample(example3)==0){
+                Asserts.fail();
+            }
 
             //删除相关社团认证记录
             CmsOfficialChangeApplyExample example4 = new CmsOfficialChangeApplyExample();
             example4.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            officialChangeApplyMapper.deleteByExample(example4);
+            if(officialChangeApplyMapper.deleteByExample(example4)==0){
+                Asserts.fail();
+            }
 
             //更新相关disbandApply表记录
             cmsClubDisbandApply.setState(ApplyStateEnum.ACTIVE.getValue());
             cmsClubDisbandApply.setHandleAt(new Date());
-            clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
+            if(clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply)==0){
+                Asserts.fail();
+            }
 
             //删除社团（逻辑删除）
             CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubDisbandApply.getClubId());
             cmsClub.setDeleteStatus(DeleteStateEnum.Deleted.getValue());
-            clubMapper.updateByPrimaryKeySelective(cmsClub);
-            //clubMapper.deleteByPrimaryKey(cmsClubDisbandApply.getClubId());
+            if(clubMapper.updateByPrimaryKeySelective(cmsClub)==0){
+                Asserts.fail();
+            }
 
             return cmsClubDisbandApply;
         }
@@ -363,7 +379,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //更新申请记录
             cmsClubDisbandApply.setHandleAt(new Date());
             cmsClubDisbandApply.setState(ApplyStateEnum.REJECTED.getValue());
-            clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply);
+            if(clubDisbandApplyMapper.updateByPrimaryKeySelective(cmsClubDisbandApply)==0){
+                Asserts.fail();
+            }
             return cmsClubDisbandApply;
         }
 
