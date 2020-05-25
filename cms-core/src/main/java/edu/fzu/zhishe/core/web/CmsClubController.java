@@ -188,7 +188,7 @@ public class CmsClubController {
                                                 @RequestParam("image") MultipartFile[] image) {
         String[] url = {null,null,null,null,null};
         for(int i = 0; i < image.length; i++){
-            if(image[i] != null) {
+            if(image[i] != null && i < 5) {
                 url[i] = storageService.store(image[i], imageRootLocation);
             }
         }
