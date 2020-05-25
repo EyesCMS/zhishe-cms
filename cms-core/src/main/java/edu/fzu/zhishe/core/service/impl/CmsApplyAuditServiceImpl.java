@@ -520,13 +520,19 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsQuitNotice.setUserId(sysUserService.getCurrentUser().getId());
         cmsQuitNotice.setQuitDate(new Date());
         cmsQuitNotice.setReason(cmsClubsQuitParam.getReason());
-        quitNoticeMapper.insert(cmsQuitNotice);
+        if(quitNoticeMapper.insert(cmsQuitNotice)==0){
+            Asserts.fail();
+        }
         //删除user_club表相关记录
-        userClubRelMapper.deleteByExample(example);
+        if(userClubRelMapper.deleteByExample(example)==0){
+            Asserts.fail();
+        }
         //更新club表相关记录人数
 
         cmsClub.setMemberCount(cmsClub.getMemberCount()-1);
-        clubMapper.updateByPrimaryKeySelective(cmsClub);
+        if(clubMapper.updateByPrimaryKeySelective(cmsClub)==0){
+            Asserts.fail();
+        }
         return cmsQuitNotice;
     }
 
