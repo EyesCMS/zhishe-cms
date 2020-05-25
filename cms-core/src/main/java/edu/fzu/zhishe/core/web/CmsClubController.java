@@ -168,21 +168,7 @@ public class CmsClubController {
         return ok(clubService.getClubPicture(clubId));
     }
 
-    /*
-    //该接口没有被用到，但是暂时保留
-    //JSONArray 转 String[] 没弄清楚
-
-    @ApiOperation(" 3.15 社长修改社团走马灯 (url)")
-    @PostMapping("/{clubId}/pictureUrls")
-    public ResponseEntity<Object> alterClubPictureUrl(@PathVariable("clubId") Integer clubId,
-                                                     @RequestBody JSONObject object) {
-        String[] urls = (String[]) object.get("pictureUrls");      <----------就这里类型转换报错
-        clubService.alterClubPictureUrl(clubId, urls);
-        return ResponseEntity.noContent().build();
-    }
-    */
-
-    @ApiOperation(" 3.16 社长修改社团走马灯(上传） ")
+    @ApiOperation(" 3.15 社长修改社团走马灯(上传） ")
     @PostMapping("/{clubId}/pictures")
     public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam("image") MultipartFile[] image) {
