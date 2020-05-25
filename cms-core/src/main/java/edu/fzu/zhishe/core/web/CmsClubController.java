@@ -118,7 +118,7 @@ public class CmsClubController {
     @IsClubMember
     public ResponseEntity<CmsClubMemberDetailDTO> showClubMemberInfo(@PathVariable("clubId") Integer clubId,
                                                                      @PathVariable("userId") Integer userId) {
-        return ok(clubService.showClubMemberInfo(clubId, userId));
+        return ok(clubService.getClubMemberInfo(clubId, userId));
     }
 
     @ApiOperation(" 3.10 社长删除社团成员 ")
@@ -143,7 +143,7 @@ public class CmsClubController {
     @RequestMapping(value = "/{clubId}/pic", method = RequestMethod.PUT)
     public ResponseEntity<Object> alterClubAvatarUrl(@PathVariable("clubId") Integer clubId,
                                                      @RequestBody JSONObject object) {
-        clubService.alterClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
+        clubService.updateClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
         return ResponseEntity.noContent().build();
     }
 
@@ -152,7 +152,7 @@ public class CmsClubController {
     public ResponseEntity<Object> uploadAvatar(@PathVariable("clubId") Integer clubId,
                                                @RequestParam("image") MultipartFile image) {
         String url = storageService.store(image, imageRootLocation);
-        if (clubService.alterClubAvatarUrl(clubId, url) == 0) {
+        if (clubService.updateClubAvatarUrl(clubId, url) == 0) {
             Asserts.fail("update avatar failed");
         }
         JSONObject jsonObject = new JSONObject();
@@ -176,7 +176,7 @@ public class CmsClubController {
                 url[i] = storageService.store(image[i], imageRootLocation);
             }
         }
-        if (clubService.alterClubPictureUrl(clubId, url) == 0) {
+        if (clubService.updateClubPictureUrl(clubId, url) == 0) {
             Asserts.fail("update picture failed");
         }
         JSONObject jsonObject = new JSONObject();

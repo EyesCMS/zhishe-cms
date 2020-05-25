@@ -36,7 +36,7 @@ public interface CmsClubService {
 
     List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId, CmsClubMemberQuery clubMemberQuery);
 
-    CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId);
+    CmsClubMemberDetailDTO getClubMemberInfo(Integer clubId, Integer userId);
 
     Integer addClubMember(Integer clubId, Integer userId);
 
@@ -44,9 +44,9 @@ public interface CmsClubService {
 
     Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam);
 
-    Integer alterClubAvatarUrl(Integer clubId, String avatarUrl);
+    Integer updateClubAvatarUrl(Integer clubId, String avatarUrl);
 
     String[] getClubPicture(Integer clubId);
 
-    Integer alterClubPictureUrl(Integer clubId, String[] avatarUrl);
+    Integer updateClubPictureUrl(Integer clubId, String[] avatarUrl);
 }

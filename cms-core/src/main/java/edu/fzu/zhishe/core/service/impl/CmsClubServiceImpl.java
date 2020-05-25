@@ -116,14 +116,14 @@ public class CmsClubServiceImpl implements CmsClubService {
         return ClubStatueEnum.MEMBER;
     }
 
-
-
+    //获取推荐社团列表
     @Override
     public List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listHotClub(orderByParam);
     }
 
+    //获取所有社团列表
     @Override
     public List<CmsClubBriefDTO> listClub(PaginationParam paginationParam,
         OrderByParam orderByParam, String keyword, String type, Integer state) {
@@ -131,6 +131,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClub(keyword,type,state);
     }
 
+    //根据社团ID查找社团
     @Override
     public CmsClubDetailDTO getClubById(Integer id) {
             CmsClub club = clubMapper.selectByPrimaryKey(id);
@@ -149,12 +150,14 @@ public class CmsClubServiceImpl implements CmsClubService {
             return data;
     }
 
+    //获取加入的社团列表（社团内身份为社员）
     @Override
     public List<CmsClubBriefDTO> listJoinedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listJoinedClub(orderByParam, userId);
     }
 
+    //获取管理的社团列表（社团内身份为社长）
     @Override
     public List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
 
@@ -162,6 +165,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listManagedClub(orderByParam, userId);
     }
 
+    //获取加入社团申请列表（学生查看自己发出的加入社团申请）
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
@@ -169,12 +173,12 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (currentUser == null) {
             Asserts.unAuthorized();
         }
-
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
         return clubDAO.listJoinClubApply(orderByParam, currentUser.getId());
     }
 
+    //获取创建社团申请列表（学生查看自己发出的创建社团申请）
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
@@ -182,12 +186,12 @@ public class CmsClubServiceImpl implements CmsClubService {
         if (currentUser == null) {
             Asserts.unAuthorized();
         }
-
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
         return clubDAO.listCreateClubApply(orderByParam, currentUser.getId());
     }
 
+    //查看社员列表
     @Override
     @IsClubMember
     public List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId,
@@ -196,9 +200,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClubMember(clubId, clubMemberQuery);
     }
 
+    //查看社员详细信息
     @Override
     @IsClubMember
-    public CmsClubMemberDetailDTO showClubMemberInfo(Integer clubId, Integer userId) {
+    public CmsClubMemberDetailDTO getClubMemberInfo(Integer clubId, Integer userId) {
 
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
@@ -208,9 +213,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsClubMemberDetailDTO data = new CmsClubMemberDetailDTO();
         //将用户字段和data字段相同的，复制到data里面
         BeanUtils.copyProperties(user, data);
-
         CmsUserClubRel userClub = userClubList.get(0);
-
         CmsMemberHonor honor = honorMapper.selectByPrimaryKey(userClub.getHonorId());
         data.setHonor(honor.getName());
         SysRole role = roleMapper.selectByPrimaryKey(userClub.getRoleId());
@@ -219,6 +222,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return data;
     }
 
+    //添加社员
     @Override
     @Transactional
     public Integer addClubMember(Integer clubId, Integer userId){
@@ -235,6 +239,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKey(club);
     }
 
+    //删除社员
     @Override
     @CheckClubAuth("3")
     @Transactional
@@ -266,9 +271,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKeySelective(club);
     }
 
+    //修改社团头像
     @Override
     @CheckClubAuth("3")
-    public Integer alterClubAvatarUrl(Integer clubId, String avatarUrl){
+    public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl){
 
         if (StrUtil.isEmpty(avatarUrl)) {
             Asserts.fail("输入不能为空！");
@@ -278,6 +284,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKeySelective(club);
     }
 
+    //获取社团走马灯图片
     @Override
     public String[] getClubPicture(Integer clubId) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
@@ -298,9 +305,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         return urls;
     }
 
+    //修改社团走马灯图片
     @Override
     @CheckClubAuth("3")
-    public Integer alterClubPictureUrl(Integer clubId, String[] pictureUrls){
+    public Integer updateClubPictureUrl(Integer clubId, String[] pictureUrls){
 
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
