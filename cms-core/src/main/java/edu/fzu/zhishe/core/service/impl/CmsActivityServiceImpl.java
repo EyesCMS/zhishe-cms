@@ -55,6 +55,10 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     public void activityApply(CmsClubActivityParam param) {
         SysUser user = userService.getCurrentUser();
 
+        if (param.getStartDate() == null || param.getEndDate() == null) {
+            Asserts.forbidden("请正确输入日期");
+        }
+
         if (param.getStartDate().after(param.getEndDate())) {
             Asserts.forbidden("结束日期不可以在开始日期之前");
         }

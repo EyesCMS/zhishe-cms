@@ -85,6 +85,33 @@ public class CmsActivityServiceImplTest {
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
+        // 存在的活动id
+        Integer activityIdNotExist = 999999;
+        // 社团帖子id
+        Integer activityId = 2;
 
+
+//        // 更新活动
+//        Assertions.assertDoesNotThrow(() -> {
+//            forumService.updatePost(personalPostId, postParam);
+//        }, " 帖子更新异常 ");
+//
+//        // 删除活动
+//        Assertions.assertDoesNotThrow(() -> {
+//            forumService.deletePost(personalPostId);
+//        }, " 帖子删除异常 ");
+//
+//
+//        // 发表评论
+//        Assertions.assertDoesNotThrow(() -> {
+//            FmsRemarkParam remarkParam = new FmsRemarkParam();
+//            remarkParam.setPostId(personalPostId2);
+//            forumService.saveRemark(remarkParam);
+//        }, " 发表评论异常 ");
+//
+//        // 删除评论
+//        Assertions.assertDoesNotThrow(() -> {
+//            forumService.deleteRemark(remarkId);
+//        }, " 删除评论异常 ");
     }
 }

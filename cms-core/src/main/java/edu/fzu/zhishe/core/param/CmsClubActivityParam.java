@@ -35,11 +35,13 @@ public class CmsClubActivityParam {
 
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
     @Future
+    @NotNull
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date startDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
     @Future
+    @NotNull
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date endDate;
 
