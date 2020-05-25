@@ -695,7 +695,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsOfficialChangeApply.setCreateAt(new Date());
         cmsOfficialChangeApply.setHandleAt(null);
         cmsOfficialChangeApply.setState(ApplyStateEnum.PENDING.getValue());
-        officialChangeApplyMapper.insert(cmsOfficialChangeApply);
+        if(officialChangeApplyMapper.insert(cmsOfficialChangeApply)==0){
+            Asserts.fail();
+        }
         return cmsOfficialChangeApply;
     }
 
@@ -721,19 +723,25 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //更新社团官方状态
             CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsOfficialChangeApply.getClubId());
             cmsClub.setOfficialState(ClubOfficialStateEnum.OFFICIAL.getValue());
-            clubMapper.updateByPrimaryKeySelective(cmsClub);
+            if(clubMapper.updateByPrimaryKeySelective(cmsClub)==0){
+                Asserts.fail();
+            }
 
             //更新申请记录
             cmsOfficialChangeApply.setState(ApplyStateEnum.ACTIVE.getValue());
             cmsOfficialChangeApply.setHandleAt(new Date());
-            officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply);
+            if(officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply)==0){
+                Asserts.fail();
+            }
 
             return cmsOfficialChangeApply;
         }
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
             cmsOfficialChangeApply.setState(ApplyStateEnum.REJECTED.getValue());
             cmsOfficialChangeApply.setHandleAt(new Date());
-            officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply);
+            if(officialChangeApplyMapper.updateByPrimaryKeySelective(cmsOfficialChangeApply)==0){
+                Asserts.fail();
+            }
             return cmsOfficialChangeApply;
         }
         return cmsOfficialChangeApply;
