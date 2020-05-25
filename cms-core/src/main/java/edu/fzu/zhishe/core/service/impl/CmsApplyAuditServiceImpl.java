@@ -423,7 +423,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsClubJoinApply.setHandleAt(null);
         cmsClubJoinApply.setState(ApplyStateEnum.PENDING.getValue());
 
-        clubJoinApplyMapper.insert(cmsClubJoinApply);
+        if(clubJoinApplyMapper.insert(cmsClubJoinApply)==0){
+            Asserts.fail();
+        }
         return cmsClubJoinApply;
     }
 
@@ -444,6 +446,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
 
         //增加社长判定，只有社长才能审核加入申请
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubJoinApply.getClubId());
+        if(cmsClub == null){
+            Asserts.fail();
+        }
         if(!sysUserService.getCurrentUser().getId().equals(cmsClub.getChiefId())){
             Asserts.forbidden(" 您不是该社社长无权进行加入申请审核 ");
         }
@@ -455,12 +460,16 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //更新社团人数
 
             cmsClub.setMemberCount(cmsClub.getMemberCount() + 1);
-            clubMapper.updateByPrimaryKeySelective(cmsClub);
+            if(clubMapper.updateByPrimaryKeySelective(cmsClub)==0){
+                Asserts.fail();
+            }
             //更新加入申请
             cmsClubJoinApply.setState(ApplyStateEnum.ACTIVE.getValue());
             Date handleAt = new Date();
             cmsClubJoinApply.setHandleAt(handleAt);
-            clubJoinApplyMapper.updateByPrimaryKeySelective(cmsClubJoinApply);
+            if(clubJoinApplyMapper.updateByPrimaryKeySelective(cmsClubJoinApply)==0){
+                Asserts.fail();
+            }
             //更新club_user表
             CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
             cmsUserClubRel.setUserId(cmsClubJoinApply.getUserId());
@@ -469,14 +478,17 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsUserClubRel.setCredit(0);
             cmsUserClubRel.setHonorId(1);
             cmsUserClubRel.setJoinDate(handleAt);
-            userClubRelMapper.insert(cmsUserClubRel);
-
+            if(userClubRelMapper.insert(cmsUserClubRel) == 0){
+                Asserts.fail();
+            }
             return cmsClubJoinApply;
         }
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
             cmsClubJoinApply.setState(ApplyStateEnum.REJECTED.getValue());
             cmsClubJoinApply.setHandleAt(new Date());
-            clubJoinApplyMapper.updateByPrimaryKeySelective(cmsClubJoinApply);
+            if(clubJoinApplyMapper.updateByPrimaryKeySelective(cmsClubJoinApply)==0){
+                Asserts.fail();
+            }
             return cmsClubJoinApply;
         }
 
