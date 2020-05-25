@@ -101,7 +101,6 @@ public class BulletinController {
 
     public ResponseEntity<Object> updateBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
-        @PathVariable("club") Integer clubId,
         @PathVariable("bulletinId") Integer bulletinId) {
 
         if (bulletinService.updateBulletin(bulletinId, bulletinParam) == 0) {
