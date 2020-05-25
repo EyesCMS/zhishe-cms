@@ -590,7 +590,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsChiefChangeApply.setCreateAt(new Date());
         cmsChiefChangeApply.setHandleAt(null);
         cmsChiefChangeApply.setState(ApplyStateEnum.PENDING.getValue());
-        chiefChangeApplyMapper.insert(cmsChiefChangeApply);
+        if(chiefChangeApplyMapper.insert(cmsChiefChangeApply)==0){
+            Asserts.fail();
+        }
         return cmsChiefChangeApply;
     }
 
@@ -617,7 +619,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //更新社团社长
             CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsChiefChangeApply.getClubId());
             cmsClub.setChiefId(cmsChiefChangeApply.getNewChiefId());
-            clubMapper.updateByPrimaryKeySelective(cmsClub);
+            if(clubMapper.updateByPrimaryKeySelective(cmsClub)==0){
+                Asserts.fail();
+            }
             //老社长要不要退社有待讨论
 
             //更新user_club表的roleId
@@ -627,26 +631,32 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
                     .andUserIdEqualTo(cmsChiefChangeApply.getOldChiefId());
             List<CmsUserClubRel> userClubRelOld = userClubRelMapper.selectByExample(example);
             userClubRelOld.get(0).setRoleId(UserRoleEnum.MEMBER.getValue());
-            userClubRelMapper.updateByPrimaryKeySelective(userClubRelOld.get(0));
+            if(userClubRelMapper.updateByPrimaryKeySelective(userClubRelOld.get(0))==0){
+                Asserts.fail();
+            }
             //修改新社长社长roleId
             CmsUserClubRelExample example1 = new CmsUserClubRelExample();
             example1.createCriteria().andClubIdEqualTo(cmsChiefChangeApply.getClubId())
                     .andUserIdEqualTo(cmsChiefChangeApply.getNewChiefId());
             List<CmsUserClubRel> userClubRelNew = userClubRelMapper.selectByExample(example1);
             userClubRelNew.get(0).setRoleId(UserRoleEnum.CHIEF.getValue());
-            userClubRelMapper.updateByPrimaryKeySelective(userClubRelNew.get(0));
-
+            if(userClubRelMapper.updateByPrimaryKeySelective(userClubRelNew.get(0))==0){
+                Asserts.fail();
+            }
             //更新申请记录
             cmsChiefChangeApply.setState(ApplyStateEnum.ACTIVE.getValue());
             cmsChiefChangeApply.setHandleAt(new Date());
-            chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply);
-
+            if(chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply)==0){
+                Asserts.fail();
+            }
             return cmsChiefChangeApply;
         }
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.REJECTED.getValue()) {
             cmsChiefChangeApply.setState(ApplyStateEnum.REJECTED.getValue());
             cmsChiefChangeApply.setHandleAt(new Date());
-            chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply);
+            if(chiefChangeApplyMapper.updateByPrimaryKeySelective(cmsChiefChangeApply)==0){
+                Asserts.fail();
+            }
             return cmsChiefChangeApply;
         }
         return cmsChiefChangeApply;
