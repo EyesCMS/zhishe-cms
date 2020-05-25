@@ -141,7 +141,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
 
     //一下三个函数用于社团创建
     @Override
-    public CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam) {
+    public int createClub(CmsClubsCreationsParam clubsCreationsParam) {
         //查询是否已存在该社团
         CmsClubExample example2 = new CmsClubExample();
         example2.createCriteria().andNameEqualTo(clubsCreationsParam.getClubName())
@@ -172,8 +172,8 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         cmsClubCreateApply.setState(ApplyStateEnum.PENDING.getValue());
         cmsClubCreateApply.setUserId(sysUser.getId());
         //System.out.println(cmsClubCreateApply.getCreateAt());
-        clubCreateApplyMapper.insert(cmsClubCreateApply);
-        return cmsClubCreateApply;
+
+        return clubCreateApplyMapper.insert(cmsClubCreateApply);
     }
 
     @Override
@@ -207,13 +207,17 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             cmsClub.setType(cmsClubCreateApply.getType());
             cmsClub.setCreateAt(new Date());
             cmsClub.setDeleteStatus(DeleteStateEnum.Existence.getValue());
-            clubMapper.insert(cmsClub);
+            if(clubMapper.insert(cmsClub)==0){
+                Asserts.fail();
+            }
 
             //更新申请记录
             Date handleAt = new Date();
             cmsClubCreateApply.setHandleAt(handleAt);
             cmsClubCreateApply.setState(ApplyStateEnum.ACTIVE.getValue());
-            clubCreateApplyMapper.updateByPrimaryKeySelective(cmsClubCreateApply);
+            if(clubCreateApplyMapper.updateByPrimaryKeySelective(cmsClubCreateApply)==0){
+                Asserts.fail();
+            }
 
             //更新club_user表
             CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
@@ -221,18 +225,25 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             CmsClubExample example = new CmsClubExample();
             example.createCriteria().andNameEqualTo(cmsClubCreateApply.getClubName());
             List<CmsClub> cmsClubs = clubMapper.selectByExample(example);
+            if(CollectionUtils.isEmpty(cmsClubs)){
+                Asserts.fail();
+            }
             cmsUserClubRel.setClubId(cmsClubs.get(0).getId());
             cmsUserClubRel.setUserId(cmsClubCreateApply.getUserId());
             cmsUserClubRel.setRoleId(UserRoleEnum.CHIEF.getValue());
             cmsUserClubRel.setCredit(0);
             cmsUserClubRel.setHonorId(1);
             cmsUserClubRel.setJoinDate(handleAt);
-            userClubRelMapper.insert(cmsUserClubRel);
+            if(userClubRelMapper.insert(cmsUserClubRel)==0){
+                Asserts.fail();
+            }
 
             //更新社团走马灯图片表
             CmsClubPicture cmsClubPicture = new CmsClubPicture();
             cmsClubPicture.setClubId(cmsClubs.get(0).getId());
-            pictureMapper.insert(cmsClubPicture);
+            if(pictureMapper.insert(cmsClubPicture)==0){
+                Asserts.fail();
+            }
 
             return cmsClubCreateApply;
         }
@@ -240,7 +251,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //更新申请记录
             cmsClubCreateApply.setHandleAt(new Date());
             cmsClubCreateApply.setState(ApplyStateEnum.REJECTED.getValue());
-            clubCreateApplyMapper.updateByPrimaryKeySelective(cmsClubCreateApply);
+            if(clubCreateApplyMapper.updateByPrimaryKeySelective(cmsClubCreateApply)==0){
+                Asserts.fail();
+            }
             return cmsClubCreateApply;
         }
         return cmsClubCreateApply;

@@ -4,6 +4,7 @@ import edu.fzu.zhishe.cms.model.CmsChiefChangeApply;
 import edu.fzu.zhishe.cms.model.CmsClubDisbandApply;
 import edu.fzu.zhishe.cms.model.CmsOfficialChangeApply;
 import edu.fzu.zhishe.common.api.CommonPage;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
@@ -49,7 +50,9 @@ public class CmsApplyAuditController {
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
     public ResponseEntity<Object> createClub(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
-        applyAuditService.createClub(cmsClubsCreationsParam);
+        if(applyAuditService.createClub(cmsClubsCreationsParam)==0){
+            Asserts.fail();
+        }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -34,7 +34,7 @@ import java.util.List;
  */
 public interface CmsApplyAuditService {
 
-    CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
+    int createClub(CmsClubsCreationsParam clubsCreationsParam);
 
     List<CmsClubsCreationsDTO> listClubCreationApply(
         CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam queryParam);
