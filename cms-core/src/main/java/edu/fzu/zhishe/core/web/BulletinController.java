@@ -95,7 +95,12 @@ public class BulletinController {
 
     public ResponseEntity<Object> updateBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
+        @PathVariable("club") Integer clubId,
         @PathVariable("bulletinId") Integer bulletinId) {
+
+        if (bulletinService.getBulletin(clubId,bulletinId) == null) {
+            Asserts.fail("操作失败！");
+        }
 
         if (bulletinService.updateBulletin(bulletinId, bulletinParam) == 0) {
             Asserts.fail("操作失败！");
