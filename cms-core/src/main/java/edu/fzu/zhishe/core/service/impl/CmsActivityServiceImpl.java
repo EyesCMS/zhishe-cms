@@ -19,6 +19,7 @@ import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsActivityService;
+import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @Autowired
     private FmsPostMapper postMapper;
+
+    @Autowired
+    private CreditService creditService;
 
     @Override
     public void activityApply(CmsClubActivityParam param) {
@@ -130,7 +134,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
                 if (postMapper.insertSelective(post) == 0) {
                     Asserts.fail("发布活动时创建帖子失败");
                 }
-
+                creditService.getCreditByActivity(club.getId());
                 return;
             }
         }
