@@ -54,6 +54,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject);
     }
 
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<JSONObject> handleException(StorageFileNotFoundException ex) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject);
+    }
+
     @ExceptionHandler({BindException.class, ConstraintViolationException.class})
     public ResponseEntity<JSONObject> validatorExceptionHandler(Exception e) {
         String msg = e instanceof BindException ? msgConverter(((BindException) e).getBindingResult())
