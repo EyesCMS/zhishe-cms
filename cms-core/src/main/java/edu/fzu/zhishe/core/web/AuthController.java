@@ -3,6 +3,7 @@ package edu.fzu.zhishe.core.web;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
@@ -70,7 +71,9 @@ public class AuthController {
         String token = userService
             .login(userLoginParam.getUsername(), userLoginParam.getPassword());
         if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("message", "invalid username or password");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(jsonObject);
         }
         Map<String, String> tokenMap = new HashMap<>(2);
         tokenMap.put("token", token);

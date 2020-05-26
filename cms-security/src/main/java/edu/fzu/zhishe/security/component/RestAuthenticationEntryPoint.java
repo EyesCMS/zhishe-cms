@@ -25,7 +25,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
         response.getWriter().println(JSONUtil.parse(ErrorResponseBody.unauthorized(authException.getMessage())));
-            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().flush();
     }
 }
