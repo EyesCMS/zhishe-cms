@@ -1,17 +1,16 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
+import edu.fzu.zhishe.cms.mapper.CmsClubGradeMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
-import edu.fzu.zhishe.cms.mapper.CmsUserClubRelMapper;
 import edu.fzu.zhishe.cms.model.CmsClub;
-import edu.fzu.zhishe.cms.model.CmsClubExample;
-import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
+import edu.fzu.zhishe.cms.model.CmsClubGrade;
 import edu.fzu.zhishe.core.service.CmsCreditCacheService;
+import edu.fzu.zhishe.core.util.CreditUtil;
 import edu.fzu.zhishe.core.util.RedisKeyUtil;
 import edu.fzu.zhishe.security.service.RedisService;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,8 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
 
     @Autowired
     CmsClubMapper clubMapper;
+    @Autowired
+    CmsClubGradeMapper clubGradeMapper;
 
     @Override
     public boolean incrTodayCredit(Integer clubId, Integer userId, Long credit) {
@@ -47,6 +48,11 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
     @Override
     @Transactional(rollbackFor = Throwable.class)
     public void storeToDatabase() {
+
+        List<Integer> lowerBounds = clubGradeMapper.selectByExample(null)
+            .stream()
+            .map(CmsClubGrade::getLowerLimit)
+            .collect(Collectors.toList());
 
         String redisKey = redisDatabase + ":" + redisKeyCreditToday;
         Map<Object, Object> creditTodayMap = redisService.hGetAll(redisKey);
@@ -61,7 +67,9 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
             if (oldClub != null) {
                 CmsClub newRecord = new CmsClub();
                 newRecord.setId(clubId);
-                newRecord.setCredit(oldClub.getCredit() + creditDelta);
+                int newCredit = oldClub.getCredit() + creditDelta;
+                newRecord.setCredit(newCredit);
+                newRecord.setGradeId(CreditUtil.getGradeByCredit(lowerBounds, newCredit));
                 clubMapper.updateByPrimaryKeySelective(newRecord);
             }
             // 鸵鸟策略：忽略对错误的处理

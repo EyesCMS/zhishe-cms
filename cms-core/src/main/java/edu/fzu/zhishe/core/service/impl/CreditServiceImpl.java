@@ -8,17 +8,16 @@ import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.UserHonorDTO;
-import edu.fzu.zhishe.core.param.CreditForCheckinParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.CreditUtil;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * @author yang on 5/18/2020.
@@ -59,8 +58,12 @@ public class CreditServiceImpl implements CreditService {
         int oldCredit = cmsUserClubRel.getCredit();
         oldCredit += credit;
         cmsUserClubRel.setCredit(oldCredit);
-        CmsUserClubRel newUserClubRel = honorCalculate(cmsUserClubRel);
-        if(cmsUserClubRelMapper.updateByPrimaryKeySelective(newUserClubRel) == 0){
+        List<Integer> lowerBounds = cmsMemberHonorMapper.selectByExample(null)
+            .stream()
+            .map(CmsMemberHonor::getLowerLimit)
+            .collect(Collectors.toList());
+        cmsUserClubRel.setHonorId(CreditUtil.getGradeByCredit(lowerBounds, oldCredit));
+        if(cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel) == 0){
             Asserts.fail();
         }
 
@@ -212,8 +215,12 @@ public class CreditServiceImpl implements CreditService {
         int oldCredit = cmsClub.getCredit();
         oldCredit += credit;
         cmsClub.setCredit(oldCredit);
-        CmsClub newCmsClub = clubCreditCalculate(cmsClub);
-        if(cmsClubMapper.updateByPrimaryKeySelective(newCmsClub) == 0){
+        List<Integer> lowerBounds = cmsClubGradeMapper.selectByExample(null)
+            .stream()
+            .map(CmsClubGrade::getLowerLimit)
+            .collect(Collectors.toList());
+        cmsClub.setGradeId(CreditUtil.getGradeByCredit(lowerBounds, credit));
+        if(cmsClubMapper.updateByPrimaryKeySelective(cmsClub) == 0){
             Asserts.fail();
         }
     }
