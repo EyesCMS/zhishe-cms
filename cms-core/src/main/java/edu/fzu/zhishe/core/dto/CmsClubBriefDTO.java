@@ -20,6 +20,9 @@ public class CmsClubBriefDTO {
     @ApiModelProperty(value = "头像链接")
     private String avatarUrl;
 
+    @ApiModelProperty(value = "加入状态")
+    private String joinState;
+
     public Integer getId() {
         return id;
     }
@@ -66,5 +69,13 @@ public class CmsClubBriefDTO {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getJoinState() {
+        return joinState;
+    }
+
+    public void setJoinState(String joinState) {
+        this.joinState = joinState;
     }
 }

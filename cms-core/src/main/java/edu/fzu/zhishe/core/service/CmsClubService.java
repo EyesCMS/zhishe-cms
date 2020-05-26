@@ -26,7 +26,7 @@ public interface CmsClubService {
     List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam);
 
     /**
-     * 获取所有社团列表
+     * 获取所有社团列表/模糊搜索社团
      */
     List<CmsClubBriefDTO> listClub(PaginationParam paginationParam, OrderByParam orderByParam, String keyword, String type, Integer state);
 

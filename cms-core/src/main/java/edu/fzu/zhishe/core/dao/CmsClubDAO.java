@@ -14,16 +14,21 @@ import org.apache.ibatis.annotations.Param;
 public interface CmsClubDAO {
 
     /**
-     * 获取人气推荐社团
+     * 获取推荐社团列表
+     * @param orderByParam 排序规则参数
+     * @return List<CmsClubBriefDTO> if success
      */
     List<CmsClubBriefDTO> listHotClub(@Param("orderBy") OrderByParam orderByParam);
 
     /**
-     * 模糊搜索社团
+     * 获取所有社团列表/模糊搜索社团
+     * @param keyword 社团名称关键字
+     * @param type 社团类型
+     * @param state 社团（删除）状态
+     * @return List<CmsClubBriefDTO> if success
      */
     List<CmsClubBriefDTO> listClub(@Param("keyword") String keyword,@Param("type") String type,
                                    @Param("state") Integer state);
-
 
     /**
      * 加入社团列表

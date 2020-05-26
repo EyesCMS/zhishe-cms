@@ -120,7 +120,16 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     public List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return clubDAO.listHotClub(orderByParam);
+        List<CmsClubBriefDTO> list = clubDAO.listHotClub(orderByParam);
+        for (CmsClubBriefDTO club : list) {
+            if (!isClubMember(club.getId())) {
+                club.setJoinState("已加入");
+            }
+            else {
+                club.setJoinState("未加入");
+            }
+        }
+        return list;
     }
 
     /**获取所有社团列表*/
@@ -128,7 +137,16 @@ public class CmsClubServiceImpl implements CmsClubService {
     public List<CmsClubBriefDTO> listClub(PaginationParam paginationParam,
         OrderByParam orderByParam, String keyword, String type, Integer state) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return clubDAO.listClub(keyword,type,state);
+        List<CmsClubBriefDTO> list = clubDAO.listClub(keyword,type,state);
+        for (CmsClubBriefDTO club : list) {
+            if (!isClubMember(club.getId())) {
+                club.setJoinState("已加入");
+            }
+            else {
+                club.setJoinState("未加入");
+            }
+        }
+        return list;
     }
 
     /**根据社团ID查找社团*/

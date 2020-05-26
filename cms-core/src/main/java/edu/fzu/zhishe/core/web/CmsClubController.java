@@ -59,7 +59,7 @@ public class CmsClubController {
                                                                            OrderByParam orderByParam,
                                                                            @RequestParam(value = "keyword", required = false) String keyword,
                                                                            @RequestParam(value = "type", required = false) String type,
-                                                                           @RequestParam(value = "state", required = false) Integer state){
+                                                                           @RequestParam(value = "state", required = false) Integer state) {
         return ok(CommonPage.restPage(clubService.listClub(paginationParam, orderByParam, keyword, type, state)));
     }
 
@@ -68,8 +68,8 @@ public class CmsClubController {
     public ResponseEntity<CommonPage<CmsClubBriefDTO>> joinedClubList(@Validated PaginationParam paginationParam,
                                                                       OrderByParam orderByParam,
                                                                       @PathVariable(value = "userId") Integer userId,
-                                                                      @RequestParam(value = "status") String status){
-        if(ClubStatueEnum.MEMBER.getMsg().equals(status)){
+                                                                      @RequestParam(value = "status") String status) {
+        if (ClubStatueEnum.MEMBER.getMsg().equals(status)) {
             return ok(CommonPage.restPage(clubService.listJoinedClub(paginationParam, orderByParam, userId)));
         } else {
             return ok(CommonPage.restPage(clubService.listManagedClub(paginationParam, orderByParam, userId)));
@@ -169,7 +169,7 @@ public class CmsClubController {
     public ResponseEntity<Object> uploadPicture(@PathVariable("clubId") Integer clubId,
                                                 @RequestParam("image") MultipartFile[] image) {
         String[] url = {null,null,null,null,null};
-        for(int i = 0; i < image.length; i++){
+        for(int i = 0; i < image.length; i ++) {
             if(image[i] != null && i < 5) {
                 url[i] = storageService.store(image[i], imageRootLocation);
             }
