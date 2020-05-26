@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.common.exception;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -67,6 +70,19 @@ public class GlobalExceptionHandler {
             : msgConverter(((ConstraintViolationException) e).getConstraintViolations());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("message", msg);
+        return ResponseEntity.badRequest().body(jsonObject);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<JSONObject> methodArgumentNotValidHandler(MethodArgumentNotValidException e) {
+        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+        String message = "method argument does not valid";
+        if (CollUtil.isNotEmpty(allErrors)) {
+            ObjectError objectError = allErrors.get(0);
+            message = objectError.getDefaultMessage();
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", message);
         return ResponseEntity.badRequest().body(jsonObject);
     }
 
