@@ -185,7 +185,7 @@ public class FmsForumServiceImpl implements FmsForumService {
 
         Integer userId = currentUser.getId();
         if (!remark.getUserId().equals(userId)) {
-            Asserts.unAuthorized();
+            Asserts.forbidden();
         }
         return remarkMapper.deleteByPrimaryKey(id);
     }

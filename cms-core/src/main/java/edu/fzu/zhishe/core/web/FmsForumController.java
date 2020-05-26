@@ -161,8 +161,8 @@ public class FmsForumController {
 
     @ApiOperation(" 8.3 删除某一评论 ")
     @RequestMapping(value = "/posts/remarks/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Object> createRemark(@PathVariable("id") Long postId) {
-        if (forumService.deleteRemark(postId) == 0) {
+    public ResponseEntity<Object> createRemark(@PathVariable("id") Long id) {
+        if (forumService.deleteRemark(id) == 0) {
             Asserts.fail();
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

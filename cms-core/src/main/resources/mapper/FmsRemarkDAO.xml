@@ -3,7 +3,8 @@
 <mapper namespace="edu.fzu.zhishe.core.dao.FmsRemarkDAO">
 
   <resultMap id="PostResultMap" type="edu.fzu.zhishe.core.dto.FmsRemarkDTO">
-    <id column="id" jdbcType="INTEGER" property="userId" />
+    <id column="r_id" jdbcType="INTEGER" property="id" />
+    <id column="u_id" jdbcType="INTEGER" property="userId" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="content" jdbcType="VARCHAR" property="content" />
@@ -12,7 +13,8 @@
 
   <select id="listRemarkByPostId" parameterType="java.lang.Long" resultMap="PostResultMap">
     SELECT
-     u.id,
+     r.id AS r_id,
+     u.id AS u_id,
      u.nickname,
      u.avatar_url,
      r.content,
