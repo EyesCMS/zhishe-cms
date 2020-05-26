@@ -11,7 +11,7 @@ import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import java.util.List;
 
-/*
+/**
  * @author PSF 2020/04/27
  */
 public interface CmsActivityService {

@@ -1,6 +1,4 @@
 package edu.fzu.zhishe.core.web;
-
-
 import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
@@ -26,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 /**
  * 社团管理

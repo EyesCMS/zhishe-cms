@@ -52,7 +52,9 @@ public class CmsActivityController {
     @ApiOperation(" 6.3 活动申请审核 ")
     @PutMapping("/activities/audit")
     public ResponseEntity<Object> activityAudit(@RequestBody JSONObject object){
-        if((Integer)object.get("id") == null || (Integer)object.get("state") == 0) {
+        Integer id = (Integer)object.get("id");
+        Integer state = (Integer)object.get("state");
+        if(id == null || state == 0) {
             Asserts.fail("请输入id和state");
         }
         clubService.activityStateChange((Integer)object.get("id"),
@@ -63,7 +65,9 @@ public class CmsActivityController {
     @ApiOperation(" 6.4 修改社团活动状态 ")
     @PutMapping("/activities/state")
     public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object){
-        if((Integer)object.get("id") == null || (Integer)object.get("state") == 0) {
+        Integer id = (Integer)object.get("id");
+        Integer state = (Integer)object.get("state");
+        if(id == null || state == 0) {
             Asserts.fail("请输入id和state");
         }
         clubService.activityStateChange((Integer) object.get("id"),

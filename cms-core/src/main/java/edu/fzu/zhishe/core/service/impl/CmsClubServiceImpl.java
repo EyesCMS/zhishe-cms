@@ -116,14 +116,14 @@ public class CmsClubServiceImpl implements CmsClubService {
         return ClubStatueEnum.MEMBER;
     }
 
-    //获取推荐社团列表
+    /**获取推荐社团列表*/
     @Override
     public List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listHotClub(orderByParam);
     }
 
-    //获取所有社团列表
+    /**获取所有社团列表*/
     @Override
     public List<CmsClubBriefDTO> listClub(PaginationParam paginationParam,
         OrderByParam orderByParam, String keyword, String type, Integer state) {
@@ -131,7 +131,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClub(keyword,type,state);
     }
 
-    //根据社团ID查找社团
+    /**根据社团ID查找社团*/
     @Override
     public CmsClubDetailDTO getClubById(Integer id) {
             CmsClub club = clubMapper.selectByPrimaryKey(id);
@@ -150,14 +150,14 @@ public class CmsClubServiceImpl implements CmsClubService {
             return data;
     }
 
-    //获取加入的社团列表（社团内身份为社员）
+    /**获取加入的社团列表（社团内身份为社员）*/
     @Override
     public List<CmsClubBriefDTO> listJoinedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listJoinedClub(orderByParam, userId);
     }
 
-    //获取管理的社团列表（社团内身份为社长）
+    /**获取管理的社团列表（社团内身份为社长）*/
     @Override
     public List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
 
@@ -165,7 +165,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listManagedClub(orderByParam, userId);
     }
 
-    //获取加入社团申请列表（学生查看自己发出的加入社团申请）
+    /**获取加入社团申请列表（学生查看自己发出的加入社团申请）*/
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
@@ -178,7 +178,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listJoinClubApply(orderByParam, currentUser.getId());
     }
 
-    //获取创建社团申请列表（学生查看自己发出的创建社团申请）
+    /**获取创建社团申请列表（学生查看自己发出的创建社团申请）*/
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
@@ -191,7 +191,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listCreateClubApply(orderByParam, currentUser.getId());
     }
 
-    //查看社员列表
+    /**查看社员列表*/
     @Override
     @IsClubMember
     public List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId,
@@ -200,7 +200,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubDAO.listClubMember(clubId, clubMemberQuery);
     }
 
-    //查看社员详细信息
+    /**查看社员详细信息*/
     @Override
     @IsClubMember
     public CmsClubMemberDetailDTO getClubMemberInfo(Integer clubId, Integer userId) {
@@ -222,16 +222,16 @@ public class CmsClubServiceImpl implements CmsClubService {
         return data;
     }
 
-    //添加社员
+    /**添加社员*/
     @Override
-    @Transactional
+    @Transactional(rollbackFor = NullPointerException.class)
     public Integer addClubMember(Integer clubId, Integer userId){
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club == null){
             Asserts.fail("社团不存在");
         }
-        if(club.getDeleteStatus() == 1){
+        if (club.getDeleteStatus() == 1){
             Asserts.fail("社团已解散");
         }
         clubRel.setClubId(clubId);
@@ -245,16 +245,15 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKey(club);
     }
 
-    //删除社员
+    /**删除社员*/
     @Override
     @CheckClubAuth("3")
-    @Transactional
+    @Transactional(rollbackFor = NullPointerException.class)
     public Integer deleteClubMember(Integer clubId, Integer userId) {
-
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> rel = userClubRelMapper.selectByExample(example);
-        if(rel.size() == 0) {
+        if (rel.size() == 0) {
             Asserts.fail("the user is not a member of this club");
         }
         userClubRelMapper.deleteByExample(example);
@@ -263,7 +262,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKey(club);
     }
 
-    //修改社团信息接口
+    /**修改社团信息接口*/
     @Override
     @CheckClubAuth("3")
     public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
@@ -277,7 +276,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKeySelective(club);
     }
 
-    //修改社团头像
+    /**修改社团头像*/
     @Override
     @CheckClubAuth("3")
     public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl){
@@ -290,7 +289,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         return clubMapper.updateByPrimaryKeySelective(club);
     }
 
-    //获取社团走马灯图片
+    /**获取社团走马灯图片*/
     @Override
     public String[] getClubPicture(Integer clubId) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
@@ -300,7 +299,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             Asserts.fail("club is not existed");
         }
         CmsClubPicture picture = pictureList.get(0);
-        String urls[] = {null,null,null,null,null};
+        String[] urls = {null,null,null,null,null};
         if (picture.getClubId() != null) {
             urls[0] = picture.getPic1Url();
             urls[1] = picture.getPic2Url();
@@ -311,20 +310,19 @@ public class CmsClubServiceImpl implements CmsClubService {
         return urls;
     }
 
-    //修改社团走马灯图片
+    /**修改社团走马灯图片*/
     @Override
     @CheckClubAuth("3")
-    public Integer updateClubPictureUrl(Integer clubId, String[] pictureUrls){
-
+    public Integer updateClubPictureUrl(Integer clubId, String[] pictureUrls) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
         CmsClubPicture picture = pictureList.get(0);
-        for(int i = 0; i < pictureUrls.length; i++){
-            if(pictureUrls[i] == null || pictureUrls[i].length() == 0){
+        for (int i = 0; i < pictureUrls.length; i++) {
+            if (pictureUrls[i] == null || pictureUrls[i].length() == 0){
                 continue;
             }
-            switch (i){
+            switch (i) {
                 case 0:
                     picture.setPic1Url(pictureUrls[i]);
                     break;
