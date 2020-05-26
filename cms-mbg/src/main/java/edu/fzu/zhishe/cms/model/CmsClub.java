@@ -30,9 +30,6 @@ public class CmsClub implements Serializable {
     @ApiModelProperty(value = "社团类型")
     private String type;
 
-    @ApiModelProperty(value = "等级")
-    private Integer grade;
-
     @ApiModelProperty(value = "社团积分")
     private Integer credit;
 
@@ -119,14 +116,6 @@ public class CmsClub implements Serializable {
         this.type = type;
     }
 
-    public Integer getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Integer grade) {
-        this.grade = grade;
-    }
-
     public Integer getCredit() {
         return credit;
     }
@@ -174,7 +163,6 @@ public class CmsClub implements Serializable {
         sb.append(", avatarUrl=").append(avatarUrl);
         sb.append(", officialState=").append(officialState);
         sb.append(", type=").append(type);
-        sb.append(", grade=").append(grade);
         sb.append(", credit=").append(credit);
         sb.append(", gradeId=").append(gradeId);
         sb.append(", createAt=").append(createAt);
