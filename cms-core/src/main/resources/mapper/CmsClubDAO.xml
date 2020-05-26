@@ -48,7 +48,7 @@
     WHERE
      delete_status != 1 AND club.chief_id = u.id
      ORDER BY
-     club.grade DESC
+     club.grade_id DESC
   </select>
 
   <select id="listClub" parameterType="java.lang.String"

@@ -228,6 +228,12 @@ public class CmsClubServiceImpl implements CmsClubService {
     public Integer addClubMember(Integer clubId, Integer userId){
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
+        if (club == null){
+            Asserts.fail("社团不存在");
+        }
+        if(club.getDeleteStatus() == 1){
+            Asserts.fail("社团已解散");
+        }
         clubRel.setClubId(clubId);
         clubRel.setUserId(userId);
         clubRel.setCredit(0);
