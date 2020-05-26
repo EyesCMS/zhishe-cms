@@ -63,6 +63,10 @@ public class CreditServiceImpl implements CreditService {
         if(cmsUserClubRelMapper.updateByPrimaryKeySelective(newUserClubRel) == 0){
             Asserts.fail();
         }
+
+        // store today's credit to cache
+        creditCacheService.incrTodayCredit(
+            cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId(), (long) credit);
     }
 
     @Override
@@ -96,11 +100,6 @@ public class CreditServiceImpl implements CreditService {
             CmsUserClubRel userClubRel = userClubRelList.get(0);
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
-
-            // store today's credit to cache
-            creditCacheService.incrTodayCredit(
-                userClubRel.getClubId(), userClubRel.getUserId(),
-                (long) CreditEnum.CHECKIN.getValue());
         }
 
     }
