@@ -4,7 +4,7 @@ import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.cms.model.CmsClubGrade;
 import edu.fzu.zhishe.cms.model.CmsMemberHonor;
 import edu.fzu.zhishe.cms.model.CmsUserClubRel;
-import edu.fzu.zhishe.core.dto.UserHonorDTO;
+import edu.fzu.zhishe.core.dto.HonorDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,11 @@ public interface CreditService {
     /**
      * 获取当前用户活跃度
      */
-    UserHonorDTO getUserHonor(Integer clubId);
+    HonorDTO getUserHonor(Integer clubId);
+    /**
+     * 获取社团等级信息
+     */
+    HonorDTO getClubGrade(Integer clubId);
     /**
      * 获取用户活跃度规则信息
      */

@@ -56,6 +56,12 @@ public class CreditController {
         return ResponseEntity.ok().body(creditService.getUserHonor(clubId));
     }
 
+    @ApiOperation(" 10.4获取当前用户活跃度 ")
+    @GetMapping("/{clubId}/clubhonor")
+    public ResponseEntity<Object> getClubGrade( @PathVariable("clubId") Integer clubId){
+        return ResponseEntity.ok().body(creditService.getClubGrade(clubId));
+    }
+
     @ApiOperation(" 10.5获取用户活跃度规则信息 ")
     @GetMapping("/userhonor")
     public ResponseEntity<Object> getCreditRuleForUser(){

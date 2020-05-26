@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.dto;
 
-public class UserHonorDTO {
+public class HonorDTO {
 
     /**
      * grade : 冒泡

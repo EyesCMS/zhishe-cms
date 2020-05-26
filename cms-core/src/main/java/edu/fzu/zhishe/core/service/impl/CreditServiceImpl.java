@@ -7,7 +7,7 @@ import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
-import edu.fzu.zhishe.core.dto.UserHonorDTO;
+import edu.fzu.zhishe.core.dto.HonorDTO;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.CreditUtil;
@@ -174,7 +174,7 @@ public class CreditServiceImpl implements CreditService {
     }
 
     @Override
-    public UserHonorDTO getUserHonor(Integer clubId) {
+    public HonorDTO getUserHonor(Integer clubId) {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
                 .andClubIdEqualTo(clubId);
@@ -193,11 +193,34 @@ public class CreditServiceImpl implements CreditService {
         double numerator = score-myHonor.getLowerLimit();
         double percent = (numerator/total)*100;
         int percentage = new Double(percent).intValue();
-        UserHonorDTO userHonorDTO = new UserHonorDTO();
-        userHonorDTO.setGrade(grade);
-        userHonorDTO.setScore(score);
-        userHonorDTO.setPercentage(percentage);
-        return userHonorDTO;
+        HonorDTO honorDTO = new HonorDTO();
+        honorDTO.setGrade(grade);
+        honorDTO.setScore(score);
+        honorDTO.setPercentage(percentage);
+        return honorDTO;
+    }
+
+    @Override
+    public HonorDTO getClubGrade(Integer clubId) {
+        CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
+        if(cmsClub == null){
+            Asserts.fail();
+        }
+        CmsClubGrade myGrade = cmsClubGradeMapper.selectByPrimaryKey(cmsClub.getGradeId());
+        if(myGrade == null){
+            Asserts.fail();
+        }
+        String grade = myGrade.getName();
+        int score = cmsClub.getCredit();
+        double total = myGrade.getUpperLimit()-myGrade.getLowerLimit();
+        double numerator = score-myGrade.getLowerLimit();
+        double percent = (numerator/total)*100;
+        int percentage = new Double(percent).intValue();
+        HonorDTO honorDTO = new HonorDTO();
+        honorDTO.setGrade(grade);
+        honorDTO.setScore(score);
+        honorDTO.setPercentage(percentage);
+        return honorDTO;
     }
 
     @Override
