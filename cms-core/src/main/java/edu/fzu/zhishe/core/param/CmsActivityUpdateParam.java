@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.param;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
@@ -11,8 +12,8 @@ import java.util.Date;
  * @author PSF(52260506 @ qq.com)
  * @
  */
+@Data
 public class CmsActivityUpdateParam {
-
 
     @ApiModelProperty(value = " 活动名称 ", required = true)
     @NotNull(message = " 活动名称不能为空 ")
@@ -38,28 +39,4 @@ public class CmsActivityUpdateParam {
 
     @ApiModelProperty(value = " 活动地点 ", required = true)
     private String location;
-
-    public String getName() {
-        return name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
 }

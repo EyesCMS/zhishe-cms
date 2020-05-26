@@ -21,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 /**
  * @author PSF(52260506 @ qq.com)
  * @
@@ -45,7 +47,7 @@ public class CmsActivityServiceImplTest {
         Integer activityIdNotExist = 999999;
         // 已删除的活动 id
         Integer deletedActivityId = 1;
-        // 社团帖子id
+        // 存在活动id
         Integer activityId = 2;
 
         // 创建活动申请
@@ -85,33 +87,34 @@ public class CmsActivityServiceImplTest {
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
-        // 存在的活动id
-        Integer activityIdNotExist = 999999;
-        // 社团帖子id
-        Integer activityId = 2;
+        // 存在的活动id，且社长为test
+        Integer activityIdExist = 5;
 
+        CmsActivityUpdateParam updateParam = new CmsActivityUpdateParam();
+        updateParam.setName("测试使用");
+        updateParam.setContent("测试使用");
+        updateParam.setTitle("测试使用");
+        updateParam.setEndDate(new Date());
+        updateParam.setStartDate(new Date());
 
-//        // 更新活动
-//        Assertions.assertDoesNotThrow(() -> {
-//            forumService.updatePost(personalPostId, postParam);
-//        }, " 帖子更新异常 ");
-//
-//        // 删除活动
-//        Assertions.assertDoesNotThrow(() -> {
-//            forumService.deletePost(personalPostId);
-//        }, " 帖子删除异常 ");
-//
-//
-//        // 发表评论
-//        Assertions.assertDoesNotThrow(() -> {
-//            FmsRemarkParam remarkParam = new FmsRemarkParam();
-//            remarkParam.setPostId(personalPostId2);
-//            forumService.saveRemark(remarkParam);
-//        }, " 发表评论异常 ");
-//
-//        // 删除评论
-//        Assertions.assertDoesNotThrow(() -> {
-//            forumService.deleteRemark(remarkId);
-//        }, " 删除评论异常 ");
+        // 更新活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.updateActivity(activityIdExist, updateParam);
+        }, " 活动更新异常 ");
+
+        // 获取活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.getActivityApplyItem(activityIdExist);
+        }, " 获取活动项异常 ");
+
+        // 获取活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.activityStateChange(activityIdExist, 2, UserRoleEnum.CHIEF);
+        }, " 改变活动状态异常 ");
+
+        // 删除活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.delActivity(activityIdExist);
+        }, " 删除活动异常 ");
     }
 }
