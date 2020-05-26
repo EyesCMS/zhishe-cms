@@ -51,10 +51,20 @@ public class CreditServiceImpl implements CreditService {
     CmsCreditCacheServiceImpl creditCacheService;
 
     //最高可获得积分评论数
-    private final int maxCommentCreditNum = 1;
+    private final int MAX_COMMENT_NUM = 1;
+
+    //最高可获得积分评论数
+    private final int MAX_CREDIT_ONEDAY = 50;
 
     @Override
     public void creditAdd(CmsUserClubRel cmsUserClubRel, int credit) {
+        Integer creditForToday = creditCacheService.getTodayCredit(cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId());
+        if(creditForToday != null){
+            if((creditForToday+credit)>MAX_CREDIT_ONEDAY){
+                System.out.println("超出每日积分上限");
+                return;
+            }
+        }
         int oldCredit = cmsUserClubRel.getCredit();
         oldCredit += credit;
         cmsUserClubRel.setCredit(oldCredit);
@@ -135,7 +145,7 @@ public class CreditServiceImpl implements CreditService {
                 .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
         List<FmsPostRemark> remarkList = fmsPostRemarkMapper.selectByExample(example);
         //没有评论或者同一帖子评论超过两条不增加积分
-        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() > maxCommentCreditNum){
+        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() > MAX_COMMENT_NUM){
             System.out.println("没有评论或者同一帖子评论超过两条不增加积分");
             return;
         }

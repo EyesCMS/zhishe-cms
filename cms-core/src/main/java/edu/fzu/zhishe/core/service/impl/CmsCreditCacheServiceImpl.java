@@ -46,6 +46,14 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
     }
 
     @Override
+    public Integer getTodayCredit(Integer clubId, Integer userId) {
+        String key = redisDatabase + ":" + redisKeyCreditToday;
+        String creditTodayKey = RedisKeyUtil.getCreditTodayKey(clubId, userId);
+        Integer credit = (Integer) redisService.hGet(key,creditTodayKey);
+        return credit;
+    }
+
+    @Override
     @Transactional(rollbackFor = Throwable.class)
     public void storeToDatabase() {
 
