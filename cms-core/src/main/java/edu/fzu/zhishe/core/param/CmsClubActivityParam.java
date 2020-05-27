@@ -2,6 +2,8 @@ package edu.fzu.zhishe.core.param;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Future;
@@ -14,6 +16,7 @@ import java.util.Date;
  * @author PSF(52260506 @ qq.com)
  * @
  */
+@Data
 public class CmsClubActivityParam {
 
     @ApiModelProperty(value = " 社团编号 ", required = true)
@@ -37,58 +40,15 @@ public class CmsClubActivityParam {
     @ApiModelProperty(value = " 活动开始时间 ", required = true)
     @Future
     @NotNull
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date startDate;
 
     @ApiModelProperty(value = " 活动结束时间 ", required = true)
     @Future
     @NotNull
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date endDate;
 
     @ApiModelProperty(value = " 活动地点 ")
     private String location;
-
-    @ApiModelProperty(value = " 活动图片 ")
-    private MultipartFile imgUrl;
-
-    public Integer getClubId() {
-        return clubId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public MultipartFile getImgUrl() {
-        return imgUrl;
-    }
-
-    public Integer getMemberCount() {
-        return memberCount;
-    }
-
-    public void setMemberCount(Integer memberCount) {
-        this.memberCount = memberCount;
-    }
 }

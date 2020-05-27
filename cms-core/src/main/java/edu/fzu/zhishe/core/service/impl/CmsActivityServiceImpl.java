@@ -32,6 +32,7 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author PSF 2020/04/27
@@ -60,8 +61,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Autowired
     private StorageService storageService;
 
+    @Autowired
+    StorageProperties storageProperties;
+
     @Override
-    public void activityApply(CmsClubActivityParam param) {
+    public void activityApply(CmsClubActivityParam param, MultipartFile imgUrl) {
         SysUser user = userService.getCurrentUser();
 
         if (param.getStartDate() == null || param.getEndDate() == null) {
@@ -99,11 +103,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         activity.setState(ActivityStateEnum.PENDING.getValue());
 
         //设置上传活动图片
-        StorageProperties storageProperties = new StorageProperties();
-        Path imageRootLocation = Paths.get(storageProperties.getImageLocation());
-        String url = storageService.store(param.getImgUrl(), imageRootLocation);
-        if (!StrUtil.isEmpty(url)) {
-            activity.setImgUrl(url);
+        if (imgUrl != null) {
+            Path imageRootLocation = Paths.get(storageProperties.getImageLocation());
+            String url = storageService.store(imgUrl, imageRootLocation);
+            if (!StrUtil.isEmpty(url)) {
+                activity.setImgUrl(url);
+            }
         }
 
         if (activityMapper.insert(activity) == 0) {

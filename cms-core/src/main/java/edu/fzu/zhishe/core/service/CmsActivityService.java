@@ -9,6 +9,8 @@ import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
 import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public interface CmsActivityService {
 
-    void activityApply(CmsClubActivityParam param);
+    void activityApply(CmsClubActivityParam param, MultipartFile imgUrl);
 
     void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role);
 

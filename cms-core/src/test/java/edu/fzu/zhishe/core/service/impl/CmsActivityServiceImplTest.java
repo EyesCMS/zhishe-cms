@@ -52,7 +52,7 @@ public class CmsActivityServiceImplTest {
 
         // 创建活动申请
         Assertions.assertThrows(AccessDeniedException.class, () -> {
-            activityService.activityApply(new CmsClubActivityParam());
+            activityService.activityApply(new CmsClubActivityParam(), null);
         }, " 非社长，却可以创建活动 ");
 
 
