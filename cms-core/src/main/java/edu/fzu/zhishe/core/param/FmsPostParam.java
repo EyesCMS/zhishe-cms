@@ -10,12 +10,10 @@ public class FmsPostParam {
     /**
      * title : 这是一个帖子
      * content : 这是内容
-     * imgUrl: https://xxxx/xxx.png
      */
 
     private String title;
     private String content;
-    private String imgUrl;
 
     public String getTitle() {
         return title;
@@ -33,11 +31,4 @@ public class FmsPostParam {
         this.content = content;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
 }

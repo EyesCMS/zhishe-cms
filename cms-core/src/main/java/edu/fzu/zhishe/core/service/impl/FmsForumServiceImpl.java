@@ -21,12 +21,14 @@ import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.FmsUserLikeService;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/25/2020.
@@ -41,6 +43,9 @@ public class FmsForumServiceImpl implements FmsForumService {
 
     @Autowired
     private FmsPostMapper postMapper;
+
+    @Autowired
+    StorageService storageService;
 
     @Autowired
     private FmsRemarkDAO remarkDAO;
@@ -92,14 +97,16 @@ public class FmsForumServiceImpl implements FmsForumService {
 
     @IsLogin
     @Override
-    public int savePost(FmsPostParam postParam) {
+    public int savePost(FmsPostParam postParam, MultipartFile imageFile) {
+
+        String imgUrl = storageService.storeImage(imageFile);
 
         FmsPost post = new FmsPost();
         post.setPosterId(userService.getCurrentUser().getId());
         post.setType(PostTypeEnum.PERSONAL.getValue());
         post.setTitle(postParam.getTitle());
         post.setContent(postParam.getContent());
-        post.setImgUrl(postParam.getImgUrl());
+        post.setImgUrl(imgUrl);
         post.setCreateAt(new Date());
         post.setDeleteState(DeleteStateEnum.Existence.getValue());
         return postMapper.insertSelective(post);
@@ -125,7 +132,6 @@ public class FmsForumServiceImpl implements FmsForumService {
         post.setId(id);
         post.setTitle(postParam.getTitle());
         post.setContent(postParam.getContent());
-        post.setImgUrl(postParam.getImgUrl());
         return postMapper.updateByPrimaryKeySelective(post);
     }
 

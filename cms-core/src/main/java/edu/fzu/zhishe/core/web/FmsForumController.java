@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/30/2020.
@@ -110,9 +111,10 @@ public class FmsForumController {
 
     @ApiOperation(" 7.4 发布个人帖 ")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
-    public ResponseEntity<Object> savePost(@RequestBody FmsPostParam postParam) {
+    public ResponseEntity<Object> savePost(FmsPostParam postParam,
+                                            @RequestParam("image") MultipartFile multipartFile) {
 
-        if (forumService.savePost(postParam) == 0) {
+        if (forumService.savePost(postParam, multipartFile) == 0) {
             Asserts.fail();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();

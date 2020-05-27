@@ -7,6 +7,7 @@ import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/25/2020.
@@ -22,7 +23,7 @@ public interface FmsForumService {
 
     FmsPostDTO getActivityPostById(Integer id);
 
-    int savePost(FmsPostParam postParam);
+    int savePost(FmsPostParam postParam, MultipartFile imageFile);
 
     int updatePost(Long id, FmsPostParam postParam);
 
