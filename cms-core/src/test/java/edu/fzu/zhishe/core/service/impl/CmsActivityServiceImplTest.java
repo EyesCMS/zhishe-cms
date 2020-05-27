@@ -51,7 +51,7 @@ public class CmsActivityServiceImplTest {
         Integer activityId = 2;
 
         // 创建活动申请
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
             activityService.activityApply(new CmsClubActivityParam());
         }, " 非社长，却可以创建活动 ");
 
@@ -65,7 +65,7 @@ public class CmsActivityServiceImplTest {
         }, " 非社长，却可以修改活动申请状态 ");
 
 
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
             activityService.delActivity(activityIdNotExist);
         }, " 不存在的活动，却可以删除 ");
 
