@@ -1,11 +1,13 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.CmsActivityMapper;
 import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
@@ -20,7 +22,11 @@ import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsActivityService;
 import edu.fzu.zhishe.core.service.CreditService;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +56,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @Autowired
     private CreditService creditService;
+
+    @Autowired
+    private StorageService storageService;
 
     @Override
     public void activityApply(CmsClubActivityParam param) {
@@ -87,8 +96,16 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         BeanUtils.copyProperties(param, activity);
         activity.setBody(param.getContent());
         activity.setCreateAt(new Date());
-
         activity.setState(ActivityStateEnum.PENDING.getValue());
+
+        //设置上传活动图片
+        StorageProperties storageProperties = new StorageProperties();
+        Path imageRootLocation = Paths.get(storageProperties.getImageLocation());
+        String url = storageService.store(param.getImgUrl(), imageRootLocation);
+        if (!StrUtil.isEmpty(url)) {
+            activity.setImgUrl(url);
+        }
+
         if (activityMapper.insert(activity) == 0) {
             Asserts.fail("数据库插入失败创建申请活动失败");
         }

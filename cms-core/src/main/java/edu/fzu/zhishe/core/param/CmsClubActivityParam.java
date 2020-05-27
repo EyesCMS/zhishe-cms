@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.param;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
@@ -49,10 +50,7 @@ public class CmsClubActivityParam {
     private String location;
 
     @ApiModelProperty(value = " 活动图片 ")
-    private String imgUrl;
-
-    @ApiModelProperty(value = " 活动附件 ")
-    private String accessoryUrl;
+    private MultipartFile imgUrl;
 
     public Integer getClubId() {
         return clubId;
@@ -82,12 +80,8 @@ public class CmsClubActivityParam {
         return location;
     }
 
-    public String getImgUrl() {
+    public MultipartFile getImgUrl() {
         return imgUrl;
-    }
-
-    public String getAccessoryUrl() {
-        return accessoryUrl;
     }
 
     public Integer getMemberCount() {
