@@ -12,8 +12,6 @@ import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dao.*;
-
-
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
@@ -21,14 +19,14 @@ import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
-
 import java.util.*;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
+import edu.fzu.zhishe.core.error.ClubErrorEnum;
 
 /**
  * 社团管理服务层
@@ -261,10 +259,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club == null) {
-            Asserts.fail("社团不存在");
+            Asserts.fail(PostErrorEnum.CLUB_NOT_EXIST);
         }
         if (club.getDeleteStatus() == 1) {
-            Asserts.fail("社团已解散");
+            Asserts.fail(PostErrorEnum.CLUB_ALREADY_DISBAND);
         }
         clubRel.setClubId(clubId);
         clubRel.setUserId(userId);
@@ -286,7 +284,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> rel = userClubRelMapper.selectByExample(example);
         if (rel.size() == 0) {
-            Asserts.fail("the user is not a member of this club");
+            Asserts.fail(ClubErrorEnum.USER_NOT_IN);
         }
         userClubRelMapper.deleteByExample(example);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
@@ -300,7 +298,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
 
         if (StrUtil.isEmpty(clubInfoParam.getType())) {
-            Asserts.fail("社团类型不能为空！");
+            Asserts.fail(ClubErrorEnum.EMPTY_TYPE);
         }
         CmsClub club = new CmsClub();
         club.setId(clubId);
@@ -314,7 +312,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl) {
 
         if (StrUtil.isEmpty(avatarUrl)) {
-            Asserts.fail("输入不能为空！");
+            Asserts.fail(ClubErrorEnum.EMPTY_FILLED);
         }
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         club.setAvatarUrl(avatarUrl);
@@ -328,7 +326,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
         if (CollUtil.isEmpty(pictureList)) {
-            Asserts.fail("club is not existed");
+            Asserts.fail(PostErrorEnum.CLUB_NOT_EXIST);
         }
         CmsClubPicture picture = pictureList.get(0);
         String[] urls = {null,null,null,null,null};
@@ -371,7 +369,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                     picture.setPic5Url(pictureUrls[i]);
                     break;
                 default:
-                    Asserts.fail("输入参数有误！");
+                    Asserts.fail(ClubErrorEnum.WRONG_FILLED);
             }
         }
         return pictureMapper.updateByPrimaryKeySelective(picture);

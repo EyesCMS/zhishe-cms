@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 /**
  * 社团管理
  * @author wjh674
@@ -174,7 +174,7 @@ public class CmsClubController {
 
         String url = storageService.store(image, imageRootLocation);
         if (clubService.updateClubAvatarUrl(clubId, url) == 0) {
-            Asserts.fail("update avatar failed");
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("avatarUrl", url);
@@ -201,7 +201,7 @@ public class CmsClubController {
             }
         }
         if (clubService.updateClubPictureUrl(clubId, url) == 0) {
-            Asserts.fail("update picture failed");
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("url", url);
