@@ -4,6 +4,8 @@ import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.annotation.IsLogin;
+import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.FmsPostQuery;
@@ -53,9 +55,9 @@ public class FmsForumController {
             @RequestParam(value = "type") Integer type,
             FmsPostQuery postQuery) {
         List<FmsPostDTO> postList = null;
-        if (type == 0) {
+        if (type.equals(PostTypeEnum.PERSONAL.getValue())) {
              postList = forumService.listPersonalPost(null, paginationParam, postQuery);
-        } else if (type == 1) {
+        } else if (type.equals(PostTypeEnum.ACTIVITY.getValue())) {
             postList = forumService.listActivityPost(null, paginationParam, postQuery);
         } else {
             Asserts.fail("parameter 'originState' can only be assigned with 0 or 1");
@@ -69,9 +71,9 @@ public class FmsForumController {
             @PathVariable("id") Integer id, @RequestParam(value = "type") Integer type) {
         Optional<FmsPostDTO> postDTO;
         // 需要通过 type 来区分发帖人（用户名和头像）
-        if (type == 0) {
+        if (type.equals(PostTypeEnum.PERSONAL.getValue())) {
             postDTO = Optional.ofNullable(forumService.getPersonalPostById(id));
-        } else if (type == 1) {
+        } else if (type.equals(PostTypeEnum.ACTIVITY.getValue())) {
             postDTO = Optional.ofNullable(forumService.getActivityPostById(id));
         } else {
             postDTO = Optional.empty();

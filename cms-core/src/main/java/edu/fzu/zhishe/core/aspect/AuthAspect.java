@@ -16,9 +16,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -46,8 +48,20 @@ public class AuthAspect {
     @Autowired
     CmsUserClubRelMapper userClubRelMapper;
 
+    @Pointcut("@annotation(edu.fzu.zhishe.core.annotation.IsLogin)")
+    public void checkLogin() { }
+
+
     @Pointcut("@annotation(edu.fzu.zhishe.core.annotation.CheckClubAuth)")
     public void checkAuth() { }
+
+    @Before("checkLogin()")
+    public void checkLogin(JoinPoint joinPoint) {
+        SysUser currentUser = userService.getCurrentUser();
+        if (currentUser == null) {
+            Asserts.unAuthorized();
+        }
+    }
 
     /**
      * WARN: method annotated with this MUST has parameter named 'clubId'
@@ -148,7 +162,7 @@ public class AuthAspect {
             break;
         }
 
-        log.info("Authorized admin user: {}", currentUser.getUsername());
+        log.info("Authorized club member: {}", currentUser.getUsername());
         return joinPoint.proceed();
     }
 }

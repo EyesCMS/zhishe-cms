@@ -9,6 +9,7 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
 import edu.fzu.zhishe.core.dao.*;
 
@@ -184,29 +185,25 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     /**获取加入社团申请列表（学生查看自己发出的加入社团申请）*/
+    @IsLogin
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
-        SysUser currentUser = sysUserService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listJoinClubApply(orderByParam, currentUser.getId());
+        return clubDAO.listJoinClubApply(orderByParam, sysUserService.getCurrentUser().getId());
     }
 
     /**获取创建社团申请列表（学生查看自己发出的创建社团申请）*/
+    @IsLogin
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
             PaginationParam paginationParam, OrderByParam orderByParam) {
-        SysUser currentUser = sysUserService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
-        return clubDAO.listCreateClubApply(orderByParam, currentUser.getId());
+        return clubDAO.listCreateClubApply(orderByParam, sysUserService.getCurrentUser().getId());
     }
 
     /**查看社员列表*/

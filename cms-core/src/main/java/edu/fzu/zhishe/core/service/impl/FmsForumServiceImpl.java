@@ -7,6 +7,7 @@ import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsPostRemark;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
@@ -53,10 +54,9 @@ public class FmsForumServiceImpl implements FmsForumService {
     FmsUserLikeService userLikeService;
 
     private FmsPostDTO queryLikeCount(FmsPostDTO post) {
-        if (post == null) {
-            return null;
+        if (post != null) {
+            post.setLikeCount(userLikeService.getPostLikeCount(post.getId()));
         }
-        post.setLikeCount(userLikeService.getPostLikeCount(post.getId()));
         return post;
     }
 
@@ -89,14 +89,12 @@ public class FmsForumServiceImpl implements FmsForumService {
         return queryLikeCount(postDAO.getActivityPostById(id));
     }
 
+    @IsLogin
     @Override
     public int savePost(FmsPostParam postParam) {
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
+
         FmsPost post = new FmsPost();
-        post.setPosterId(currentUser.getId());
+        post.setPosterId(userService.getCurrentUser().getId());
         post.setType(PostTypeEnum.PERSONAL.getValue());
         post.setTitle(postParam.getTitle());
         post.setContent(postParam.getContent());
@@ -106,10 +104,11 @@ public class FmsForumServiceImpl implements FmsForumService {
         return postMapper.insertSelective(post);
     }
 
+    @IsLogin
     @Override
     public int updatePost(Long id, FmsPostParam postParam) {
         FmsPost oldPost = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(oldPost == null || oldPost.getDeleteState() == 1);
+        Asserts.notFound(oldPost == null || oldPost.getDeleteState() == DeleteStateEnum.Deleted.getValue());
 
         if (oldPost.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
             Asserts.fail("can't update activity post");
@@ -127,20 +126,17 @@ public class FmsForumServiceImpl implements FmsForumService {
         return postMapper.updateByPrimaryKeySelective(post);
     }
 
+    @IsLogin
     @Override
     public int deletePost(Long id) {
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
 
         FmsPost post = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(post == null || post.getDeleteState() == 1);
+        Asserts.notFound(post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue());
 
         if (post.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
             Asserts.fail("can't delete activity post");
         }
-        if (!currentUser.getId().equals(post.getPosterId())) {
+        if (!userService.getCurrentUser().getId().equals(post.getPosterId())) {
             Asserts.forbidden("你不是该贴的发帖人");
         }
 
@@ -150,22 +146,16 @@ public class FmsForumServiceImpl implements FmsForumService {
         return postMapper.updateByPrimaryKeySelective(newPost);
     }
 
+    @IsLogin
     @Override
     public int saveRemark(FmsRemarkParam remarkParam) {
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
 
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
-            Asserts.notFound();
-        }
+        Asserts.notFound(post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue());
 
-        SysUser user = userService.getCurrentUser();
         FmsPostRemark remark = new FmsPostRemark();
-        remark.setUserId(user.getId());
+        remark.setUserId(userService.getCurrentUser().getId());
         remark.setPostId(remarkParam.getPostId().intValue());
         remark.setContent(remarkParam.getContent());
         remark.setCreateAt(new Date());
@@ -173,17 +163,13 @@ public class FmsForumServiceImpl implements FmsForumService {
         return remarkMapper.insertSelective(remark);
     }
 
+    @IsLogin
     @Override
     public int deleteRemark(Long id) {
         FmsPostRemark remark = remarkMapper.selectByPrimaryKey(id);
         Asserts.notNull(remark);
 
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
-
-        Integer userId = currentUser.getId();
+        Integer userId = userService.getCurrentUser().getId();
         if (!remark.getUserId().equals(userId)) {
             Asserts.forbidden();
         }

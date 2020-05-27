@@ -2,6 +2,7 @@ package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
@@ -186,17 +187,14 @@ public class SysUserServiceImpl implements SysUserService {
         return userMapper.selectByExample(null);
     }
 
+    @IsLogin
     @Override
     public void updateUserByParam(SysUserUpdateParam updateParam) {
-        SysUser user = getCurrentUser();
-        if (user == null) {
-            Asserts.unAuthorized("请登录后修改信息");
-        }
 
         Asserts.hasFiled(updateParam);
 
         SysUser updatedUser = new SysUser();
-        updatedUser.setId(user.getId());
+        updatedUser.setId(getCurrentUser().getId());
         BeanUtils.copyProperties(updateParam, updatedUser);
 
         if (userMapper.updateByPrimaryKeySelective(updatedUser) == 0) {
