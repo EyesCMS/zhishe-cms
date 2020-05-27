@@ -126,8 +126,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             if (user.getIsAdmin() == 0) {
                 Asserts.forbidden("非管理员，权限不足");
             }
-            if (stateId.equals(ActivityStateEnum.ACTIVE.getValue()) ||
-                    stateId.equals(ActivityStateEnum.REJECTED.getValue())) {
+            if (stateId.equals(ActivityStateEnum.ACTIVE.getValue())
+                || stateId.equals(ActivityStateEnum.REJECTED.getValue())) {
+
                 activity.setState(stateId);
                 activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
@@ -139,7 +140,9 @@ public class CmsActivityServiceImpl implements CmsActivityService {
             if (club == null || !club.getChiefId().equals(user.getId())) {
                 Asserts.forbidden("非社长，权限不足");
             }
-            if (stateId.equals(ActivityStateEnum.PUBLISHED.getValue()) || stateId.equals(ActivityStateEnum.FINISHED.getValue())) {
+            if (stateId.equals(ActivityStateEnum.PUBLISHED.getValue())
+                || stateId.equals(ActivityStateEnum.FINISHED.getValue())) {
+
                 activity.setState(stateId);
                 activity.setHandleAt(new Date());
                 activityMapper.updateByPrimaryKey(activity);
@@ -186,9 +189,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     }
 
     @Override
-    public List<CmsActivityApplyDTO> listActivitiesApply(Integer clubId,
+    public List<CmsActivityApplyDTO> listActivitiesApply(
+        Integer clubId,
         CmsActivityQuery param,
         PaginationParam paginationParam, OrderByParam orderByParam) {
+
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         SysUser user = userService.getCurrentUser();
 
@@ -254,8 +259,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     }
 
     @Override
-    public List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
-        PaginationParam paginationParam, OrderByParam orderByParam) {
+    public List<CmsActivityApplyListDTO> listActivitiesApply(
+        CmsActivityQuery param,
+        PaginationParam paginationParam,
+        OrderByParam orderByParam) {
+
         SysUser user = userService.getCurrentUser();
         if (user == null || user.getIsAdmin() == 0) {
             Asserts.fail("非管理员无法查询");

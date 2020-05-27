@@ -68,7 +68,7 @@ public interface CmsClubService {
     /**
      * 添加社团成员
      */
-    Integer addClubMember(Integer clubId, Integer userId);
+    Integer saveClubMember(Integer clubId, Integer userId);
 
     /**
      * 删除社团成员

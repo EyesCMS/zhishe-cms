@@ -53,10 +53,11 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    public List<CmsBulletinsDTO> listClubBulletin(int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
+    public List<CmsBulletinsDTO> listClubBulletin(
+        int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
+
         //CmsBulletinExample bulletinExample = new CmsBulletinExample();
         //bulletinExample.createCriteria().andClubIdEqualTo(clubId);
-
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return bulletinDAO.listBulletin(clubId,bulletinQuery);
@@ -87,7 +88,6 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         Asserts.notNull(bulletin);
 
         Integer clubId = bulletin.getClubId();
-        //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
             Asserts.notFound(" 找不到该社团 ");
@@ -113,7 +113,6 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         Integer clubId = bulletin.getClubId();
-        //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
             Asserts.notFound(" 找不到该社团 ");

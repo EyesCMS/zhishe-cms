@@ -130,8 +130,7 @@ public class StorageServiceImpl implements StorageService {
                 return resource;
             }
             else {
-                throw new StorageFileNotFoundException(
-                    "Could not read file: " + filename);
+                throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
         }
         catch (MalformedURLException e) {

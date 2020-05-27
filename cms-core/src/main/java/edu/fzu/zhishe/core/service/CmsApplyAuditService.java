@@ -43,19 +43,22 @@ public interface CmsApplyAuditService {
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
+    List<CmsClubsDisbandDTO> listClubDisbandApply(
+        CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
+    List<CmsClubsJoinDTO> listJoinClubApply(
+        Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
 
-    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam);
+    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery,
+        PaginationParam paginationParam);
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 

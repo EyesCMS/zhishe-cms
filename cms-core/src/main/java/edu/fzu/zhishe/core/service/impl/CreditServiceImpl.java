@@ -58,9 +58,10 @@ public class CreditServiceImpl implements CreditService {
 
     @Override
     public void creditAdd(CmsUserClubRel cmsUserClubRel, int credit) {
-        Integer creditForToday = creditCacheService.getTodayCredit(cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId());
-        if(creditForToday != null){
-            if((creditForToday+credit)>MAX_CREDIT_ONEDAY){
+        Integer creditForToday = creditCacheService.
+            getTodayCredit(cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId());
+        if (creditForToday != null) {
+            if ((creditForToday+credit)>MAX_CREDIT_ONEDAY) {
                 System.out.println("超出每日积分上限");
                 return;
             }
@@ -73,21 +74,20 @@ public class CreditServiceImpl implements CreditService {
             .map(CmsMemberHonor::getLowerLimit)
             .collect(Collectors.toList());
         cmsUserClubRel.setHonorId(CreditUtil.getGradeByCredit(lowerBounds, oldCredit));
-        if(cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel) == 0){
+        if (cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel) == 0) {
             Asserts.fail();
         }
 
         // store today's credit to cache
-        creditCacheService.incrTodayCredit(
-            cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId(), (long) credit);
+        creditCacheService.incrTodayCredit(cmsUserClubRel.getClubId(), cmsUserClubRel.getUserId(), (long) credit);
     }
 
     @Override
     public CmsUserClubRel honorCalculate(CmsUserClubRel cmsUserClubRel) {
         int credit = cmsUserClubRel.getCredit();
         List<CmsMemberHonor> memberHonorList = cmsMemberHonorMapper.selectByExample(null);
-        for(CmsMemberHonor memberHonor:memberHonorList){
-            if(memberHonor.getLowerLimit()<=credit&&credit<memberHonor.getUpperLimit()){
+        for (CmsMemberHonor memberHonor:memberHonorList) {
+            if (memberHonor.getLowerLimit()<=credit&&credit<memberHonor.getUpperLimit()) {
                 cmsUserClubRel.setHonorId(memberHonor.getId());
                 return cmsUserClubRel;
             }
@@ -100,7 +100,7 @@ public class CreditServiceImpl implements CreditService {
     public void checkin(Integer clubId,Date date) {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
-                .andClubIdEqualTo(clubId);
+            .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         int state = isCheckin(clubId,date,userClubRelList);
         if (state == CheckinStateEnum.DENIED.getValue()) {
@@ -109,12 +109,11 @@ public class CreditServiceImpl implements CreditService {
         if (state == CheckinStateEnum.DONE.getValue()) {
             Asserts.forbidden("今天您已签到过，同一天不可重复签到");
         }
-        if (state == CheckinStateEnum.GRANTED.getValue()){
+        if (state == CheckinStateEnum.GRANTED.getValue()) {
             CmsUserClubRel userClubRel = userClubRelList.get(0);
             userClubRel.setCheckInDate(date);
             creditAdd(userClubRel, CreditEnum.CHECKIN.getValue());
         }
-
     }
 
     @Override
@@ -142,10 +141,10 @@ public class CreditServiceImpl implements CreditService {
     public void getCreditByComment(Integer postId) {
         FmsPostRemarkExample example = new FmsPostRemarkExample();
         example.createCriteria().andPostIdEqualTo(postId)
-                .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
+            .andUserIdEqualTo(sysUserService.getCurrentUser().getId());
         List<FmsPostRemark> remarkList = fmsPostRemarkMapper.selectByExample(example);
         //没有评论或者同一帖子评论超过两条不增加积分
-        if (CollectionUtils.isEmpty(remarkList)||remarkList.size() > MAX_COMMENT_NUM){
+        if (CollectionUtils.isEmpty(remarkList) || remarkList.size() > MAX_COMMENT_NUM) {
             System.out.println("没有评论或者同一帖子评论超过两条不增加积分");
             return;
         }
@@ -162,7 +161,7 @@ public class CreditServiceImpl implements CreditService {
         int clubId = post.getPosterId();
         CmsUserClubRelExample example1 = new CmsUserClubRelExample();
         example1.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
-                .andClubIdEqualTo(clubId);
+            .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example1);
         if (CollectionUtils.isEmpty(userClubRelList)) {
             System.out.println("非用户已加入社团不加积分");
@@ -177,14 +176,14 @@ public class CreditServiceImpl implements CreditService {
     public HonorDTO getUserHonor(Integer clubId) {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
-                .andClubIdEqualTo(clubId);
+            .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(userClubRelList)) {
             Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
         }
         CmsUserClubRel userClubRel = userClubRelList.get(0);
         CmsMemberHonor myHonor = cmsMemberHonorMapper.selectByPrimaryKey(userClubRel.getHonorId());
-        if(myHonor == null){
+        if (myHonor == null) {
             Asserts.fail();
         }
         String grade = myHonor.getName();
@@ -203,11 +202,11 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public HonorDTO getClubGrade(Integer clubId) {
         CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
-        if(cmsClub == null){
+        if (cmsClub == null) {
             Asserts.fail();
         }
         CmsClubGrade myGrade = cmsClubGradeMapper.selectByPrimaryKey(cmsClub.getGradeId());
-        if(myGrade == null){
+        if (myGrade == null) {
             Asserts.fail();
         }
         String grade = myGrade.getName();
@@ -236,7 +235,7 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public CmsClub getCreditByActivity(Integer clubId) {
         CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
-        if(cmsClub == null){
+        if (cmsClub == null) {
             Asserts.fail();
         }
         clubCreditAdd(cmsClub,CreditEnum.ACTIVITY.getValue());
@@ -253,7 +252,7 @@ public class CreditServiceImpl implements CreditService {
             .map(CmsClubGrade::getLowerLimit)
             .collect(Collectors.toList());
         cmsClub.setGradeId(CreditUtil.getGradeByCredit(lowerBounds, credit));
-        if(cmsClubMapper.updateByPrimaryKeySelective(cmsClub) == 0){
+        if (cmsClubMapper.updateByPrimaryKeySelective(cmsClub) == 0) {
             Asserts.fail();
         }
     }
@@ -262,8 +261,8 @@ public class CreditServiceImpl implements CreditService {
     public CmsClub clubCreditCalculate(CmsClub cmsClub) {
         int credit = cmsClub.getCredit();
         List<CmsClubGrade> clubGradeList = cmsClubGradeMapper.selectByExample(null);
-        for(CmsClubGrade clubGrade : clubGradeList){
-            if(clubGrade.getLowerLimit()<=credit && credit<=clubGrade.getUpperLimit()){
+        for (CmsClubGrade clubGrade : clubGradeList) {
+            if (clubGrade.getLowerLimit()<=credit && credit<=clubGrade.getUpperLimit()) {
                 cmsClub.setGradeId(clubGrade.getId());
                 return cmsClub;
             }

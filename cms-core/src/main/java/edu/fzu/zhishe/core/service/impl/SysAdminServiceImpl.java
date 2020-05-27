@@ -111,7 +111,7 @@ public class SysAdminServiceImpl implements SysAdminService {
         while (end.after(query.getStartDate())) {
             dates.add(DateUtil.format(end, "yyyy-MM-dd"));
             newUsers.add(0);
-            end = DateUtil.offsetDay(end, -1);
+            end = DateUtil.offsetDay(end, - 1);
         }
 
         for (SysUser usertest : users) {

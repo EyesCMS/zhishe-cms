@@ -135,8 +135,13 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     /**获取所有社团列表*/
     @Override
-    public List<CmsClubBriefDTO> listClub(PaginationParam paginationParam,
-        OrderByParam orderByParam, String keyword, String type, Integer state) {
+    public List<CmsClubBriefDTO> listClub(
+        PaginationParam paginationParam,
+        OrderByParam orderByParam,
+        String keyword,
+        String type,
+        Integer state) {
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listClub(keyword,type,state);
         for (CmsClubBriefDTO club : list) {
@@ -153,32 +158,39 @@ public class CmsClubServiceImpl implements CmsClubService {
     /**根据社团ID查找社团*/
     @Override
     public CmsClubDetailDTO getClubById(Integer id) {
-            CmsClub club = clubMapper.selectByPrimaryKey(id);
-            SysUser user = sysUserMapper.selectByPrimaryKey(club.getChiefId());
-            CmsClubDetailDTO data = new CmsClubDetailDTO();
-            if (club.getId() != null) {
-                data.setId(club.getId());
-                data.setName(club.getName());
-                data.setChiefName(user.getNickname());
-                data.setAvatarUrl(club.getAvatarUrl());
-                data.setSlogan(club.getSlogan());
-                data.setType(club.getType());
-                data.setMemberCount(club.getMemberCount());
-                data.setQqGroup(club.getQqGroup());
-            }
-            return data;
+        CmsClub club = clubMapper.selectByPrimaryKey(id);
+        SysUser user = sysUserMapper.selectByPrimaryKey(club.getChiefId());
+        CmsClubDetailDTO data = new CmsClubDetailDTO();
+        if (club.getId() != null) {
+            data.setId(club.getId());
+            data.setName(club.getName());
+            data.setChiefName(user.getNickname());
+            data.setAvatarUrl(club.getAvatarUrl());
+            data.setSlogan(club.getSlogan());
+            data.setType(club.getType());
+            data.setMemberCount(club.getMemberCount());
+            data.setQqGroup(club.getQqGroup());
+        }
+        return data;
     }
 
     /**获取加入的社团列表（社团内身份为社员）*/
     @Override
-    public List<CmsClubBriefDTO> listJoinedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+    public List<CmsClubBriefDTO> listJoinedClub(
+        PaginationParam paginationParam,
+        OrderByParam orderByParam,
+        Integer userId) {
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listJoinedClub(orderByParam, userId);
     }
 
     /**获取管理的社团列表（社团内身份为社长）*/
     @Override
-    public List<CmsClubBriefDTO> listManagedClub(PaginationParam paginationParam, OrderByParam orderByParam, Integer userId) {
+    public List<CmsClubBriefDTO> listManagedClub(
+        PaginationParam paginationParam,
+        OrderByParam orderByParam,
+        Integer userId) {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listManagedClub(orderByParam, userId);
@@ -188,7 +200,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     @IsLogin
     @Override
     public List<CmsClubJoinApplyDTO> listJoinClubApply(
-            PaginationParam paginationParam, OrderByParam orderByParam) {
+        PaginationParam paginationParam,
+        OrderByParam orderByParam) {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
@@ -199,7 +212,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     @IsLogin
     @Override
     public List<CmsClubCreateApplyDTO> listCreateClubApply(
-            PaginationParam paginationParam, OrderByParam orderByParam) {
+        PaginationParam paginationParam,
+        OrderByParam orderByParam) {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         orderByParam.setOrder("desc");
@@ -209,8 +223,11 @@ public class CmsClubServiceImpl implements CmsClubService {
     /**查看社员列表*/
     @Override
     @IsClubMember
-    public List<CmsClubMemberBriefDTO> listClubMember(PaginationParam paginationParam, Integer clubId,
-            CmsClubMemberQuery clubMemberQuery) {
+    public List<CmsClubMemberBriefDTO> listClubMember(
+        PaginationParam paginationParam,
+        Integer clubId,
+        CmsClubMemberQuery clubMemberQuery) {
+
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDAO.listClubMember(clubId, clubMemberQuery);
     }
@@ -240,13 +257,13 @@ public class CmsClubServiceImpl implements CmsClubService {
     /**添加社员*/
     @Override
     @Transactional(rollbackFor = NullPointerException.class)
-    public Integer addClubMember(Integer clubId, Integer userId){
+    public Integer saveClubMember(Integer clubId, Integer userId) {
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        if (club == null){
+        if (club == null) {
             Asserts.fail("社团不存在");
         }
-        if (club.getDeleteStatus() == 1){
+        if (club.getDeleteStatus() == 1) {
             Asserts.fail("社团已解散");
         }
         clubRel.setClubId(clubId);
@@ -294,7 +311,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     /**修改社团头像*/
     @Override
     @CheckClubAuth("3")
-    public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl){
+    public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl) {
 
         if (StrUtil.isEmpty(avatarUrl)) {
             Asserts.fail("输入不能为空！");
@@ -333,8 +350,8 @@ public class CmsClubServiceImpl implements CmsClubService {
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
         CmsClubPicture picture = pictureList.get(0);
-        for (int i = 0; i < pictureUrls.length; i++) {
-            if (pictureUrls[i] == null || pictureUrls[i].length() == 0){
+        for (int i = 0; i < pictureUrls.length; i ++ ) {
+            if (pictureUrls[i] == null || pictureUrls[i].length() == 0) {
                 continue;
             }
             switch (i) {
