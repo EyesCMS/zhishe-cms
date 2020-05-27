@@ -49,8 +49,9 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.1提交创建社团申请表单 ")
     @PostMapping("/creations")
-    public ResponseEntity<Object> createClub(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam){
-        if(applyAuditService.createClub(cmsClubsCreationsParam)==0){
+    public ResponseEntity<Object> createClub(@Validated @RequestBody CmsClubsCreationsParam cmsClubsCreationsParam) {
+
+        if (applyAuditService.createClub(cmsClubsCreationsParam) == 0) {
             Asserts.fail();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -60,7 +61,9 @@ public class CmsApplyAuditController {
     @GetMapping("/creations")
     @IsAdmin
     public ResponseEntity<Object> clubCreateList(
-            CmsClubsCreationsQuery cmsClubsCreationsQuery, @Validated PaginationParam paginationParam) {
+        CmsClubsCreationsQuery cmsClubsCreationsQuery,
+        @Validated PaginationParam paginationParam) {
+
         List<CmsClubsCreationsDTO> cmsClubsCreationsDTOList = applyAuditService.listClubCreationApply(
             cmsClubsCreationsQuery, paginationParam);
         /*id 和 userid可能不需要，如果后面真的不需要可以在model加上jsonignore，先留着*/
@@ -69,14 +72,16 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.3审核创建社团申请 ")
     @PutMapping("/creations/audit")
-    public ResponseEntity<Object> clubCreateAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubCreateAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam) {
+
         applyAuditService.clubCreationsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.4提交解散社团申请表单 ")
     @PostMapping("/dissolution")
-    public ResponseEntity<Object> clubDissolve(@Validated @RequestBody CmsClubsDisbandParam cmsClubsDisbandParam){
+    public ResponseEntity<Object> clubDissolve(@Validated @RequestBody CmsClubsDisbandParam cmsClubsDisbandParam) {
+
         applyAuditService.clubDisband(cmsClubsDisbandParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -84,7 +89,10 @@ public class CmsApplyAuditController {
     @ApiOperation(" 4.5社团解散申请列表 ")
     @GetMapping("/dissolution")
     @IsAdmin
-    public ResponseEntity<Object> clubDisbandList(CmsClubsDisbandQuery cmsClubsDisbandQuery, @Validated PaginationParam paginationParam) {
+    public ResponseEntity<Object> clubDisbandList(
+        CmsClubsDisbandQuery cmsClubsDisbandQuery,
+        @Validated PaginationParam paginationParam) {
+
         /*有的参数可能不需要返回，如果后面真的不需要可以在model加上jsonignore，先留着*/
         List<CmsClubsDisbandDTO> cmsClubsDisbandDTOList = applyAuditService.listClubDisbandApply(
             cmsClubsDisbandQuery, paginationParam);
@@ -93,22 +101,27 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.6审核解散社团申请 ")
     @PutMapping("/dissolution/audit")
-    public ResponseEntity<Object> clubDisbandAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubDisbandAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam) {
+
         applyAuditService.clubDissolutionAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.7提交加入社团申请表单 ")
     @PostMapping("/join")
-    public ResponseEntity<Object> clubJoin(@Validated @RequestBody CmsClubsJoinParam cmsClubsJoinParam){
+    public ResponseEntity<Object> clubJoin(@Validated @RequestBody CmsClubsJoinParam cmsClubsJoinParam) {
+
         applyAuditService.clubJoin(cmsClubsJoinParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(value = " 4.8根据社团 ID 获取申请列表 ")
     @GetMapping("/{clubId}/joins")
-    public ResponseEntity<Object> joinsList(CmsClubsJoinQuery cmsClubsJoinQuery, @PathVariable("clubId") Integer clubId,
-            @Validated PaginationParam paginationParam) {
+    public ResponseEntity<Object> joinsList(
+        CmsClubsJoinQuery cmsClubsJoinQuery,
+        @PathVariable("clubId") Integer clubId,
+        @Validated PaginationParam paginationParam) {
+
         List<CmsClubsJoinDTO> cmsClubsJoinDTOList = applyAuditService
             .listJoinClubApply(clubId, cmsClubsJoinQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsJoinDTOList));
@@ -116,23 +129,27 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.9审核解散社团申请 ")
     @PutMapping("/joins/audit")
-    public ResponseEntity<Object> clubJoinsAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubJoinsAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam) {
+
         applyAuditService.clubJoinsAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.10提交退出社团申请表单 ")
     @PostMapping("/quit")
-    public ResponseEntity<Object> clubQuit(@Validated @RequestBody CmsClubsQuitParam cmsClubsQuitParam){
+    public ResponseEntity<Object> clubQuit(@Validated @RequestBody CmsClubsQuitParam cmsClubsQuitParam) {
+
         applyAuditService.clubQuit(cmsClubsQuitParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(value = " 4.11根据社团 ID 获取退社申请列表 ")
     @GetMapping("/{clubId}/quit")
-    public ResponseEntity<Object> quitList(CmsClubsQuitQuery cmsClubsQuitQuery,
-                                           @PathVariable("clubId") Integer clubId,
-                                           @Validated PaginationParam paginationParam) {
+    public ResponseEntity<Object> quitList(
+        CmsClubsQuitQuery cmsClubsQuitQuery,
+        @PathVariable("clubId") Integer clubId,
+        @Validated PaginationParam paginationParam) {
+
         List<CmsClubsQuitDTO> cmsClubsQuitDTOList = applyAuditService.listClubQuit(clubId,
             cmsClubsQuitQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsQuitDTOList));
@@ -140,7 +157,9 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.12提交社团换届申请表单 ")
     @PostMapping("/leader/change")
-    public ResponseEntity<Object> clubChiefChange(@Validated @RequestBody CmsClubsChiefChangeParam cmsClubsChiefChangeParam){
+    public ResponseEntity<Object> clubChiefChange(
+        @Validated @RequestBody CmsClubsChiefChangeParam cmsClubsChiefChangeParam) {
+
         applyAuditService.clubChiefChange(cmsClubsChiefChangeParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -150,7 +169,8 @@ public class CmsApplyAuditController {
     @GetMapping("/leader/changes")
     @IsAdmin
     public ResponseEntity<Object> clubChiefChangeList(
-            CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, @Validated PaginationParam paginationParam){
+        CmsClubsChiefChangeQuery cmsClubsChiefChangeQuery, @Validated PaginationParam paginationParam) {
+
         List<CmsClubsChiefChangeDTO> cmsClubsChiefChangeDTOList = applyAuditService.listClubChiefChangeApply(
             cmsClubsChiefChangeQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsChiefChangeDTOList));
@@ -158,24 +178,27 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.14审核社团换届申请 ")
     @PutMapping("/leader/changes")
-    public ResponseEntity<Object> clubChiefChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubChiefChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam) {
+
         applyAuditService.clubChiefChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 4.15提交社团认证申请表单 ")
     @PostMapping("/certifications")
-    public ResponseEntity<Object> clubOfficialChange(@Validated @RequestBody CmsClubsCertificationsParam cmsClubsCertificationsParam){
+    public ResponseEntity<Object> clubOfficialChange(
+        @Validated @RequestBody CmsClubsCertificationsParam cmsClubsCertificationsParam) {
+
         applyAuditService.clubOfficialChange(cmsClubsCertificationsParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
 
     @ApiOperation(" 4.16社团认证申请列表 ")
     @GetMapping("/certifications")
     @IsAdmin
     public ResponseEntity<Object> clubOfficialChangeList(
-            CmsClubsCertificationsQuery cmsClubsCertificationsQuery, @Validated PaginationParam paginationParam) {
+        CmsClubsCertificationsQuery cmsClubsCertificationsQuery, @Validated PaginationParam paginationParam) {
+
         List<CmsClubsCertificationsDTO> cmsClubsCertificationsDTOList = applyAuditService.listClubOfficialChange(
             cmsClubsCertificationsQuery, paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubsCertificationsDTOList));
@@ -183,7 +206,9 @@ public class CmsApplyAuditController {
 
     @ApiOperation(" 4.17审核社团认证申请 ")
     @PutMapping("/certifications")
-    public ResponseEntity<Object> clubOfficialChangeAudit(@Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam){
+    public ResponseEntity<Object> clubOfficialChangeAudit(
+        @Validated @RequestBody CmsClubsAuditParam cmsClubsAuditParam) {
+
         // TODO: 等待api修改
         applyAuditService.clubOfficialChangeAudit(cmsClubsAuditParam);
         return ResponseEntity.noContent().build();
@@ -191,25 +216,34 @@ public class CmsApplyAuditController {
 
     @ApiOperation(value = " 4.18根据社团 ID 获取认证申请列表 ")
     @GetMapping("/{clubId}/certifications")
-    public ResponseEntity<Object> myClubOfficialChangeList(@PathVariable("clubId") Integer clubId,
-                                            @Validated PaginationParam paginationParam) {
-        List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = applyAuditService.listMyClubOfficialChange(clubId,paginationParam);
+    public ResponseEntity<Object> myClubOfficialChangeList(
+        @PathVariable("clubId") Integer clubId,
+        @Validated PaginationParam paginationParam) {
+
+        List<CmsOfficialChangeApply> cmsOfficialChangeApplyList = applyAuditService
+            .listMyClubOfficialChange(clubId,paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsOfficialChangeApplyList));
     }
 
     @ApiOperation(value = " 4.19根据社团 ID 获取换届申请列表 ")
     @GetMapping("/{clubId}/leaderChange")
-    public ResponseEntity<Object> myClubChiefChangeList(@PathVariable("clubId") Integer clubId,
-                                                           @Validated PaginationParam paginationParam) {
-        List<CmsChiefChangeApply> cmsChiefChangeApplyList = applyAuditService.listMyClubChiefChange(clubId,paginationParam);
+    public ResponseEntity<Object> myClubChiefChangeList(
+        @PathVariable("clubId") Integer clubId,
+        @Validated PaginationParam paginationParam) {
+
+        List<CmsChiefChangeApply> cmsChiefChangeApplyList = applyAuditService
+            .listMyClubChiefChange(clubId,paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsChiefChangeApplyList));
     }
 
     @ApiOperation(value = " 4.20根据社团 ID 获取解散申请列表 ")
     @GetMapping("/{clubId}/dissolution")
-    public ResponseEntity<Object> myClubDissolutionList(@PathVariable("clubId") Integer clubId,
-                                                        @Validated PaginationParam paginationParam) {
-        List<CmsClubDisbandApply> cmsClubDisbandApplyList = applyAuditService.listMyClubDissolution(clubId,paginationParam);
+    public ResponseEntity<Object> myClubDissolutionList(
+        @PathVariable("clubId") Integer clubId,
+        @Validated PaginationParam paginationParam) {
+
+        List<CmsClubDisbandApply> cmsClubDisbandApplyList = applyAuditService
+            .listMyClubDissolution(clubId,paginationParam);
         return ResponseEntity.ok().body(CommonPage.restPage(cmsClubDisbandApplyList));
     }
 

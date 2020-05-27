@@ -41,6 +41,7 @@ public class SysUserController {
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
     public ResponseEntity<Object> question(String username) {
+
         if (username == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -56,6 +57,7 @@ public class SysUserController {
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
     @PostMapping(value = "/answer")
     public ResponseEntity<Object> answer(@RequestBody SysUserUpdatePwdByAnswer param) {
+
         if (param.getUsername() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -70,6 +72,7 @@ public class SysUserController {
     @ApiOperation(value = " 用户修改个人信息 ")
     @PutMapping(value = "/info")
     public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
+
         userService.updateUserByParam(updateParam);
         return noContent().build();
     }
@@ -87,6 +90,7 @@ public class SysUserController {
     @ApiOperation(value = " 忘记密码时通过回答保密问题修改密码 ")
     @PutMapping(value = "/password")
     public ResponseEntity<Object> password(@Validated @RequestBody SysUserUpdatePwdByAnswer param) {
+
         UpdatePasswordResultEnum result = userService.updateUserPasswordAfterAnswer(param);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {

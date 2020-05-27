@@ -39,5 +39,4 @@ public class AdminHomeController {
         return ResponseEntity.ok(adminService.clubSpecies());
     }
 
-
 }

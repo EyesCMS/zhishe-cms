@@ -37,24 +37,30 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.1 申请活动 ")
     @PostMapping("/activities")
-    public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param){
+    public ResponseEntity<Object> activityApply(@Validated @RequestBody CmsClubActivityParam param) {
+
         clubService.activityApply(param);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(" 6.2 管理员获取社团活动申请 ")
     @GetMapping("/activities")
-    public ResponseEntity<Object> listActivitiesApply(CmsActivityQuery param,
-            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
-        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(param, paginationParam, orderByParam)));
+    public ResponseEntity<Object> listActivitiesApply(
+            CmsActivityQuery param,
+            @Validated PaginationParam paginationParam,
+            OrderByParam orderByParam) {
+
+        return ResponseEntity.ok().body(
+            CommonPage.restPage(clubService.listActivitiesApply(param, paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.3 活动申请审核 ")
     @PutMapping("/activities/audit")
-    public ResponseEntity<Object> activityAudit(@RequestBody JSONObject object){
+    public ResponseEntity<Object> activityAudit(@RequestBody JSONObject object) {
+
         Integer id = (Integer)object.get("id");
         Integer state = (Integer)object.get("state");
-        if(id == null || state == 0) {
+        if (id == null || state == 0) {
             Asserts.fail("请输入id和state");
         }
         clubService.activityStateChange((Integer)object.get("id"),
@@ -64,21 +70,23 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.4 修改社团活动状态 ")
     @PutMapping("/activities/state")
-    public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object){
+    public ResponseEntity<Object> activityStateChange(@RequestBody JSONObject object) {
+
         Integer id = (Integer)object.get("id");
         Integer state = (Integer)object.get("state");
-        if(id == null || state == 0) {
+        if (id == null || state == 0) {
             Asserts.fail("请输入id和state");
         }
-        clubService.activityStateChange((Integer) object.get("id"),
-            (Integer) object.get("state"), UserRoleEnum.CHIEF);
+        clubService.activityStateChange((Integer) object.get("id"), (Integer) object.get("state"), UserRoleEnum.CHIEF);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 6.5 社长修改社团活动 ")
     @PutMapping("/activities/{id}")
-    public ResponseEntity<Object> updateActivity(@PathVariable(value = "id") Integer id,
-                                                 @Validated @RequestBody CmsActivityUpdateParam param) {
+    public ResponseEntity<Object> updateActivity(
+        @PathVariable(value = "id") Integer id,
+        @Validated @RequestBody CmsActivityUpdateParam param) {
+
         clubService.updateActivity(id, param);
         return ResponseEntity.noContent().build();
     }
@@ -86,21 +94,27 @@ public class CmsActivityController {
     @ApiOperation(" 6.6 根据活动id删除活动 ")
     @DeleteMapping("/activities/{id}")
     public ResponseEntity<Object> delActivity(@PathVariable(value = "id") Integer id) {
+
         clubService.delActivity(id);
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation(" 6.7 社长可以获取自己社团申请的活动列表 ")
     @GetMapping("/{clubId}/activities/apply")
-    public ResponseEntity<Object> getApply(@PathVariable(value = "clubId") Integer clubId,
-                                           CmsActivityQuery param,
-            @Validated PaginationParam paginationParam, OrderByParam orderByParam) {
-        return ResponseEntity.ok().body(CommonPage.restPage(clubService.listActivitiesApply(clubId, param,paginationParam, orderByParam)));
+    public ResponseEntity<Object> getApply(
+        @PathVariable(value = "clubId") Integer clubId,
+        CmsActivityQuery param,
+        @Validated PaginationParam paginationParam,
+        OrderByParam orderByParam) {
+
+        return ResponseEntity.ok().body(
+            CommonPage.restPage(clubService.listActivitiesApply(clubId, param,paginationParam, orderByParam)));
     }
 
     @ApiOperation(" 6.8 社长可以获取自己社团申请的某一活动的详情 ")
     @GetMapping("/activities/apply/{id}")
     public ResponseEntity<Object> getApplyItem(@PathVariable(value = "id") Integer id) {
+
         return ResponseEntity.ok().body(clubService.getActivityApplyItem(id));
     }
 }

@@ -72,13 +72,12 @@ public class BulletinController {
         return ResponseEntity.ok().body(CommonPage.restPage(bulletinList));
     }
 
-
     @ApiOperation("5.3查看公告详情")
     @GetMapping("/{club}/bulletins/{bulletinId}")
     @IsClubMember
     public ResponseEntity<CmsBulletinDTO> getBulletin(
-            @PathVariable("club") Integer clubId,
-            @PathVariable("bulletinId") Integer bulletinId) {
+        @PathVariable("club") Integer clubId,
+        @PathVariable("bulletinId") Integer bulletinId) {
 
         CmsBulletin bulletin = bulletinService.getBulletin(clubId, bulletinId);
         if (bulletin == null) {
@@ -111,6 +110,7 @@ public class BulletinController {
     @ApiOperation("5.5删除公告")
     @DeleteMapping("/bulletins/{bulletinId}")
     public ResponseEntity<Object> deleteBulletin(@PathVariable("bulletinId") Integer bulletinId) {
+
         if (bulletinService.deleteBulletin(bulletinId) == 0) {
             Asserts.fail("操作失败！");
         }

@@ -60,7 +60,9 @@ public class AuthController {
     @ApiOperation(" 用户注册 ")
     @PostMapping("/register")
     public ResponseEntity<Object> register(
-            @Validated @RequestBody SysUserRegisterParam userRegisterParam, BindingResult bindingResult) {
+        @Validated @RequestBody SysUserRegisterParam userRegisterParam,
+        BindingResult bindingResult) {
+
         userService.register(userRegisterParam);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -68,8 +70,8 @@ public class AuthController {
     @ApiOperation("  登录以后返回 token ")
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Validated @RequestBody SysUserLoginParam userLoginParam) {
-        String token = userService
-            .login(userLoginParam.getUsername(), userLoginParam.getPassword());
+
+        String token = userService.login(userLoginParam.getUsername(), userLoginParam.getPassword());
         if (token == null) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("message", "invalid username or password");
@@ -84,13 +86,13 @@ public class AuthController {
     @ApiOperation(value = " 登出功能 ")
     @PostMapping(value = "/logout")
     public ResponseEntity<Object> logout() {
-
         return noContent().build();
     }
 
     @ApiOperation(" 获取用户信息 ")
     @GetMapping("/info")
     public ResponseEntity<Object> info(Principal principal) {
+
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponseBody.unauthorized());
         }
@@ -120,6 +122,7 @@ public class AuthController {
     @PostMapping("/password")
     public ResponseEntity<Object> updatePassword(
         @Validated @RequestBody UpdateUserPasswordParam updateUserPasswordParam) {
+
         UpdatePasswordResultEnum result = userService.updatePassword(updateUserPasswordParam);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {

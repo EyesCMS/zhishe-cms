@@ -62,9 +62,10 @@ public class FmsForumController {
     @ApiOperation(" 7.1 帖子列表(个人/活动) ")
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
     public ResponseEntity<CommonPage<FmsPostDTO>> listPosts(
-            @Validated PaginationParam paginationParam,
-            @RequestParam(value = "type") Integer type,
-            FmsPostQuery postQuery) {
+        @Validated PaginationParam paginationParam,
+        @RequestParam(value = "type") Integer type,
+        FmsPostQuery postQuery) {
+
         List<FmsPostDTO> postList = null;
         if (type.equals(PostTypeEnum.PERSONAL.getValue())) {
              postList = forumService.listPersonalPost(null, paginationParam, postQuery);
@@ -79,7 +80,9 @@ public class FmsForumController {
     @ApiOperation(" 7.2 查看某一帖子 ")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.GET)
     public ResponseEntity<FmsPostDTO> getPost(
-            @PathVariable("id") Integer id, @RequestParam(value = "type") Integer type) {
+        @PathVariable("id") Integer id,
+        @RequestParam(value = "type") Integer type) {
+
         Optional<FmsPostDTO> postDTO;
         // 需要通过 type 来区分发帖人（用户名和头像）
         if (type.equals(PostTypeEnum.PERSONAL.getValue())) {
@@ -98,6 +101,7 @@ public class FmsForumController {
     @ApiOperation(" 7.3 删除一条帖子 ")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
+
         if (forumService.deletePost(id) == 0) {
             Asserts.fail();
         }
@@ -107,6 +111,7 @@ public class FmsForumController {
     @ApiOperation(" 7.4 发布个人帖 ")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public ResponseEntity<Object> savePost(@RequestBody FmsPostParam postParam) {
+
         if (forumService.savePost(postParam) == 0) {
             Asserts.fail();
         }
@@ -116,6 +121,7 @@ public class FmsForumController {
     @ApiOperation(" 7.5 修改个人帖 ")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @RequestBody FmsPostParam postParam) {
+
         if (forumService.updatePost(id, postParam) == 0) {
             Asserts.fail();
         }
@@ -124,10 +130,12 @@ public class FmsForumController {
 
     @ApiOperation(" 7.6 某个社团的帖子列表 ")
     @RequestMapping(value = "/{clubId}/posts", method = RequestMethod.GET)
-    public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(@PathVariable("clubId") Integer clubId,
-                                                FmsPostQuery postQuery,
-                                                @RequestParam(value = "type") Integer type,
-                                                @Validated PaginationParam paginationParam) {
+    public ResponseEntity<CommonPage<FmsPostDTO>> listClubPosts(
+        @PathVariable("clubId") Integer clubId,
+        FmsPostQuery postQuery,
+        @RequestParam(value = "type") Integer type,
+        @Validated PaginationParam paginationParam) {
+
         List<FmsPostDTO> postList = null;
         if (type == 0) {
             postList = forumService.listPersonalPost(clubId, paginationParam, postQuery);
@@ -141,8 +149,10 @@ public class FmsForumController {
 
     @ApiOperation(" 7.7 我的帖子列表 ")
     @RequestMapping(value = "/posts/mine", method = RequestMethod.GET)
-    public ResponseEntity<CommonPage<FmsPostDTO>> listMyPosts(@Validated PaginationParam paginationParam,
-            FmsPostQuery postQuery) {
+    public ResponseEntity<CommonPage<FmsPostDTO>> listMyPosts(
+        @Validated PaginationParam paginationParam,
+        FmsPostQuery postQuery) {
+
         SysUser currentUser = userService.getCurrentUser();
         if (currentUser == null) {
             Asserts.unAuthorized();
@@ -193,6 +203,7 @@ public class FmsForumController {
     @ApiOperation(" 8.1 对某一帖子发表评论 ")
     @RequestMapping(value = "/posts/remarks", method = RequestMethod.POST)
     public ResponseEntity<Object> createRemark(@RequestBody FmsRemarkParam remarkParam) {
+
         if (forumService.saveRemark(remarkParam) == 0) {
             Asserts.fail();
         }
@@ -202,14 +213,17 @@ public class FmsForumController {
 
     @ApiOperation(" 8.2 获取某一帖子的评论列表 ")
     @RequestMapping(value = "/posts/{id}/remarks", method = RequestMethod.GET)
-    public ResponseEntity<Object> getRemarksByPostId(@PathVariable("id") Long postId,
-                                                     @Validated PaginationParam paginationParam) {
+    public ResponseEntity<Object> getRemarksByPostId(
+        @PathVariable("id") Long postId,
+        @Validated PaginationParam paginationParam) {
+
         return ResponseEntity.ok().body(CommonPage.restPage(forumService.listRemarkByPostId(postId, paginationParam)));
     }
 
     @ApiOperation(" 8.3 删除某一评论 ")
     @RequestMapping(value = "/posts/remarks/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Object> createRemark(@PathVariable("id") Long id) {
+
         if (forumService.deleteRemark(id) == 0) {
             Asserts.fail();
         }

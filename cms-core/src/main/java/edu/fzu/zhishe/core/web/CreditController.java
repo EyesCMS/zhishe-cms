@@ -34,14 +34,16 @@ public class CreditController {
 
     @ApiOperation(" 10.1签到获取积分 ")
     @PostMapping("/{clubId}/checkin")
-    public ResponseEntity<Object> checkin( @PathVariable("clubId") Integer clubId){
+    public ResponseEntity<Object> checkin(@PathVariable("clubId") Integer clubId) {
+
         creditService.checkin(clubId,new Date());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(" 10.2签到状态 ")
     @GetMapping("/{clubId}/ischeckin")
-    public ResponseEntity<Object> isCheckin( @PathVariable("clubId") Integer clubId){
+    public ResponseEntity<Object> isCheckin(@PathVariable("clubId") Integer clubId) {
+
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andUserIdEqualTo(sysUserService.getCurrentUser().getId())
                 .andClubIdEqualTo(clubId);
@@ -52,26 +54,28 @@ public class CreditController {
 
     @ApiOperation(" 10.3获取当前用户活跃度 ")
     @GetMapping("/{clubId}/userhonor")
-    public ResponseEntity<Object> getUserHonor( @PathVariable("clubId") Integer clubId){
+    public ResponseEntity<Object> getUserHonor(@PathVariable("clubId") Integer clubId) {
+
         return ResponseEntity.ok().body(creditService.getUserHonor(clubId));
     }
 
     @ApiOperation(" 10.4获取当前用户活跃度 ")
     @GetMapping("/{clubId}/clubhonor")
-    public ResponseEntity<Object> getClubGrade( @PathVariable("clubId") Integer clubId){
+    public ResponseEntity<Object> getClubGrade(@PathVariable("clubId") Integer clubId) {
+
         return ResponseEntity.ok().body(creditService.getClubGrade(clubId));
     }
 
     @ApiOperation(" 10.5获取用户活跃度规则信息 ")
     @GetMapping("/userhonor")
-    public ResponseEntity<Object> getCreditRuleForUser(){
+    public ResponseEntity<Object> getCreditRuleForUser() {
 
         return ResponseEntity.ok().body(creditService.listMemberHonor());
     }
 
     @ApiOperation(" 10.6获取社团等级规则信息 ")
     @GetMapping("/clubhonor")
-    public ResponseEntity<Object> getCreditRuleForClub(){
+    public ResponseEntity<Object> getCreditRuleForClub() {
 
         return ResponseEntity.ok().body(creditService.listClubGrade());
     }
