@@ -150,7 +150,7 @@ public class CmsClubController {
     @CheckClubAuth("3")
     public ResponseEntity<Object> updateClubInfo(
         @PathVariable("clubId") Integer clubId,
-        @RequestBody CmsClubInfoParam clubInfoParam) {
+        @Validated @RequestBody CmsClubInfoParam clubInfoParam) {
 
         clubService.updateClubInfo(clubId, clubInfoParam);
         return ResponseEntity.noContent().build();

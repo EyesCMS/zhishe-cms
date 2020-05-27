@@ -122,7 +122,7 @@ public class FmsForumController {
 
     @ApiOperation(" 7.5 修改个人帖 ")
     @RequestMapping(value = "/posts/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @RequestBody FmsPostParam postParam) {
+    public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @Validated @RequestBody FmsPostParam postParam) {
 
         if (forumService.updatePost(id, postParam) == 0) {
             Asserts.fail();
@@ -204,7 +204,7 @@ public class FmsForumController {
 
     @ApiOperation(" 8.1 对某一帖子发表评论 ")
     @RequestMapping(value = "/posts/remarks", method = RequestMethod.POST)
-    public ResponseEntity<Object> createRemark(@RequestBody FmsRemarkParam remarkParam) {
+    public ResponseEntity<Object> createRemark(@Validated @RequestBody FmsRemarkParam remarkParam) {
 
         if (forumService.saveRemark(remarkParam) == 0) {
             Asserts.fail();
