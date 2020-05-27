@@ -8,6 +8,7 @@ import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.HonorDTO;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.CreditUtil;
@@ -74,7 +75,7 @@ public class CreditServiceImpl implements CreditService {
             .collect(Collectors.toList());
         cmsUserClubRel.setHonorId(CreditUtil.getGradeByCredit(lowerBounds, oldCredit));
         if(cmsUserClubRelMapper.updateByPrimaryKeySelective(cmsUserClubRel) == 0){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
 
         // store today's credit to cache
@@ -104,10 +105,10 @@ public class CreditServiceImpl implements CreditService {
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         int state = isCheckin(clubId,date,userClubRelList);
         if (state == CheckinStateEnum.DENIED.getValue()) {
-            Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
+            Asserts.fail(PostErrorEnum.USER_CLUB_REL_NOT_EXIST);
         }
         if (state == CheckinStateEnum.DONE.getValue()) {
-            Asserts.forbidden("今天您已签到过，同一天不可重复签到");
+            Asserts.forbidden(PostErrorEnum.ALREADY_CHECKIN);
         }
         if (state == CheckinStateEnum.GRANTED.getValue()){
             CmsUserClubRel userClubRel = userClubRelList.get(0);
@@ -151,7 +152,7 @@ public class CreditServiceImpl implements CreditService {
         }
         FmsPost post = fmsPostMapper.selectByPrimaryKey(postId.longValue());
         if(post == null){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         //个人贴不加积分
         if(post.getType().equals(PostTypeEnum.PERSONAL.getValue())){
@@ -180,12 +181,12 @@ public class CreditServiceImpl implements CreditService {
                 .andClubIdEqualTo(clubId);
         List<CmsUserClubRel> userClubRelList = cmsUserClubRelMapper.selectByExample(example);
         if (CollectionUtils.isEmpty(userClubRelList)) {
-            Asserts.fail(" 该社团已不存在或您已退出（还未加入）该社团 ");
+            Asserts.fail(PostErrorEnum.USER_CLUB_REL_NOT_EXIST);
         }
         CmsUserClubRel userClubRel = userClubRelList.get(0);
         CmsMemberHonor myHonor = cmsMemberHonorMapper.selectByPrimaryKey(userClubRel.getHonorId());
         if(myHonor == null){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         String grade = myHonor.getName();
         int score = userClubRel.getCredit();
@@ -204,11 +205,11 @@ public class CreditServiceImpl implements CreditService {
     public HonorDTO getClubGrade(Integer clubId) {
         CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
         if(cmsClub == null){
-            Asserts.fail("该社团不存在");
+            Asserts.fail(PostErrorEnum.CLUB_NOT_EXIST);
         }
         CmsClubGrade myGrade = cmsClubGradeMapper.selectByPrimaryKey(cmsClub.getGradeId());
         if(myGrade == null){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         String grade = myGrade.getName();
         int score = cmsClub.getCredit();
@@ -237,7 +238,7 @@ public class CreditServiceImpl implements CreditService {
     public CmsClub getCreditByActivity(Integer clubId) {
         CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
         if(cmsClub == null){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         clubCreditAdd(cmsClub,CreditEnum.ACTIVITY.getValue());
         return cmsClub;
@@ -254,7 +255,7 @@ public class CreditServiceImpl implements CreditService {
             .collect(Collectors.toList());
         cmsClub.setGradeId(CreditUtil.getGradeByCredit(lowerBounds, credit));
         if(cmsClubMapper.updateByPrimaryKeySelective(cmsClub) == 0){
-            Asserts.fail();
+            Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
     }
 
