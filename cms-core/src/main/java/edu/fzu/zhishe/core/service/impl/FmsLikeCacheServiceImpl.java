@@ -62,7 +62,7 @@ public class FmsLikeCacheServiceImpl implements FmsLikeCacheService {
     public Integer getLikeCount(Long postId) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_POST_LIKED_COUNT;
         Object count = redisService.hGet(key, postId.toString());
-        return (count == null) ? 0 :(Integer) count;
+        return (count == null) ? 0 : (Integer) count;
     }
 
     @Override

@@ -100,7 +100,6 @@ public class FmsForumServiceImpl implements FmsForumService {
     public int savePost(FmsPostParam postParam, MultipartFile imageFile) {
 
         String imgUrl = storageService.storeImage(imageFile);
-
         FmsPost post = new FmsPost();
         post.setPosterId(userService.getCurrentUser().getId());
         post.setType(PostTypeEnum.PERSONAL.getValue());

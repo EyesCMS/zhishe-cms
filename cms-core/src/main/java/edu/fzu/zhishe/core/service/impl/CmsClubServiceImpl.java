@@ -283,7 +283,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
         example.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> rel = userClubRelMapper.selectByExample(example);
-        if (rel.size() == 0) {
+        if (CollUtil.isEmpty(rel)) {
             Asserts.fail(ClubErrorEnum.USER_NOT_IN);
         }
         userClubRelMapper.deleteByExample(example);

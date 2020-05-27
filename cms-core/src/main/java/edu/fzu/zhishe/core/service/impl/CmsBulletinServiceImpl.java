@@ -48,19 +48,12 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
 
     @Override
     public CmsBulletin getBulletin(Integer clubId, Integer bulletinId) {
-//        if (!clubService.isClubMember(clubId)) {
-//            Asserts.fail(BulletinErrorEnum.NOT_PRESIDENT);
-//        }
         return bulletinMapper.selectByPrimaryKey(bulletinId);
     }
 
     @Override
     public List<CmsBulletinsDTO> listClubBulletin(
         int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
-
-        //CmsBulletinExample bulletinExample = new CmsBulletinExample();
-        //bulletinExample.createCriteria().andClubIdEqualTo(clubId);
-
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return bulletinDAO.listBulletin(clubId,bulletinQuery);
     }
@@ -102,7 +95,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         BeanUtils.copyProperties(cmsBulletinParam, bulletin);
         bulletin.setBody(cmsBulletinParam.getBody());
         bulletin.setUpdateAt(new Date());
-       return bulletinMapper.updateByPrimaryKey(bulletin);
+        return bulletinMapper.updateByPrimaryKey(bulletin);
     }
 
     @Override

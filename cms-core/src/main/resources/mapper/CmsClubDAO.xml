@@ -8,31 +8,6 @@
     grade, create_at
   </sql>
 
-
-  <!--
-  <select id="listClubMember" parameterType="java.lang.Integer"
-    resultMap="edu.fzu.zhishe.cms.mapper.SysUserMapper.BaseResultMap">
-    SELECT
-      u.id,
-      u.username,
-      u.PASSWORD,
-      u.nickname,
-      u.avatar_url,
-      u.major,
-      u.email,
-      u.phone,
-      u.slogan,
-      u.login_question,
-      u.login_answer,
-      u.is_admin
-    FROM
-      cms_user_club_rel r,
-      sys_user u
-    WHERE
-      r.club_id = #{id,jdbcType=INTEGER} AND r.user_id=u.id
-  </select>
--->
-
   <select id="listHotClub" parameterType="java.lang.Integer"
     resultMap="ClubMap1">
     SELECT
@@ -77,27 +52,6 @@
       AND club.official_state = #{state,jdbcType=INTEGER}
     </if>
   </select>
-
-  <!--
-  <select id="getClubById" parameterType="java.lang.Integer"
-          resultMap="ClubMap2">
-    SELECT
-      club.id,
-      club.name,
-      club.chief_id,
-      u.nickname,
-      club.avatar_url,
-      club.slogan,
-      club.member_count,
-      club.qq_group
-    FROM
-      cms_club club,
-      sys_user u
-    WHERE
-      club.chief_id = u.id AND club.id = #{id,jdbcType=INTEGER}
-  </select>
-
--->
 
   <select id="listJoinedClub" parameterType="java.lang.Integer"
           resultMap="ClubMap1">

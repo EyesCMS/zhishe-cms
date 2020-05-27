@@ -333,7 +333,6 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
                 Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
             }
 
-
             //删除相关joinApply表记录
             CmsClubJoinApplyExample example1 = new CmsClubJoinApplyExample();
             example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
