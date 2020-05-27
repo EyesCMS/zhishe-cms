@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.config.StorageProperties;
@@ -212,7 +213,7 @@ public class SysUserServiceImpl implements SysUserService {
         String rootLocation = "http://101.200.193.180:9520/files/images";
         if (avatarUrl != null) {
             // delete if avatar is uploaded to server before
-            int index = avatarUrl.lastIndexOf('/');
+            int index = avatarUrl.lastIndexOf(StrUtil.SLASH);
             if (rootLocation.equals(avatarUrl.substring(0, index))) {
                 String filename = avatarUrl.substring(index);
                 Path oldAvatarPath = Paths.get(imageRootLocation.toAbsolutePath() + filename);

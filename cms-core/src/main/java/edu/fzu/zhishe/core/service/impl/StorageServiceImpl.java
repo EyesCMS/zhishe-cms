@@ -41,6 +41,13 @@ public class StorageServiceImpl implements StorageService {
     @Value("${storage.path.str.file}")
     String filePathStr = "files";
 
+    private final Path imageRootLocation;
+
+    @Autowired
+    public StorageServiceImpl(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
+    }
+
     @Override
     public String store(MultipartFile file, Path location) {
         if (file == null) {
@@ -89,6 +96,12 @@ public class StorageServiceImpl implements StorageService {
             .toUri()
             .toString();
         return serveFile;
+    }
+
+    @Override
+    public String storeImage(MultipartFile file) {
+
+        return this.store(file, imageRootLocation);
     }
 
     @Override
