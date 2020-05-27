@@ -23,6 +23,7 @@ import edu.fzu.zhishe.core.service.FmsForumService;
 import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +140,7 @@ public class FmsForumServiceImpl implements FmsForumService {
     public int deletePost(Long id) {
 
         FmsPost post = postMapper.selectByPrimaryKey(id);
-        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+        if (NotExistUtil.check(post)) {
             Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
         }
 
@@ -162,7 +163,7 @@ public class FmsForumServiceImpl implements FmsForumService {
 
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+        if (NotExistUtil.check(post)) {
             Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
         }
 

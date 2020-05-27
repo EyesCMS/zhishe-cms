@@ -9,7 +9,6 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.annotation.IsLogin;
-import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
@@ -17,6 +16,7 @@ import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO;
+import edu.fzu.zhishe.core.error.ClubErrorEnum;
 import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
@@ -27,8 +27,7 @@ import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
@@ -63,14 +62,6 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Autowired
     private StorageService storageService;
 
-    public boolean notExistClub(CmsClub club) {
-        return club == null || club.getDeleteStatus() == DeleteStateEnum.Deleted.getValue();
-    }
-
-    public boolean notExistActivity(CmsActivity activity) {
-        return activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue());
-    }
-
     @IsLogin
     @Override
     public void activityApply(CmsClubActivityParam param, MultipartFile imgUrl) {
@@ -80,7 +71,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(param.getClubId());
-        if (notExistClub(club)) {
+        if (NotExistUtil.check(club)) {
             Asserts.notFound("clubId 错误，找不到社团");
         }
 
@@ -120,7 +111,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     public void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
         SysUser user = userService.getCurrentUser();
-        if (activity == null) {
+        if (NotExistUtil.check(activity)) {
             Asserts.notFound("找不到活动");
         }
 
@@ -139,7 +130,10 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         }
         else if (role.equals(UserRoleEnum.CHIEF) && activity.getState().equals(ActivityStateEnum.ACTIVE.getValue())) {
             CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-            if (club == null || !club.getChiefId().equals(user.getId())) {
+            if (NotExistUtil.check(club)) {
+                Asserts.notFound(ClubErrorEnum.CLUB_NOT_FOUND);
+            }
+            if (!club.getChiefId().equals(user.getId())) {
                 Asserts.forbidden("非社长，权限不足");
             }
             if (stateId.equals(ActivityStateEnum.PUBLISHED.getValue())
@@ -170,12 +164,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void delActivity(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (notExistActivity(activity)) {
+        if (NotExistUtil.check(activity)) {
             Asserts.notFound("活动ID不存在");
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (notExistClub(club)) {
+        if (NotExistUtil.check(club)) {
             Asserts.notFound("活动对应社团不存在");
         }
         SysUser user = userService.getCurrentUser();
@@ -198,7 +192,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         PaginationParam paginationParam, OrderByParam orderByParam) {
 
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        if (notExistClub(club)) {
+        if (NotExistUtil.check(club)) {
             Asserts.notFound("社团ID错误，无法获取社团信息");
         }
 
@@ -215,12 +209,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (notExistActivity(activity)) {
+        if (NotExistUtil.check(activity)) {
             Asserts.notFound("申请ID错误，获取申请活动失败");
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (notExistClub(club)) {
+        if (NotExistUtil.check(club)) {
             Asserts.notFound("获取活动的社团失败");
         }
         if (!userService.getCurrentUser().getId().equals(club.getChiefId())) {
@@ -234,7 +228,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void updateActivity(Integer id, CmsActivityUpdateParam param) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (notExistActivity(activity)) {
+        if (NotExistUtil.check(activity)) {
             Asserts.notFound("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());

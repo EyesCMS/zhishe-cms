@@ -19,6 +19,7 @@ import edu.fzu.zhishe.core.param.OrderByParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsClubService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     public ClubStatueEnum getClubStatue(Integer clubId) {
         // 找不到社团
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        if (club == null) {
+        if (NotExistUtil.check(club)) {
             return ClubStatueEnum.NONE;
         }
 

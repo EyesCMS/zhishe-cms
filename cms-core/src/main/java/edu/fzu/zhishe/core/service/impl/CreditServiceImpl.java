@@ -12,6 +12,7 @@ import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.CreditUtil;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -152,7 +153,7 @@ public class CreditServiceImpl implements CreditService {
             return;
         }
         FmsPost post = fmsPostMapper.selectByPrimaryKey(postId.longValue());
-        if (post == null) {
+        if (NotExistUtil.check(post)) {
             Asserts.fail(PostErrorEnum.MAPPER_OPERATION_FAILED);
         }
         //个人贴不加积分

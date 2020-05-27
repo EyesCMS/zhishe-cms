@@ -39,6 +39,7 @@ import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsApplyAuditService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
@@ -103,10 +104,6 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
 
     @Autowired
     CmsClubPictureMapper pictureMapper;
-
-    public boolean notExistClub(CmsClub club) {
-        return club == null || club.getDeleteStatus() == DeleteStateEnum.Deleted.getValue();
-    }
 
     public void checkNotExistOrAudited(Object auditObject) {
 
@@ -394,7 +391,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     public CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam) {
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsJoinParam.getClubId());
-        if (notExistClub(cmsClub)) {
+        if (NotExistUtil.check(cmsClub)) {
             Asserts.notFound(PostErrorEnum.CLUB_NOT_EXIST);
         }
         // 查询是否已经是社团成员
@@ -502,7 +499,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         //由于不用审核，就不需要重复申请判断
         // 查询是否已存在该社团
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsQuitParam.getClubId());
-        if (notExistClub(cmsClub)) {
+        if (NotExistUtil.check(cmsClub)) {
             Asserts.notFound(PostErrorEnum.CLUB_NOT_EXIST);
         }
         //前端页面社长没有退社按钮就不需要验证了

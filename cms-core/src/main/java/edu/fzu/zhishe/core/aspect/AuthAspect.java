@@ -8,9 +8,8 @@ import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
-import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.service.SysUserService;
-import java.util.ArrayList;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -81,7 +80,7 @@ public class AuthAspect {
 
             Integer clubId = (Integer) joinPoint.getArgs()[i];
             CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-            if (club == null) {
+            if (NotExistUtil.check(club)) {
                 Asserts.notFound("社团不存在");
             }
 

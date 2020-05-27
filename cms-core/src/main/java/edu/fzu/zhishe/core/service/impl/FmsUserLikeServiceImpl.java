@@ -17,6 +17,7 @@ import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
     @Override
     public void like(Long likedPostId) {
         FmsPost post = postMapper.selectByPrimaryKey(likedPostId);
-        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+        if (NotExistUtil.check(post)) {
             Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
         }
 

@@ -17,6 +17,7 @@ public enum ClubErrorEnum implements BaseErrorEnum {
 
 
     // 404
+    CLUB_NOT_FOUND("社团不存在"),
     USER_NOT_IN("该用户不是社团成员"),
 
     ;
