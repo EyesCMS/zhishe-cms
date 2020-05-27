@@ -36,6 +36,6 @@ public class NotExistUtil {
      * @return true if post is not exist
      */
     public static boolean check(FmsPost post) {
-        return post == null || post.getDeleteState().equals(ActivityStateEnum.DELETED.getValue());
+        return post == null || post.getDeleteState()== DeleteStateEnum.Deleted.getValue();
     }
 }
