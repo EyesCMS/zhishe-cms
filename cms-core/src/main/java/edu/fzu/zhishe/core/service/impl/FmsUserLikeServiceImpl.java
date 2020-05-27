@@ -6,6 +6,10 @@ import edu.fzu.zhishe.cms.mapper.FmsUserLikePostMapper;
 import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsUserLikePost;
 import edu.fzu.zhishe.cms.model.FmsUserLikePostExample;
+import edu.fzu.zhishe.cms.model.SysUser;
+import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.IsLogin;
+import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.dao.FmsUserLikePostDAO;
 import edu.fzu.zhishe.core.dto.FmsLikedCountDTO;
 import edu.fzu.zhishe.core.service.FmsLikeCacheService;
@@ -37,6 +41,43 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
 
     @Autowired
     FmsPostMapper postMapper;
+
+    @IsLogin
+    @Override
+    public Integer getLikeStatus(Long postId) {
+
+        SysUser currentUser = userService.getCurrentUser();
+        return likeCacheService.hasLiked(currentUser.getId(), postId)
+            ? LikedStatusEnum.LIKE.getCode()
+            : LikedStatusEnum.UNLIKE.getCode();
+    }
+
+    @IsLogin
+    @Override
+    public void like(Long likedPostId) {
+
+        SysUser currentUser = userService.getCurrentUser();
+        if (likeCacheService.hasLiked(currentUser.getId(), likedPostId)) {
+            Asserts.fail("你已经点过赞了");
+        }
+
+        // 先存到 Redis 里面，再定时写到数据库里
+        likeCacheService.saveLiked2Redis(currentUser.getId(), likedPostId);
+        likeCacheService.incrLikedCount(likedPostId);
+    }
+
+    @IsLogin
+    @Override
+    public void unlike(Long likedPostId) {
+
+        SysUser currentUser = userService.getCurrentUser();
+        if (likeCacheService.hasUnLiked(currentUser.getId(), likedPostId)) {
+            Asserts.fail("你还没有赞过呢");
+        }
+        // 取消点赞，先存到 Redis 里面，再定时写到数据库里
+        likeCacheService.unlikeFromRedis(currentUser.getId(), likedPostId);
+        likeCacheService.decrLikedCount(likedPostId);
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)

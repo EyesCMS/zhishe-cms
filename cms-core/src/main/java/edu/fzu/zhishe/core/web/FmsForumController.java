@@ -1,5 +1,9 @@
 package edu.fzu.zhishe.core.web;
 
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
+
+import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
@@ -13,8 +17,11 @@ import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.FmsForumService;
+import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +51,9 @@ public class FmsForumController {
 
     @Autowired
     private SysUserService userService;
+
+    @Autowired
+    FmsUserLikeService userLikeService;
 
     @Autowired
     CreditService creditService;
@@ -142,6 +152,40 @@ public class FmsForumController {
             .filter(p -> p.getPosterName().equals(username))
             .collect(Collectors.toList());
         return ResponseEntity.ok().body(CommonPage.restPage(myPosts));
+    }
+
+    @ApiOperation(value = " 7.8 点赞 ")
+    @RequestMapping(value = "/like", method = RequestMethod.POST)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "likedPostId", value = " 被点赞的帖子 id"),
+    })
+    public ResponseEntity<Object> like(@RequestParam("likedPostId") Long likedPostId) {
+
+        userLikeService.like(likedPostId);
+        return noContent().build();
+    }
+
+    @ApiOperation(value = " 7.9 取消点赞 ")
+    @RequestMapping(value = "/unlike", method = RequestMethod.POST)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "likedPostId", value = " 被取消点赞的帖子 id"),
+    })
+    public ResponseEntity<Object> unlike(@RequestParam("likedPostId") Long likedPostId) {
+
+        userLikeService.unlike(likedPostId);
+        return noContent().build();
+    }
+
+    @ApiOperation(value = " 7.10 查看当前用户对某一帖子的点赞情况 ")
+    @RequestMapping(value = "/like", method = RequestMethod.GET)
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "postId", value = " 帖子 id"),
+    })
+    public ResponseEntity<Object> getLikeStatus(@RequestParam("postId") Long postId) {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status", userLikeService.getLikeStatus(postId));
+        return ok().body(jsonObject);
     }
 
     @ApiOperation(" 8.1 对某一帖子发表评论 ")

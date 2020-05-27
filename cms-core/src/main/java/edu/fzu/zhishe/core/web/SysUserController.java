@@ -5,18 +5,12 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
-import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
-import edu.fzu.zhishe.core.service.FmsLikeCacheService;
-import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 import java.util.HashMap;
@@ -43,12 +37,6 @@ public class SysUserController {
 
     @Autowired
     SysUserService userService;
-
-    @Autowired
-    FmsLikeCacheService likeCacheService;
-
-    @Autowired
-    FmsUserLikeService userLikeService;
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
@@ -106,57 +94,6 @@ public class SysUserController {
             response.setMessage(result.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
-        return noContent().build();
-    }
-
-    @ApiOperation(value = " 查看当前用户对某一帖子的点赞情况 ")
-    @RequestMapping(value = "/like", method = RequestMethod.GET)
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "postId", value = " 帖子 id"),
-    })
-    public ResponseEntity<Object> getLikeStatus(@RequestParam("postId") Long likedPostId) {
-
-        SysUser currentUser = userService.getCurrentUser();
-        JSONObject jsonObject = new JSONObject();
-        if (likeCacheService.hasLiked(currentUser.getId(), likedPostId)) {
-            jsonObject.put("status", LikedStatusEnum.LIKE.getCode());
-        } else {
-            jsonObject.put("status", LikedStatusEnum.UNLIKE.getCode());
-        }
-        return ok().body(jsonObject);
-    }
-
-    @ApiOperation(value = " 点赞 ")
-    @RequestMapping(value = "/like", method = RequestMethod.POST)
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "likedPostId", value = " 被点赞的帖子 id"),
-    })
-    public ResponseEntity<Object> like(@RequestParam("likedPostId") Long likedPostId) {
-
-        SysUser currentUser = userService.getCurrentUser();
-        if (likeCacheService.hasLiked(currentUser.getId(), likedPostId)) {
-            Asserts.fail("你已经点过赞了");
-        }
-        // 先存到 Redis 里面，再定时写到数据库里
-        likeCacheService.saveLiked2Redis(currentUser.getId(), likedPostId);
-        likeCacheService.incrLikedCount(likedPostId);
-        return noContent().build();
-    }
-
-    @ApiOperation(value = " 取消点赞 ")
-    @RequestMapping(value = "/unlike", method = RequestMethod.POST)
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "likedPostId", value = " 被取消点赞的帖子 id"),
-    })
-    public ResponseEntity<Object> unlike(@RequestParam("likedPostId") Long likedPostId) {
-
-        SysUser currentUser = userService.getCurrentUser();
-        if (likeCacheService.hasUnLiked(currentUser.getId(), likedPostId)) {
-            Asserts.fail("你还没有赞过呢");
-        }
-        // 取消点赞，先存到 Redis 里面，再定时写到数据库里
-        likeCacheService.unlikeFromRedis(currentUser.getId(), likedPostId);
-        likeCacheService.decrLikedCount(likedPostId);
         return noContent().build();
     }
 }

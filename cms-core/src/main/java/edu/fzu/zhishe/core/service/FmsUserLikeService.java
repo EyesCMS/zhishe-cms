@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.service;
 
 import edu.fzu.zhishe.cms.model.FmsUserLikePost;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import java.util.List;
 
 /**
@@ -8,6 +9,20 @@ import java.util.List;
  * @version 1.0
  */
 public interface FmsUserLikeService {
+
+    Integer getLikeStatus(Long postId);
+
+    /**
+     * 点赞
+     * @param likedPostId 被点赞帖子 ID
+     */
+    void like(Long likedPostId);
+
+    /**
+     * 取消点赞
+     * @param likedPostId 被点赞帖子 ID
+     */
+    void unlike(Long likedPostId);
 
     /**
      * 保存点赞记录
