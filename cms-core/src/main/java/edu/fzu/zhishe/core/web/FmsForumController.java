@@ -11,6 +11,7 @@ import edu.fzu.zhishe.common.exception.EntityNotFoundException;
 import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
@@ -90,7 +91,8 @@ public class FmsForumController {
             Asserts.fail("type must be 0 or 1");
         }
 
-        return ResponseEntity.ok().body(postDTO.orElseThrow(() -> new EntityNotFoundException("Post doesn't exist")));
+        return ResponseEntity.ok().body(postDTO.orElseThrow(() -> new EntityNotFoundException(
+            PostErrorEnum.POST_NOT_EXIST.getMessage())));
     }
 
     @ApiOperation(" 7.3 删除一条帖子 ")

@@ -9,9 +9,11 @@ import edu.fzu.zhishe.cms.model.FmsUserLikePostExample;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.IsLogin;
+import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.dao.FmsUserLikePostDAO;
 import edu.fzu.zhishe.core.dto.FmsLikedCountDTO;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -55,10 +57,14 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
     @IsLogin
     @Override
     public void like(Long likedPostId) {
+        FmsPost post = postMapper.selectByPrimaryKey(likedPostId);
+        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         SysUser currentUser = userService.getCurrentUser();
         if (likeCacheService.hasLiked(currentUser.getId(), likedPostId)) {
-            Asserts.fail("你已经点过赞了");
+            Asserts.fail(PostErrorEnum.ALREADY_LIKED);
         }
 
         // 先存到 Redis 里面，再定时写到数据库里
@@ -72,7 +78,7 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
 
         SysUser currentUser = userService.getCurrentUser();
         if (likeCacheService.hasUnLiked(currentUser.getId(), likedPostId)) {
-            Asserts.fail("你还没有赞过呢");
+            Asserts.fail(PostErrorEnum.DOES_NOT_LIKED);
         }
         // 取消点赞，先存到 Redis 里面，再定时写到数据库里
         likeCacheService.unlikeFromRedis(currentUser.getId(), likedPostId);

@@ -13,6 +13,7 @@ import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
 import edu.fzu.zhishe.core.dao.FmsRemarkDAO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.param.FmsPostQuery;
@@ -108,14 +109,16 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Override
     public int updatePost(Long id, FmsPostParam postParam) {
         FmsPost oldPost = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(oldPost == null || oldPost.getDeleteState() == DeleteStateEnum.Deleted.getValue());
+        if (oldPost == null || oldPost.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         if (oldPost.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
-            Asserts.fail("can't update activity post");
+            Asserts.fail(PostErrorEnum.CAN_NOT_UPDATE_ACTIVITY_POST);
         }
         SysUser currentUser = userService.getCurrentUser();
         if (!oldPost.getPosterId().equals(currentUser.getId())) {
-            Asserts.forbidden();
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
 
         FmsPost post = new FmsPost();
@@ -131,18 +134,20 @@ public class FmsForumServiceImpl implements FmsForumService {
     public int deletePost(Long id) {
 
         FmsPost post = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue());
+        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         if (post.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
-            Asserts.fail("can't delete activity post");
+            Asserts.fail(PostErrorEnum.CAN_NOT_DELETE_ACTIVITY_POST);
         }
         if (!userService.getCurrentUser().getId().equals(post.getPosterId())) {
-            Asserts.forbidden("你不是该贴的发帖人");
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
 
         FmsPost newPost = new FmsPost();
         newPost.setId(id);
-        newPost.setDeleteState(1);
+        newPost.setDeleteState(DeleteStateEnum.Deleted.getValue());
         return postMapper.updateByPrimaryKeySelective(newPost);
     }
 
@@ -152,7 +157,9 @@ public class FmsForumServiceImpl implements FmsForumService {
 
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        Asserts.notFound(post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue());
+        if (post == null || post.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         FmsPostRemark remark = new FmsPostRemark();
         remark.setUserId(userService.getCurrentUser().getId());
@@ -167,11 +174,13 @@ public class FmsForumServiceImpl implements FmsForumService {
     @Override
     public int deleteRemark(Long id) {
         FmsPostRemark remark = remarkMapper.selectByPrimaryKey(id);
-        Asserts.notNull(remark);
+        if (remark == null) {
+            Asserts.notFound(PostErrorEnum.REMARK_NOT_EXIST);
+        }
 
         Integer userId = userService.getCurrentUser().getId();
         if (!remark.getUserId().equals(userId)) {
-            Asserts.forbidden();
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
         return remarkMapper.deleteByPrimaryKey(id);
     }

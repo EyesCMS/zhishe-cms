@@ -31,12 +31,20 @@ public class Asserts {
         }
     }
 
+    public static void unAuthorized(BaseErrorEnum errorEnum) {
+        throw new AuthException(errorEnum.getMessage());
+    }
+
     public static void unAuthorized(String message) {
         throw new AuthException(message);
     }
 
     public static void unAuthorized() {
         throw new AuthException("Full authentication is required to access this resource");
+    }
+
+    public static void forbidden(BaseErrorEnum errorEnum) {
+        throw new AccessDeniedException(errorEnum.getMessage());
     }
 
     public static void forbidden(String message) {
@@ -53,12 +61,18 @@ public class Asserts {
         }
     }
 
+    public static void notFound(BaseErrorEnum errorEnum) { throw new EntityNotFoundException(errorEnum.getMessage()); }
+
     public static void notFound() { throw new EntityNotFoundException("not found"); }
 
     public static void notFound(String message) { throw new EntityNotFoundException(message); }
 
+    public static void fail(BaseErrorEnum errorEnum) {
+        throw new ApiException(errorEnum.getMessage());
+    }
+
     public static void fail() {
-        throw new ApiException("操作失败");
+        throw new ApiException("operation failed");
     }
 
     public static void fail(String message) {
