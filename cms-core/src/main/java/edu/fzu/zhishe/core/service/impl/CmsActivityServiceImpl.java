@@ -7,6 +7,8 @@ import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.IsAdmin;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
@@ -61,30 +63,28 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Autowired
     private StorageService storageService;
 
-    @Autowired
-    StorageProperties storageProperties;
+    public boolean notExistClub(CmsClub club) {
+        return club == null || club.getDeleteStatus() == DeleteStateEnum.Deleted.getValue();
+    }
 
+    public boolean notExistActivity(CmsActivity activity) {
+        return activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue());
+    }
+
+    @IsLogin
     @Override
     public void activityApply(CmsClubActivityParam param, MultipartFile imgUrl) {
-        SysUser user = userService.getCurrentUser();
-
-        if (param.getStartDate() == null || param.getEndDate() == null) {
-            Asserts.forbidden("请正确输入日期");
-        }
 
         if (param.getStartDate().after(param.getEndDate())) {
             Asserts.forbidden("结束日期不可以在开始日期之前");
         }
 
-        if (user == null) {
-            Asserts.forbidden("请登录");
-        }
         CmsClub club = clubMapper.selectByPrimaryKey(param.getClubId());
-        if (club== null) {
-            Asserts.notFound("clubId错误，找不到社团");
+        if (notExistClub(club)) {
+            Asserts.notFound("clubId 错误，找不到社团");
         }
 
-        if (!club.getChiefId().equals(user.getId())) {
+        if (!club.getChiefId().equals(userService.getCurrentUser().getId())) {
             Asserts.forbidden("非社长无法申请社团活动");
         }
 
@@ -104,8 +104,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
         //设置上传活动图片
         if (imgUrl != null) {
-            Path imageRootLocation = Paths.get(storageProperties.getImageLocation());
-            String url = storageService.store(imgUrl, imageRootLocation);
+            String url = storageService.storeImage(imgUrl);
             if (!StrUtil.isEmpty(url)) {
                 activity.setImgUrl(url);
             }
@@ -116,15 +115,13 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         }
     }
 
+    @IsLogin
     @Override
     public void activityStateChange(Integer applyId, Integer stateId, UserRoleEnum role) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(applyId);
         SysUser user = userService.getCurrentUser();
         if (activity == null) {
             Asserts.notFound("找不到活动");
-        }
-        if (user == null) {
-            Asserts.forbidden("权限不足");
         }
 
         if (role.equals(UserRoleEnum.ADMIN) && activity.getState().equals(ActivityStateEnum.PENDING.getValue())) {
@@ -173,12 +170,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     @Override
     public void delActivity(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (activity == null) {
+        if (notExistActivity(activity)) {
             Asserts.notFound("活动ID不存在");
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (club == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+        if (notExistClub(club)) {
             Asserts.notFound("活动对应社团不存在");
         }
         SysUser user = userService.getCurrentUser();
@@ -193,6 +190,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         }
     }
 
+    @IsLogin
     @Override
     public List<CmsActivityApplyDTO> listActivitiesApply(
         Integer clubId,
@@ -200,13 +198,12 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         PaginationParam paginationParam, OrderByParam orderByParam) {
 
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
-        SysUser user = userService.getCurrentUser();
-
-        if (club == null) {
+        if (notExistClub(club)) {
             Asserts.notFound("社团ID错误，无法获取社团信息");
         }
 
-        if (user == null || !user.getId().equals(club.getChiefId())) {
+        SysUser user = userService.getCurrentUser();
+        if (!user.getId().equals(club.getChiefId())) {
             Asserts.forbidden("非社长无法查看申请活动");
         }
 
@@ -214,68 +211,54 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         return activityDAO.listActivityApplyForChief(clubId, param);
     }
 
+    @IsLogin
     @Override
     public CmsActivity getActivityApplyItem(Integer id) {
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+        if (notExistActivity(activity)) {
             Asserts.notFound("申请ID错误，获取申请活动失败");
         }
 
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (club == null) {
+        if (notExistClub(club)) {
             Asserts.notFound("获取活动的社团失败");
         }
-        SysUser user = userService.getCurrentUser();
-        if (user == null || !user.getId().equals(club.getChiefId())) {
+        if (!userService.getCurrentUser().getId().equals(club.getChiefId())) {
             Asserts.forbidden("非社长无法查看申请活动");
         }
 
         return activity;
     }
 
+    @IsLogin
     @Override
     public void updateActivity(Integer id, CmsActivityUpdateParam param) {
-        SysUser user = userService.getCurrentUser();
         CmsActivity activity = activityMapper.selectByPrimaryKey(id);
-        if (user == null) {
-            Asserts.forbidden("请登录");
-        }
-        if (activity == null || activity.getState().equals(ActivityStateEnum.DELETED.getValue())) {
+        if (notExistActivity(activity)) {
             Asserts.notFound("获取活动失败");
         }
         CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
-        if (!club.getChiefId().equals(user.getId())) {
+        if (!club.getChiefId().equals(userService.getCurrentUser().getId())) {
             Asserts.forbidden("非社长不能修改活动");
         }
         if (param.getStartDate().after(param.getEndDate())) {
             Asserts.forbidden("结束日期不可以在开始日期之前");
         }
-        activity.setName(param.getName());
-        activity.setTitle(param.getTitle());
         activity.setBody(param.getContent());
-        activity.setStartDate(param.getStartDate());
-        activity.setEndDate(param.getEndDate());
-        if (param.getLocation() != null) {
-            activity.setLocation(param.getLocation());
-        }
-        if (activityMapper.updateByPrimaryKey(activity) == 0) {
+        BeanUtils.copyProperties(param, activity);
+        if (activityMapper.updateByPrimaryKeySelective(activity) == 0) {
             Asserts.fail("更新失败");
         }
     }
 
+    @IsAdmin
     @Override
     public List<CmsActivityApplyListDTO> listActivitiesApply(
         CmsActivityQuery param,
         PaginationParam paginationParam,
         OrderByParam orderByParam) {
 
-        SysUser user = userService.getCurrentUser();
-        if (user == null || user.getIsAdmin() == 0) {
-            Asserts.fail("非管理员无法查询");
-        }
-
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-
         return activityDAO.listActivityApplyForAdmin(param.getState(), param.getClubName());
     }
 
