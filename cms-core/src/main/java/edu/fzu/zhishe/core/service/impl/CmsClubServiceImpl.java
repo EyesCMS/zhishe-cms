@@ -173,6 +173,7 @@ public class CmsClubServiceImpl implements CmsClubService {
             data.setName(club.getName());
             data.setChiefName(user.getNickname());
             data.setAvatarUrl(club.getAvatarUrl());
+            data.setState(club.getOfficialState());
             data.setSlogan(club.getSlogan());
             data.setType(club.getType());
             data.setMemberCount(club.getMemberCount());
@@ -203,7 +204,11 @@ public class CmsClubServiceImpl implements CmsClubService {
         Integer userId) {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return clubDAO.listJoinedClub(orderByParam, userId);
+        List<CmsClubBriefDTO> list = clubDAO.listJoinedClub(orderByParam, userId);
+        for (CmsClubBriefDTO club : list) {
+            club = setRoleAndJoinState(club);
+        }
+        return list;
     }
 
     /**获取管理的社团列表（社团内身份为社长）*/
@@ -214,7 +219,11 @@ public class CmsClubServiceImpl implements CmsClubService {
         Integer userId) {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return clubDAO.listManagedClub(orderByParam, userId);
+        List<CmsClubBriefDTO> list = clubDAO.listManagedClub(orderByParam, userId);
+        for (CmsClubBriefDTO club : list) {
+            club = setRoleAndJoinState(club);
+        }
+        return list;
     }
 
     /**获取加入社团申请列表（学生查看自己发出的加入社团申请）*/
