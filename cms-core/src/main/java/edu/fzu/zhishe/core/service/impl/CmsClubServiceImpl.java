@@ -98,6 +98,9 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
 
         SysUser currentUser = sysUserService.getCurrentUser();
+        if (currentUser == null) {
+            return ClubStatueEnum.NONE;
+        }
         Integer userId = currentUser.getId();
         if (club.getChiefId().equals(userId)) {
             return ClubStatueEnum.CHIEF;
