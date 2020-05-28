@@ -126,7 +126,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                 club.setJoinState("已加入");
                 club.setRole("社员");
                 break;
-            case NONE:
+            default:
                 club.setJoinState("未加入");
                 club.setRole("无");
                 break;
@@ -187,7 +187,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                     data.setJoinState("已加入");
                     data.setRole("社员");
                     break;
-                case NONE:
+                default:
                     data.setJoinState("未加入");
                     data.setRole("无");
                     break;
