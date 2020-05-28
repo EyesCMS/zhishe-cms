@@ -1,8 +1,10 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.mapper.FmsUserLikePostMapper;
+import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsUserLikePost;
 import edu.fzu.zhishe.cms.model.FmsUserLikePostExample;
@@ -19,6 +21,7 @@ import edu.fzu.zhishe.core.service.FmsUserLikeService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +47,9 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
 
     @Autowired
     FmsPostMapper postMapper;
+
+    @Autowired
+    SysUserMapper userMapper;
 
     @IsLogin
     @Override
@@ -133,7 +139,7 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
         example.createCriteria().andUserIdEqualTo(likedUserId)
             .andPostIdEqualTo(likedPostId);
         List<FmsUserLikePost> likePostList = userLikePostMapper.selectByExample(example);
-        if (likePostList == null || likePostList.isEmpty()) {
+        if (CollUtil.isEmpty(likePostList)) {
             return null;
         }
         return likePostList.get(0);
@@ -148,8 +154,17 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
 
         // 2. insert all data from Redis to MySQL
         List<FmsUserLikePost> likePostList = likeCacheService.listLikedDataFromRedis();
-        if (!CollectionUtil.isEmpty(likePostList)) {
-            userLikePostDAO.insertList(likePostList);
+        List<FmsUserLikePost> checkedList = likePostList.stream()
+            .filter(p -> {
+                SysUser user = userMapper.selectByPrimaryKey(p.getUserId());
+                if (user == null) {
+                    return false;
+                }
+                FmsPost post = postMapper.selectByPrimaryKey(p.getPostId());
+                return !NotExistUtil.check(post);
+            }).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(checkedList)) {
+            userLikePostDAO.insertList(checkedList);
         }
     }
 
