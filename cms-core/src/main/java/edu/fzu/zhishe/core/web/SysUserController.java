@@ -56,7 +56,7 @@ public class SysUserController {
 
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
     @PostMapping(value = "/answer")
-    public ResponseEntity<Object> answer(@RequestBody SysUserUpdatePwdByAnswer param) {
+    public ResponseEntity<Object> answer(@Validated @RequestBody SysUserUpdatePwdByAnswer param) {
 
         if (param.getUsername() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -71,7 +71,7 @@ public class SysUserController {
 
     @ApiOperation(value = " 用户修改个人信息 ")
     @PutMapping(value = "/info")
-    public ResponseEntity<Object> info(@RequestBody SysUserUpdateParam updateParam) {
+    public ResponseEntity<Object> info(@Validated @RequestBody SysUserUpdateParam updateParam) {
 
         userService.updateUserByParam(updateParam);
         return noContent().build();
