@@ -116,7 +116,7 @@ public class CmsClubServiceImpl implements CmsClubService {
     }
 
     @Override
-    public CmsClubBriefDTO setRoleAndJoinState(CmsClubBriefDTO club) {
+    public void setRoleAndJoinState(CmsClubBriefDTO club) {
         switch (getClubStatue(club.getId())){
             case CHIEF:
                 club.setJoinState("已加入");
@@ -131,7 +131,7 @@ public class CmsClubServiceImpl implements CmsClubService {
                 club.setRole("无");
                 break;
         }
-        return club;
+        return ;
     }
 
     /**获取推荐社团列表*/
@@ -140,7 +140,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listHotClub(orderByParam);
         for (CmsClubBriefDTO club : list) {
-            club = setRoleAndJoinState(club);
+            setRoleAndJoinState(club);
         }
         return list;
     }
@@ -157,7 +157,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listClub(keyword,type,state);
         for (CmsClubBriefDTO club : list) {
-            club = setRoleAndJoinState(club);
+            setRoleAndJoinState(club);
         }
         return list;
     }
@@ -206,7 +206,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listJoinedClub(orderByParam, userId);
         for (CmsClubBriefDTO club : list) {
-            club = setRoleAndJoinState(club);
+            setRoleAndJoinState(club);
         }
         return list;
     }
@@ -221,7 +221,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listManagedClub(orderByParam, userId);
         for (CmsClubBriefDTO club : list) {
-            club = setRoleAndJoinState(club);
+            setRoleAndJoinState(club);
         }
         return list;
     }

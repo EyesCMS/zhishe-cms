@@ -20,7 +20,7 @@ public interface CmsClubService {
 
     ClubStatueEnum getClubStatue(Integer clubId);
 
-    CmsClubBriefDTO setRoleAndJoinState(CmsClubBriefDTO club);
+    void setRoleAndJoinState(CmsClubBriefDTO club);
 
     /**
      * 获取推荐社团列表
