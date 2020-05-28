@@ -122,10 +122,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsClubBriefDTO> list = clubDAO.listHotClub(orderByParam);
         for (CmsClubBriefDTO club : list) {
             if (!isClubMember(club.getId())) {
-                club.setJoinState("已加入");
+                club.setJoinState("未加入");
             }
             else {
-                club.setJoinState("未加入");
+                club.setJoinState("已加入");
             }
         }
         return list;
@@ -144,10 +144,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         List<CmsClubBriefDTO> list = clubDAO.listClub(keyword,type,state);
         for (CmsClubBriefDTO club : list) {
             if (!isClubMember(club.getId())) {
-                club.setJoinState("已加入");
+                club.setJoinState("未加入");
             }
             else {
-                club.setJoinState("未加入");
+                club.setJoinState("已加入");
             }
         }
         return list;
