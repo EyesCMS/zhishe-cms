@@ -67,6 +67,38 @@
      AND p.id = #{id}
   </select>
 
+  <select id="listMyPost" parameterType="java.lang.Integer" resultMap="PostResultMap">
+    SELECT
+      p.id,
+      p.title,
+      p.content,
+      p.img_url,
+      u.username AS poster_name,
+      u.avatar_url AS poster_avatar_url,
+      p.create_at,
+      (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
+    FROM
+      fms_post AS p
+      LEFT JOIN sys_user AS u ON p.poster_id = #{userId}
+    WHERE
+      p.delete_state = 0
+      AND p.type = 0
+    <if test="queryParam.posterName != null and queryParam.posterName != ''">
+      AND username LIKE concat("%", #{queryParam.posterName},"%")
+    </if>
+    <if test="queryParam.title != null and queryParam.title != ''">
+      AND title LIKE concat("%", #{queryParam.title},"%")
+    </if>
+    <if test="queryParam.content != null and queryParam.content != ''">
+      AND content LIKE concat("%", #{queryParam.content},"%")
+    </if>
+    <if test="queryParam.createAt != null and queryParam.createAt != ''">
+      AND create_at LIKE concat("%", #{queryParam.createAt},"%")
+    </if>
+    ORDER BY
+    create_at DESC
+  </select>
+
   <select id="listPersonalPost" parameterType="java.lang.Integer" resultMap="PostResultMap">
     SELECT
      p.id,

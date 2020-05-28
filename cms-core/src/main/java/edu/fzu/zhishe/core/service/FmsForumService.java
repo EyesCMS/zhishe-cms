@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FmsForumService {
 
+    List<FmsPostDTO> listMyPost(PaginationParam paginationParam, FmsPostQuery postQuery);
+
     List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery);
 
     FmsPostDTO getPersonalPostById(Integer id);

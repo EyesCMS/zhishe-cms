@@ -154,17 +154,7 @@ public class FmsForumController {
         @Validated PaginationParam paginationParam,
         FmsPostQuery postQuery) {
 
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
-        String username = currentUser.getUsername();
-        postQuery.setPosterName(username);
-        List<FmsPostDTO> posts = forumService.listPersonalPost(null, paginationParam, postQuery);
-        List<FmsPostDTO> myPosts = posts.stream()
-            .filter(p -> p.getPosterName().equals(username))
-            .collect(Collectors.toList());
-        return ResponseEntity.ok().body(CommonPage.restPage(myPosts));
+        return ResponseEntity.ok().body(CommonPage.restPage(forumService.listMyPost(paginationParam, postQuery)));
     }
 
     @ApiOperation(value = " 7.8 点赞 ")

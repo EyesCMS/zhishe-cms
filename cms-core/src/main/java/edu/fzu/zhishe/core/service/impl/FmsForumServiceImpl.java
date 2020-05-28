@@ -73,6 +73,14 @@ public class FmsForumServiceImpl implements FmsForumService {
         return postList;
     }
 
+    @IsLogin
+    @Override
+    public List<FmsPostDTO> listMyPost(PaginationParam paginationParam, FmsPostQuery postQuery) {
+
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return queryLikeCount(postDAO.listMyPost(userService.getCurrentUser().getId(), postQuery));
+    }
+
     @Override
     public List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
