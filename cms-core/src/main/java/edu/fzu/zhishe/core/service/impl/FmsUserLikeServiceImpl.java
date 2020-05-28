@@ -77,6 +77,11 @@ public class FmsUserLikeServiceImpl implements FmsUserLikeService {
     @Override
     public void unlike(Long likedPostId) {
 
+        FmsPost post = postMapper.selectByPrimaryKey(likedPostId);
+        if (NotExistUtil.check(post)) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
+
         SysUser currentUser = userService.getCurrentUser();
         if (likeCacheService.hasUnLiked(currentUser.getId(), likedPostId)) {
             Asserts.fail(PostErrorEnum.DOES_NOT_LIKED);
