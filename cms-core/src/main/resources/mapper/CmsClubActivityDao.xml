@@ -60,7 +60,7 @@
         </if>
 
         ORDER BY
-        id ASC
+        a.state ASC
     </select>
 
     <select id="listActivityApplyForAdmin" resultMap="ApplyList">
@@ -86,9 +86,8 @@
         <if test="clubName!=null and clubName!=''">
             AND c.name LIKE concat("%", #{clubName},"%")
         </if>
-
         ORDER BY
-        id ASC
+        a.state ASC
     </select>
 
     <update id="finishActivityBatch">
