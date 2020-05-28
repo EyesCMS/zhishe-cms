@@ -115,18 +115,32 @@ public class CmsClubServiceImpl implements CmsClubService {
         return ClubStatueEnum.MEMBER;
     }
 
+    @Override
+    public CmsClubBriefDTO setRoleAndJoinState(CmsClubBriefDTO club) {
+        switch (getClubStatue(club.getId())){
+            case CHIEF:
+                club.setJoinState("已加入");
+                club.setRole("社长");
+                break;
+            case MEMBER:
+                club.setJoinState("已加入");
+                club.setRole("社员");
+                break;
+            case NONE:
+                club.setJoinState("未加入");
+                club.setRole("无");
+                break;
+        }
+        return club;
+    }
+
     /**获取推荐社团列表*/
     @Override
     public List<CmsClubBriefDTO> listHotClub(PaginationParam paginationParam, OrderByParam orderByParam) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listHotClub(orderByParam);
         for (CmsClubBriefDTO club : list) {
-            if (!isClubMember(club.getId())) {
-                club.setJoinState("未加入");
-            }
-            else {
-                club.setJoinState("已加入");
-            }
+            club = setRoleAndJoinState(club);
         }
         return list;
     }
@@ -143,12 +157,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         List<CmsClubBriefDTO> list = clubDAO.listClub(keyword,type,state);
         for (CmsClubBriefDTO club : list) {
-            if (!isClubMember(club.getId())) {
-                club.setJoinState("未加入");
-            }
-            else {
-                club.setJoinState("已加入");
-            }
+            club = setRoleAndJoinState(club);
         }
         return list;
     }
@@ -168,6 +177,20 @@ public class CmsClubServiceImpl implements CmsClubService {
             data.setType(club.getType());
             data.setMemberCount(club.getMemberCount());
             data.setQqGroup(club.getQqGroup());
+            switch (getClubStatue(data.getId())){
+                case CHIEF:
+                    data.setJoinState("已加入");
+                    data.setRole("社长");
+                    break;
+                case MEMBER:
+                    data.setJoinState("已加入");
+                    data.setRole("社员");
+                    break;
+                case NONE:
+                    data.setJoinState("未加入");
+                    data.setRole("无");
+                    break;
+            }
         }
         return data;
     }

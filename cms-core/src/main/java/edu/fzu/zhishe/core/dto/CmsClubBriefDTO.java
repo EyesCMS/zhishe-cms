@@ -23,6 +23,9 @@ public class CmsClubBriefDTO {
     @ApiModelProperty(value = "加入状态")
     private String joinState;
 
+    @ApiModelProperty(value = "身份")
+    private String role;
+
     public Integer getId() {
         return id;
     }
@@ -77,5 +80,11 @@ public class CmsClubBriefDTO {
 
     public void setJoinState(String joinState) {
         this.joinState = joinState;
+    }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
