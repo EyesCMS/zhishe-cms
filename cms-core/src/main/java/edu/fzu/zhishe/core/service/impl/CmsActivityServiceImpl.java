@@ -131,7 +131,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         else if (role.equals(UserRoleEnum.CHIEF) && activity.getState().equals(ActivityStateEnum.ACTIVE.getValue())) {
             CmsClub club = clubMapper.selectByPrimaryKey(activity.getClubId());
             if (NotExistUtil.check(club)) {
-                Asserts.notFound(ClubErrorEnum.CLUB_NOT_FOUND);
+                Asserts.notFound(ClubErrorEnum.CLUB_NOT_EXIST);
             }
             if (!club.getChiefId().equals(user.getId())) {
                 Asserts.forbidden("非社长，权限不足");
