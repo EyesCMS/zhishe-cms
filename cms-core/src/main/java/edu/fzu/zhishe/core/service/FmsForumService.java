@@ -23,7 +23,7 @@ public interface FmsForumService {
 
     FmsPostDTO getActivityPostById(Integer id);
 
-    int savePost(FmsPostParam postParam, MultipartFile imageFile);
+    int savePost(FmsPostParam postParam);
 
     int updatePost(Long id, FmsPostParam postParam);
 

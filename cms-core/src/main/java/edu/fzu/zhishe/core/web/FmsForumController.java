@@ -111,10 +111,9 @@ public class FmsForumController {
 
     @ApiOperation(" 7.4 发布个人帖 ")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
-    public ResponseEntity<Object> savePost(@Validated FmsPostParam postParam,
-                                            @RequestParam("image") MultipartFile multipartFile) {
+    public ResponseEntity<Object> savePost(@Validated FmsPostParam postParam) {
 
-        if (forumService.savePost(postParam, multipartFile) == 0) {
+        if (forumService.savePost(postParam) == 0) {
             Asserts.fail();
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();

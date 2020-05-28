@@ -1,7 +1,7 @@
 package edu.fzu.zhishe.core.param;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 5/1/2020.
@@ -12,6 +12,7 @@ public class FmsPostParam {
     /**
      * title : 这是一个帖子
      * content : 这是内容
+     * image： bin
      */
 
     @NotEmpty(message = "帖子标题不能为空")
@@ -19,6 +20,8 @@ public class FmsPostParam {
 
     @NotEmpty(message = "帖子内容不能为空")
     private String content;
+
+    MultipartFile image;
 
     public String getTitle() {
         return title;
@@ -36,4 +39,11 @@ public class FmsPostParam {
         this.content = content;
     }
 
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
 }

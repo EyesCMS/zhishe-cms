@@ -29,7 +29,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/25/2020.
@@ -98,9 +97,9 @@ public class FmsForumServiceImpl implements FmsForumService {
 
     @IsLogin
     @Override
-    public int savePost(FmsPostParam postParam, MultipartFile imageFile) {
+    public int savePost(FmsPostParam postParam) {
 
-        String imgUrl = storageService.storeImage(imageFile);
+        String imgUrl = storageService.storeImage(postParam.getImage());
         FmsPost post = new FmsPost();
         post.setPosterId(userService.getCurrentUser().getId());
         post.setType(PostTypeEnum.PERSONAL.getValue());
