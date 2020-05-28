@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.error.ClubErrorEnum;
 
 /**
@@ -260,10 +259,10 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsUserClubRel clubRel = new CmsUserClubRel();
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club == null) {
-            Asserts.fail(PostErrorEnum.CLUB_NOT_EXIST);
+            Asserts.fail(ClubErrorEnum.CLUB_NOT_EXIST);
         }
         if (club.getDeleteStatus() == 1) {
-            Asserts.fail(PostErrorEnum.CLUB_ALREADY_DISBAND);
+            Asserts.fail(ClubErrorEnum.CLUB_ALREADY_DISBAND);
         }
         clubRel.setClubId(clubId);
         clubRel.setUserId(userId);
@@ -327,7 +326,7 @@ public class CmsClubServiceImpl implements CmsClubService {
         pictureExample.createCriteria().andClubIdEqualTo(clubId);
         List<CmsClubPicture> pictureList = pictureMapper.selectByExample(pictureExample);
         if (CollUtil.isEmpty(pictureList)) {
-            Asserts.fail(PostErrorEnum.CLUB_NOT_EXIST);
+            Asserts.fail(ClubErrorEnum.CLUB_NOT_EXIST);
         }
         CmsClubPicture picture = pictureList.get(0);
         String[] urls = {null,null,null,null,null};
