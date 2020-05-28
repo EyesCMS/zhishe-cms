@@ -6,6 +6,7 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.CheckinStateEnum;
 import edu.fzu.zhishe.core.constant.CreditEnum;
+import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.HonorDTO;
 import edu.fzu.zhishe.core.error.CreditErrorEnum;
@@ -207,7 +208,7 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public HonorDTO getClubGrade(Integer clubId) {
         CmsClub cmsClub = cmsClubMapper.selectByPrimaryKey(clubId);
-        if (cmsClub == null) {
+        if (cmsClub == null|| cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
             Asserts.fail(CreditErrorEnum.CLUB_NOT_EXIST);
         }
         CmsClubGrade myGrade = cmsClubGradeMapper.selectByPrimaryKey(cmsClub.getGradeId());
