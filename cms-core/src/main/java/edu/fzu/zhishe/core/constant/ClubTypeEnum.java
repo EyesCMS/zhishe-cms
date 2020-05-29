@@ -7,7 +7,7 @@ public enum ClubTypeEnum implements BaseErrorEnum {
     STUDY("学习"),
     ART("艺术"),
     SPORT("运动"),
-    Leisure("休闲"),
+    LEISURE("休闲"),
     OTHER("其他"),
 
     ;
