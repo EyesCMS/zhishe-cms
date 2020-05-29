@@ -26,6 +26,8 @@ public class CmsClubsChiefChangeQuery {
     private String createAt;
     @ApiModelProperty(value = "状态")
     private Integer state;
+    @ApiModelProperty(value = "原因")
+    private String reason;
 
     public Integer getId() {
         return id;
@@ -73,5 +75,13 @@ public class CmsClubsChiefChangeQuery {
 
     public void setState(Integer state) {
         this.state = state;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

@@ -9,6 +9,7 @@
         <result property="clubName" jdbcType="VARCHAR" column="name" />
         <result property="oldChiefName" jdbcType="VARCHAR" column="old_chief_name" />
         <result property="newChiefName" jdbcType="VARCHAR" column="new_chief_name" />
+        <result property="reason" jdbcType="VARCHAR" column="reason" />
     </resultMap>
 
     <select id="listClubChiefChangeApply" resultMap="CmsClubChiefChangeReturnResultMapper">
@@ -18,7 +19,8 @@
         a.state,
         b.name,
         c.username as old_chief_name,
-        d.username as new_chief_name
+        d.username as new_chief_name,
+        a.reason
         FROM
         cms_chief_change_apply a left join cms_club b on a.club_id = b.id
                                 left join sys_user c on a.old_chief_id = c.id
@@ -42,6 +44,9 @@
         </if>
         <if test="queryParam.state!=null">
             AND a.state = #{queryParam.state}
+        </if>
+        <if test="queryParam.reason!=null and  queryParam.reason!=''">
+            AND a.reason LIKE concat("%", #{queryParam.reason},"%")
         </if>
         ORDER BY
         a.state ASC ,
