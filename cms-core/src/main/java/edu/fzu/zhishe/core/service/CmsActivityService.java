@@ -4,6 +4,8 @@ import edu.fzu.zhishe.cms.model.CmsActivity;
 import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO;
+import edu.fzu.zhishe.core.dto.CmsActivityRecommendDTO;
+import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
 import edu.fzu.zhishe.core.param.CmsClubActivityParam;
@@ -33,6 +35,8 @@ public interface CmsActivityService {
 
     List<CmsActivityApplyListDTO> listActivitiesApply(CmsActivityQuery param,
         PaginationParam paginationParam, OrderByParam orderByParam);
+
+    List<CmsActivityRecommendDTO> listRecomend();
 
     int finishExpiredActivity();
 }

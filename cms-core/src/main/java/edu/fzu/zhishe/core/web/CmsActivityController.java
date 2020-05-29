@@ -106,4 +106,11 @@ public class CmsActivityController {
     public ResponseEntity<Object> getApplyItem(@PathVariable(value = "id") Integer id) {
         return ResponseEntity.ok().body(clubService.getActivityApplyItem(id));
     }
+
+    @ApiOperation(" 6.9 获取热门活动贴 ")
+    @GetMapping("/activities/recommended")
+    public ResponseEntity<Object> listRecommend() {
+
+        return ResponseEntity.ok().body(clubService.listRecomend());
+    }
 }

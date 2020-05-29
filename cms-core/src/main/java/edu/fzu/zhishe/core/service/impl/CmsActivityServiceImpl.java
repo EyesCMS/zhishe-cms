@@ -16,6 +16,7 @@ import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsClubActivityDAO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyDTO;
 import edu.fzu.zhishe.core.dto.CmsActivityApplyListDTO;
+import edu.fzu.zhishe.core.dto.CmsActivityRecommendDTO;
 import edu.fzu.zhishe.core.error.ClubErrorEnum;
 import edu.fzu.zhishe.core.param.CmsActivityQuery;
 import edu.fzu.zhishe.core.param.CmsActivityUpdateParam;
@@ -254,6 +255,16 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return activityDAO.listActivityApplyForAdmin(param.getState(), param.getClubName());
+    }
+
+    /*
+     *TODO
+     */
+    @Override
+    public List<CmsActivityRecommendDTO> listRecomend() {
+        FmsPostExample example = new FmsPostExample();
+        example.setOrderByClause("like_count DESC");
+        return null;
     }
 
     /**

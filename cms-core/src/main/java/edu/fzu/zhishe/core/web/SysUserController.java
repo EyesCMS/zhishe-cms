@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.SysUserAnswerParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
@@ -56,7 +57,7 @@ public class SysUserController {
 
     @ApiOperation(value = " 校验密保问题回答是否正确 ")
     @PostMapping(value = "/answer")
-    public ResponseEntity<Object> answer(@Validated @RequestBody SysUserUpdatePwdByAnswer param) {
+    public ResponseEntity<Object> answer(@Validated @RequestBody SysUserAnswerParam param) {
 
         if (param.getUsername() == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
