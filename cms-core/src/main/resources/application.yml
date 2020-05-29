@@ -7,17 +7,32 @@ spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  mail:
+    host: smtp.qq.com
+    username: 2895428930@qq.com
+    password: pxtrbmpjwxgkdhfh #客户端授权码
+    protocol: smtp
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.port: 465 # 465  587
+    properties.mail.display.sendmail: Javen
+    properties.mail.display.sendname: Zhishe
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
 
 redis:
   database: zhishe
   key:
     user: 'sys:user'
+    authCode: 'sys:authCode'
     post:
       liked: 'post:liked'
       liked-count: 'post:liked:count'
     credit:
       today: 'credit:member'
   expire:
+    authCode: 600 # 验证码超期时间
     common: 86400 # 24 小时
 
 mybatis:
@@ -54,6 +69,7 @@ secure:
       - /actuator/**
       - /auth/login
       - /auth/register
+      - /auth/authCode
       - /auth/info
       - /auth/logout
       - /users/answer
@@ -64,6 +80,7 @@ secure:
       - /forum/**
       - /roles/**
       - /files/images/**
+      - /test/**
 
 logging:
   level:

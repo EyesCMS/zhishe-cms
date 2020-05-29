@@ -6,11 +6,13 @@ import static org.springframework.http.ResponseEntity.ok;
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.AjaxResponse;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserInfoDTO;
+import edu.fzu.zhishe.core.param.SysRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserLoginParam;
-import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.service.MailService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.model.SysUser;
 import io.swagger.annotations.Api;
@@ -21,15 +23,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -53,17 +57,19 @@ public class AuthController {
     @Value("${role.student}")
     private String roleStudent;
 
+    @Autowired
+    MailService mailService;
+
     public AuthController(SysUserService userService) {
         this.userService = userService;
     }
 
     @ApiOperation(" 用户注册 ")
     @PostMapping("/register")
-    public ResponseEntity<Object> register(
-        @Validated @RequestBody SysUserRegisterParam userRegisterParam,
-        BindingResult bindingResult) {
-
-        userService.register(userRegisterParam);
+    public ResponseEntity<Object> register(@Validated @RequestBody SysRegisterParam userRegisterParam) {
+        if (userService.register(userRegisterParam) == 0) {
+            Asserts.fail("register failed");
+        }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -111,12 +117,14 @@ public class AuthController {
         return ok().body(userInfoDTO);
     }
 
-//    @ApiOperation(" 获取验证码 ")
-//    @RequestMapping(value = "/getAuthCode", method = RequestMethod.GET)
-//    public CommonResult getAuthCode(@RequestParam String telephone) {
-//        String authCode = memberService.generateAuthCode(telephone);
-//        return CommonResult.success(authCode, " 获取验证码成功 ");
-//    }
+    @ApiOperation(" 获取验证码 ")
+    @RequestMapping(value = "/authCode", method = RequestMethod.GET)
+    public ResponseEntity<JSONObject> getAuthCode(@RequestParam String email) {
+        userService.generateAuthCode(email);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("message", "获取验证码成功");
+        return ResponseEntity.ok().body(jsonObject);
+    }
 
     @ApiOperation(" 修改密码 ")
     @PostMapping("/password")

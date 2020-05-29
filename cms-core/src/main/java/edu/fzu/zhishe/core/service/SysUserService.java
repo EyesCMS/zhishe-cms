@@ -4,6 +4,7 @@ import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.cms.model.SysUser;
 //import org.springframework.security.core.userdetails.UserDetails;
+import edu.fzu.zhishe.core.param.SysRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
@@ -32,13 +33,19 @@ public interface SysUserService {
     /**
      * 用户注册
      */
+    @Transactional(rollbackFor = Throwable.class)
+    int register(SysRegisterParam registerParam);
+
+    /**
+     * 用户注册
+     */
     @Transactional
     SysUser register(SysUserRegisterParam umsAdminParam);
 
     /**
      * 生成验证码
      */
-    String generateAuthCode(String telephone);
+    void generateAuthCode(String email);
 
     /**
      * 修改密码

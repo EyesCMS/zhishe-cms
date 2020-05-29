@@ -24,8 +24,10 @@ public class SysUserCacheServiceImpl implements SysUserCacheService {
     private Long REDIS_EXPIRE;
     @Value("${redis.key.user}")
     private String REDIS_KEY_USER;
-    //@Value("${redis.key.resourceList}")
-    //private String REDIS_KEY_RESOURCE_LIST;
+    @Value("${redis.key.authCode}")
+    private String REDIS_KEY_AUTH_CODE;
+    @Value("${redis.expire.authCode}")
+    private Long REDIS_EXPIRE_AUTH_CODE;
 
     @Autowired
     private SysUserService userService;
@@ -49,5 +51,17 @@ public class SysUserCacheServiceImpl implements SysUserCacheService {
     public void setUser(SysUser user) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_USER + ":" + user.getUsername();
         redisService.set(key, user, REDIS_EXPIRE);
+    }
+
+    @Override
+    public void setAuthCode(String email, String authCode) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + email;
+        redisService.set(key, authCode, REDIS_EXPIRE_AUTH_CODE);
+    }
+
+    @Override
+    public String getAuthCode(String email) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + email;
+        return (String) redisService.get(key);
     }
 }

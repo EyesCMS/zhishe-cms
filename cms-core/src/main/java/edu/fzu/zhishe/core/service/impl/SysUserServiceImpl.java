@@ -8,9 +8,11 @@ import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.param.SysRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.service.MailService;
 import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -22,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -66,12 +68,22 @@ public class SysUserServiceImpl implements SysUserService {
     public SysUserServiceImpl(StorageProperties storageProperties) {
         this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
     }
-//    @Value("${redis.key.authCode}")
-//    private String REDIS_KEY_PREFIX_AUTH_CODE;
-//    @Value("${redis.expire.authCode}")
-//    private Long AUTH_CODE_EXPIRE_SECONDS;
 
-    public static final String ANON_USER = "anonymousUser";
+    @Autowired
+    MailService mailService;
+
+    /**
+     * 验证码长度
+     */
+    private static final int CODE_SIZE = 6;
+
+    /**
+     * 验证码范围
+     */
+    private static final int CODE_BOUND = 10;
+
+
+    public static final String EMAIL_SUBJECT = "Zhishe 注册";
 
     @Override
     public SysUser getByUsername(String username) {
@@ -96,6 +108,44 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    public int register(SysRegisterParam registerParam) {
+        if (!verifyAuthCode(registerParam.getEmail(), registerParam.getAuthCode())) {
+            Asserts.fail("验证码错误");
+        }
+
+        // 验证是否存在相同用户名或者邮箱
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andUsernameEqualTo(registerParam.getUsername());
+        example.or(example.createCriteria().andEmailEqualTo(registerParam.getEmail()));
+        List<SysUser> sysUsers = userMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(sysUsers)) {
+            Asserts.fail(" 该用户已经存在 ");
+        }
+        // 添加操作
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(registerParam, sysUser);
+        sysUser.setUsername(registerParam.getUsername());
+        sysUser.setPassword(passwordEncoder.encode(registerParam.getPassword()));
+        sysUser.setIsAdmin(0);
+        sysUser.setRegisterDate(new Date());
+        return userMapper.insertSelective(sysUser);
+    }
+
+    /**
+     * 校验注册验证码
+     * @param email 邮箱
+     * @param authCode 验证码
+     * @return
+     */
+    private boolean verifyAuthCode(String email, String authCode) {
+        if (StrUtil.isEmpty(authCode)) {
+            return false;
+        }
+        String realAuthCode = userCacheService.getAuthCode(email);
+        return authCode.equals(realAuthCode);
+    }
+
+    @Override
     public SysUser register(SysUserRegisterParam userRegisterParam) {
         // 查询是否已有该用户
         SysUserExample example = new SysUserExample();
@@ -114,8 +164,26 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public String generateAuthCode(String telephone) {
-        return null;
+    public void generateAuthCode(String email) {
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < CODE_SIZE; i++) {
+            stringBuilder.append(random.nextInt(CODE_BOUND));
+        }
+        String code = stringBuilder.toString();
+        userCacheService.setAuthCode(email, code);
+        String content = "<html>\n" +
+            "<body>\n" +
+            "<div style=\"border: black;width: 400px;height: 400px;\">\n" +
+            "<p> 尊敬的先生/女生，您好！</p>\n" +
+            "<p>     您的注册验证码为：<b>" + code + "</b></p>\n" +
+            "<p>     验证码有效时间为 10 分钟</p><br/>\n" +
+            "<p> <a href=\"https://github.com/eyescms\">The Zhishe Team</a></p>\n" +
+            "</div>\n" +
+            "</body>\n" +
+            "</html>";
+        mailService.sendHtmlMail(email, EMAIL_SUBJECT, content);
     }
 
     @Override
