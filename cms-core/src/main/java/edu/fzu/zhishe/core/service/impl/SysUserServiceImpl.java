@@ -306,6 +306,7 @@ public class SysUserServiceImpl implements SysUserService {
         if (userMapper.updateByPrimaryKeySelective(user) == 0) {
             Asserts.fail("update avatar failed");
         }
+        userCacheService.delUser(user.getId());
         return url;
     }
 
