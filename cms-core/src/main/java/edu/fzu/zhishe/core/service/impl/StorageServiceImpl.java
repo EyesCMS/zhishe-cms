@@ -51,7 +51,7 @@ public class StorageServiceImpl implements StorageService {
     @Override
     public String store(MultipartFile file, Path location) {
         if (file == null) {
-            Asserts.notFound("file is null");
+            return null;
         }
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String newFilename = FileNameUtils.getFileName(filename);
