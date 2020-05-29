@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 public class CmsActivityRecommendDTO {
     private Long id;
-    private Integer commentCount;
+    private String imgUrl;
 }

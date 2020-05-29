@@ -29,6 +29,8 @@ import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 
 import edu.fzu.zhishe.core.util.NotExistUtil;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.BeanUtils;
@@ -257,14 +259,31 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         return activityDAO.listActivityApplyForAdmin(param.getState(), param.getClubName());
     }
 
-    /*
-     *TODO
-     */
     @Override
-    public List<CmsActivityRecommendDTO> listRecomend() {
+    public List<CmsActivityRecommendDTO> listRecomend(Integer number) {
         FmsPostExample example = new FmsPostExample();
         example.setOrderByClause("like_count DESC");
-        return null;
+        example.createCriteria().andTypeEqualTo(1);
+
+        List<FmsPost> list = postMapper.selectByExample(example);
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        List<CmsActivityRecommendDTO> dto = new ArrayList<>();
+        int n = number.intValue();
+
+        for (FmsPost post : list) {
+            if (n == 0) {
+                break;
+            }
+            CmsActivityRecommendDTO row = new CmsActivityRecommendDTO();
+            row.setId(post.getId());
+            row.setImgUrl(post.getImgUrl());
+            dto.add(row);
+            n--;
+        }
+        return dto;
     }
 
     /**

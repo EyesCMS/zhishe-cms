@@ -109,8 +109,7 @@ public class CmsActivityController {
 
     @ApiOperation(" 6.9 获取热门活动贴 ")
     @GetMapping("/activities/recommended")
-    public ResponseEntity<Object> listRecommend() {
-
-        return ResponseEntity.ok().body(clubService.listRecomend());
+    public ResponseEntity<Object> listRecommend(@RequestParam(defaultValue = "10") Integer number) {
+        return ResponseEntity.ok().body(clubService.listRecomend(number));
     }
 }
