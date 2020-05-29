@@ -60,6 +60,7 @@ public class CmsApplyAuditServiceImplTest{
         int clubIdRepeat = 10014;
         int clubIdNotMine = 10020;
         int applyIdHasAudited = 10001;
+        String type = "运动";
 
         String clubNameExisted = "7社";
         String clubNameRepeat = "单元测试";
@@ -68,12 +69,12 @@ public class CmsApplyAuditServiceImplTest{
         cmsClubsCreationsParam.setClubName(clubNameExisted);
         cmsClubsCreationsParam.setOfficialState(1);
         cmsClubsCreationsParam.setReason("xx");
-        cmsClubsCreationsParam.setType("xx");
+        cmsClubsCreationsParam.setType(type);
         CmsClubsCreationsParam cmsClubsCreationsParamRepeat = new CmsClubsCreationsParam();
         cmsClubsCreationsParamRepeat.setClubName(clubNameRepeat);
         cmsClubsCreationsParamRepeat.setOfficialState(1);
         cmsClubsCreationsParamRepeat.setReason("xx");
-        cmsClubsCreationsParamRepeat.setType("xx");
+        cmsClubsCreationsParamRepeat.setType(type);
 
         CmsClubsAuditParam cmsClubsAuditParamApplyIdNotExist = new CmsClubsAuditParam();
         cmsClubsAuditParamApplyIdNotExist.setId(applyIdNotExist);
@@ -223,6 +224,7 @@ public class CmsApplyAuditServiceImplTest{
         int clubIdHasNotJoined = 5000;
         int clubIdHasJoin = 10000;
         int applyIdHasNotAudited = 10000;
+        String type = "运动";
 
         String clubNameNotExisted = "还不存在社";
 
@@ -231,7 +233,7 @@ public class CmsApplyAuditServiceImplTest{
         cmsClubsCreationsParam.setClubName(clubNameNotExisted);
         cmsClubsCreationsParam.setOfficialState(1);
         cmsClubsCreationsParam.setReason("xx");
-        cmsClubsCreationsParam.setType("xx");
+        cmsClubsCreationsParam.setType(type);
 
         CmsClubsAuditParam cmsClubsAuditParamHasNotAudited = new CmsClubsAuditParam();
         cmsClubsAuditParamHasNotAudited.setId(applyIdHasNotAudited);

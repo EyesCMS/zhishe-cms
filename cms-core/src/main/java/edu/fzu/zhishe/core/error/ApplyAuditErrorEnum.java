@@ -17,7 +17,7 @@ public enum ApplyAuditErrorEnum  implements BaseErrorEnum {
     ALREADY_APPLY_CHIEF_CHANG(" 该社团已经申请换届，请等待审核 "),
     ALREADY_CERTIFICATED(" 该社团已经是认证社团 "),
     ALREADY_APPLY_OFFICIAL_CHANGE(" 该社团已经申请认证，请等待审核 "),
-    USER_CLUB_REL_NOT_EXIST(" 该社团已不存在或您已退出（还未加入）该社团 "),
+
 
     // 403
     CAN_NOT_DISBAND(" 您不是社长无权解散 "),
@@ -31,7 +31,7 @@ public enum ApplyAuditErrorEnum  implements BaseErrorEnum {
     CLUB_NOT_EXIST(" 该社团不存在 "),
     CLUB_ALREADY_DISBAND(" 该社团已解散 "),
     USER_NOT_EXIST("用户不存在"),
-
+    CLUB_TYPE_NOT_EXIST("该社团类型不存在"),
     ;
 
 

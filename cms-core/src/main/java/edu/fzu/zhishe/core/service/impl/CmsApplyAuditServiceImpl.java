@@ -6,10 +6,7 @@ import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
-import edu.fzu.zhishe.core.constant.ApplyStateEnum;
-import edu.fzu.zhishe.core.constant.ClubOfficialStateEnum;
-import edu.fzu.zhishe.core.constant.DeleteStateEnum;
-import edu.fzu.zhishe.core.constant.UserRoleEnum;
+import edu.fzu.zhishe.core.constant.*;
 import edu.fzu.zhishe.core.dao.CmsClubCertificationDAO;
 import edu.fzu.zhishe.core.dao.CmsClubChiefChangeDAO;
 import edu.fzu.zhishe.core.dao.CmsClubCreationDAO;
@@ -156,6 +153,17 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             .selectByExample(example1);
         if (!CollectionUtils.isEmpty(cmsClubCreateApplies)) {
             Asserts.fail(ApplyAuditErrorEnum.ALREADY_APPLY_CREATE);
+        }
+        //验证社团类型
+        boolean flag = false;
+        for(ClubTypeEnum c:ClubTypeEnum.values()){
+            if(c.getMessage().equals(clubsCreationsParam.getType())){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            Asserts.notFound(ApplyAuditErrorEnum.CLUB_TYPE_NOT_EXIST);
         }
 
         //SysUserService sysUserService = new SysUserServiceImpl();
