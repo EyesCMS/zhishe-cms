@@ -79,9 +79,10 @@
       (SELECT count(*) from fms_post_remark where post_id = p.id) AS comment_count
     FROM
       fms_post AS p
-      LEFT JOIN sys_user AS u ON p.poster_id = #{userId}
+      LEFT JOIN sys_user AS u ON p.poster_id = u.id
     WHERE
-      p.delete_state = 0
+      p.poster_id = #{userId}
+      AND p.delete_state = 0
       AND p.type = 0
     <if test="queryParam.posterName != null and queryParam.posterName != ''">
       AND username LIKE concat("%", #{queryParam.posterName},"%")
