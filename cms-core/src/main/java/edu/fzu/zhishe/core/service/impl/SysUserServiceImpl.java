@@ -113,13 +113,12 @@ public class SysUserServiceImpl implements SysUserService {
             Asserts.fail("验证码错误");
         }
 
-        // 验证是否存在相同用户名或者邮箱
+        // 验证是否存在相同用户名(邮箱已通过验证码验证）
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(registerParam.getUsername());
-        example.or(example.createCriteria().andEmailEqualTo(registerParam.getEmail()));
         List<SysUser> sysUsers = userMapper.selectByExample(example);
         if (CollUtil.isNotEmpty(sysUsers)) {
-            Asserts.fail(" 该用户已经存在 ");
+            Asserts.fail(" 该用户名已经存在 ");
         }
         // 添加操作
         SysUser sysUser = new SysUser();
@@ -165,6 +164,13 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public void generateAuthCode(String email) {
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<SysUser> sysUsers = userMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(sysUsers)) {
+            Asserts.fail(" 该邮箱已经注册过 ");
+        }
+
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
 
