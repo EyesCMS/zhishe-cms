@@ -317,7 +317,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     /**删除社员*/
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     @Transactional(rollbackFor = NullPointerException.class)
     public Integer deleteClubMember(Integer clubId, Integer userId) {
         CmsUserClubRelExample example = new CmsUserClubRelExample();
@@ -334,7 +334,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     /**修改社团信息接口*/
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
 
         Asserts.hasFiled(clubInfoParam, "至少要有一个非空属性");
@@ -350,7 +350,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     /**修改社团头像*/
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public Integer updateClubAvatarUrl(Integer clubId, String avatarUrl) {
 
         if (StrUtil.isEmpty(avatarUrl)) {
@@ -384,7 +384,7 @@ public class CmsClubServiceImpl implements CmsClubService {
 
     /**修改社团走马灯图片*/
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public Integer updateClubPictureUrl(Integer clubId, String[] pictureUrls) {
         CmsClubPictureExample pictureExample = new CmsClubPictureExample();
         pictureExample.createCriteria().andClubIdEqualTo(clubId);

@@ -10,6 +10,7 @@ import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsBulletinDAO;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
 import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
@@ -64,7 +65,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int creatBulletin(Integer clubId, CmsBulletinParam cmsBulletinParam) {
         CmsBulletin bulletin = new CmsBulletin();
         bulletin.setClubId(clubId);
@@ -76,7 +77,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
@@ -99,7 +100,7 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int deleteBulletin(Integer bulletinId) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);

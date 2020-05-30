@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.annotation;
 
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,10 +21,10 @@ public @interface CheckClubAuth {
     /**
      * 允许访问的角色 id
      */
-    String value() default "";
+    UserRoleEnum value() default UserRoleEnum.NORMAL;
 
     /**
      * 多个角色
      */
-    String[] values() default "";
+    UserRoleEnum[] values() default {UserRoleEnum.NORMAL};
 }

@@ -8,6 +8,8 @@ import edu.fzu.zhishe.cms.model.CmsUserClubRelExample;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
+import edu.fzu.zhishe.core.error.AuthErrorEnum;
+import edu.fzu.zhishe.core.error.ClubErrorEnum;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Arrays;
@@ -58,7 +60,7 @@ public class AuthAspect {
     public void checkLogin(JoinPoint joinPoint) {
         SysUser currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            Asserts.unAuthorized();
+            Asserts.unAuthorized(AuthErrorEnum.NOT_USER);
         }
     }
 
@@ -69,7 +71,7 @@ public class AuthAspect {
     public Object checkAuth(ProceedingJoinPoint joinPoint) throws Throwable {
         SysUser currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            Asserts.unAuthorized();
+            Asserts.unAuthorized(AuthErrorEnum.NOT_USER);
         }
 
         CodeSignature codeSignature = (CodeSignature) joinPoint.getSignature();
@@ -81,7 +83,7 @@ public class AuthAspect {
             Integer clubId = (Integer) joinPoint.getArgs()[i];
             CmsClub club = clubMapper.selectByPrimaryKey(clubId);
             if (NotExistUtil.check(club)) {
-                Asserts.notFound("社团不存在");
+                Asserts.notFound(ClubErrorEnum.CLUB_NOT_EXIST);
             }
 
             CmsUserClubRelExample example = new CmsUserClubRelExample();
@@ -90,13 +92,13 @@ public class AuthAspect {
                 .andClubIdEqualTo(clubId);
             List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example);
             if (CollectionUtils.isEmpty(userClubRels)) {
-                Asserts.forbidden();
+                Asserts.forbidden(ClubErrorEnum.USER_NOT_IN);
             }
 
             CmsUserClubRel userClubRel = userClubRels.get(0);
             MethodSignature signature = (MethodSignature) joinPoint.getSignature();
             CheckClubAuth annotation = signature.getMethod().getAnnotation(CheckClubAuth.class);
-            if (!annotation.value().equals(userClubRel.getRoleId().toString())) {
+            if (annotation.value().getValue() != userClubRel.getRoleId()) {
                 Asserts.forbidden("CheckAuth failed, current role: " + userClubRel.getRoleId()
                     + " required role: " + annotation.value());
             }
@@ -115,10 +117,10 @@ public class AuthAspect {
     public Object checkAdminAuth(ProceedingJoinPoint joinPoint) throws Throwable {
         SysUser currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            Asserts.unAuthorized();
+            Asserts.unAuthorized(AuthErrorEnum.NOT_USER);
         }
         if (currentUser.getIsAdmin().equals(0)) {
-            Asserts.forbidden();
+            Asserts.forbidden(AuthErrorEnum.NOT_ADMIN);
         }
 
         log.info("Authorized admin user: {}", currentUser.getUsername());
@@ -132,7 +134,7 @@ public class AuthAspect {
     public Object checkClubMemberAuth(ProceedingJoinPoint joinPoint) throws Throwable {
         SysUser currentUser = userService.getCurrentUser();
         if (currentUser == null) {
-            Asserts.unAuthorized();
+            Asserts.unAuthorized(AuthErrorEnum.NOT_USER);
         }
 
         CodeSignature codeSignature = (CodeSignature) joinPoint.getSignature();
@@ -146,7 +148,7 @@ public class AuthAspect {
                 .andClubIdEqualTo((Integer) joinPoint.getArgs()[i]);
             List<CmsUserClubRel> userClubRels = userClubRelMapper.selectByExample(example);
             if (CollectionUtils.isEmpty(userClubRels)) {
-                Asserts.forbidden();
+                Asserts.forbidden(AuthErrorEnum.NOT_MEMBER);
             }
 
             CmsUserClubRel userClubRel = userClubRels.get(0);

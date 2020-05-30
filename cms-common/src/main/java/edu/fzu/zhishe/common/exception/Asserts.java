@@ -25,6 +25,16 @@ public class Asserts {
         }
     }
 
+    public static void hasFiled(Object object, String message) {
+        try {
+            if (!FieldUtil.hasNotNullFiled(object)) {
+                Asserts.fail(message);
+            }
+        } catch (IllegalAccessException e) {
+            Asserts.fail(message);
+        }
+    }
+
     public static void notNull(@Nullable Object object) {
         if (object == null) {
             throw new EntityNotFoundException("Object doesn't exist");

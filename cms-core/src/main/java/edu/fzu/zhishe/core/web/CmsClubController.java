@@ -8,7 +8,9 @@ import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
 import edu.fzu.zhishe.core.param.CmsClubInfoParam;
 import edu.fzu.zhishe.core.param.CmsClubMemberQuery;
 import edu.fzu.zhishe.core.param.OrderByParam;
@@ -136,7 +138,7 @@ public class CmsClubController {
 
     @ApiOperation(" 3.10 社长删除社团成员 ")
     @DeleteMapping("/{clubId}/members/{userId}")
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public ResponseEntity<Integer> deleteClubMember(
         @PathVariable("clubId") Integer clubId,
         @PathVariable("userId") Integer userId) {
@@ -147,12 +149,14 @@ public class CmsClubController {
 
     @ApiOperation(" 3.11 社长修改社团信息 ")
     @RequestMapping(value = "/{clubId}/info", method = RequestMethod.PUT)
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public ResponseEntity<Object> updateClubInfo(
         @PathVariable("clubId") Integer clubId,
         @Validated @RequestBody CmsClubInfoParam clubInfoParam) {
 
-        clubService.updateClubInfo(clubId, clubInfoParam);
+        if (clubService.updateClubInfo(clubId, clubInfoParam) == 0) {
+            Asserts.fail(DatabaseErrorEnum.UPDATE_ERROR);
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -162,7 +166,9 @@ public class CmsClubController {
         @PathVariable("clubId") Integer clubId,
         @RequestBody JSONObject object) {
 
-        clubService.updateClubAvatarUrl(clubId, (String)object.get("avatarUrl"));
+        if (clubService.updateClubAvatarUrl(clubId, (String)object.get("avatarUrl")) == 0) {
+            Asserts.fail(DatabaseErrorEnum.UPDATE_ERROR);
+        }
         return ResponseEntity.noContent().build();
     }
 

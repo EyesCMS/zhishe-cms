@@ -437,7 +437,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId,
         CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam) {
 
@@ -544,7 +544,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public List<CmsClubsQuitDTO> listClubQuit(Integer clubId,
         CmsClubsQuitQuery cmsClubsQuitQuery,
         PaginationParam paginationParam) {
@@ -759,7 +759,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public List<CmsOfficialChangeApply> listMyClubOfficialChange(Integer clubId, PaginationParam paginationParam) {
 
         CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
@@ -770,7 +770,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam paginationParam) {
 
         CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
@@ -781,7 +781,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam paginationParam) {
 
         CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
