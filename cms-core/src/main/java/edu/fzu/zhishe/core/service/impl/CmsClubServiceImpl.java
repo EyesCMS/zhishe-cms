@@ -11,6 +11,8 @@ import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
+import edu.fzu.zhishe.core.constant.InitValueEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.*;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.core.param.CmsClubInfoParam;
@@ -273,6 +275,9 @@ public class CmsClubServiceImpl implements CmsClubService {
         CmsUserClubRelExample userClubRel = new CmsUserClubRelExample();
         userClubRel.createCriteria().andClubIdEqualTo(clubId).andUserIdEqualTo(userId);
         List<CmsUserClubRel> userClubList = userClubRelMapper.selectByExample(userClubRel);
+        if (CollUtil.isEmpty(userClubList)) {
+            Asserts.notFound(ClubErrorEnum.USER_NOT_IN);
+        }
 
         SysUser user = sysUserMapper.selectByPrimaryKey(userId);
         CmsClubMemberDetailDTO data = new CmsClubMemberDetailDTO();
@@ -301,9 +306,9 @@ public class CmsClubServiceImpl implements CmsClubService {
         }
         clubRel.setClubId(clubId);
         clubRel.setUserId(userId);
-        clubRel.setCredit(0);
-        clubRel.setHonorId(1);
-        clubRel.setRoleId(2);
+        clubRel.setCredit(InitValueEnum.CREDIT.getValue());
+        clubRel.setHonorId(InitValueEnum.HONOR.getValue());
+        clubRel.setRoleId(UserRoleEnum.MEMBER.getValue());
         clubRel.setJoinDate(new Date());
         userClubRelMapper.insert(clubRel);
         club.setMemberCount(club.getMemberCount()+1);
@@ -331,6 +336,8 @@ public class CmsClubServiceImpl implements CmsClubService {
     @Override
     @CheckClubAuth("3")
     public Integer updateClubInfo(Integer clubId, CmsClubInfoParam clubInfoParam) {
+
+        Asserts.hasFiled(clubInfoParam, "至少要有一个非空属性");
 
         if (StrUtil.isEmpty(clubInfoParam.getType())) {
             Asserts.fail(ClubErrorEnum.EMPTY_TYPE);
