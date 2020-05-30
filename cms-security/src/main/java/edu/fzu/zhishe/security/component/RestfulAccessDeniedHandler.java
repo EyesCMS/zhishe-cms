@@ -1,7 +1,7 @@
 package edu.fzu.zhishe.security.component;
 
 import cn.hutool.json.JSONUtil;
-import edu.fzu.zhishe.common.api.ErrorResponseBody;
+import edu.fzu.zhishe.common.api.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -28,7 +28,7 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler{
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(JSONUtil.parse(ErrorResponseBody.forbidden(e.getMessage())));
+        response.getWriter().println(JSONUtil.parse(ErrorResponse.message(e.getMessage())));
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().flush();
     }

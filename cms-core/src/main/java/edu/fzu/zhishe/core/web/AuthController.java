@@ -5,7 +5,6 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.ErrorResponse;
-import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.SysUserInfoDTO;
@@ -100,7 +99,7 @@ public class AuthController {
     public ResponseEntity<Object> info(Principal principal) {
 
         if (principal == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponseBody.unauthorized());
+            Asserts.unAuthorized();
         }
         String username = principal.getName();
         SysUser user = userService.getByUsername(username);
