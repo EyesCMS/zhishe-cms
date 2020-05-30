@@ -84,14 +84,6 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 拦截所有未处理异常
-     */
-    @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<ErrorResponse> exceptionHandler(Exception exception) throws Exception {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.message("server error"));
-    }
-
-    /**
      * 校验消息转换拼接
      */
     public static String msgConverter(BindingResult bindingResult) {
