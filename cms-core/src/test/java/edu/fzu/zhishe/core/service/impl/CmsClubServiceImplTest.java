@@ -68,7 +68,7 @@ public class CmsClubServiceImplTest{
             cmsClubService.getClubMemberInfo(notJoinedClubId, managerId);
         }, " 没有该权限，无法查看成员详情。");
 
-        Assertions.assertThrows(IndexOutOfBoundsException.class, () -> {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
             cmsClubService.getClubMemberInfo(joinedClubId, notMemberId);
         }, " 用户不存在，无法查看成员详情。");
 
