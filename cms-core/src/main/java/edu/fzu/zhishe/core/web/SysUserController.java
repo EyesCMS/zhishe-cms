@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,14 +44,14 @@ public class SysUserController {
 
     @ApiOperation(value = " 根据用户名获取密保问题 ")
     @GetMapping(value = "/question")
-    public ResponseEntity<Object> question(String username) {
-
-        if (username == null) {
+    public ResponseEntity<Object> question(@RequestParam String username) {
+        SysUser user = userService.getByUsername(username);
+        if (user == null) {
             Asserts.notFound(UserErrorEnum.USERNAME_NOT_FOUND);
         }
-        SysUser user = userService.getByUsername(username);
-        if (user == null || user.getLoginQuestion() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        if (user.getLoginQuestion() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.message("用户未设置密保"));
         }
         Map<String, String> myMap = new HashMap<>(1);
         myMap.put("loginProblem", user.getLoginQuestion());
