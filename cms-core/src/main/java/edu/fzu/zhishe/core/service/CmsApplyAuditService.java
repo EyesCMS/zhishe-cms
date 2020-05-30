@@ -79,4 +79,31 @@ public interface CmsApplyAuditService {
     List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam queryParam);
 
     List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam queryParam);
+
+    void updateExpiredApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredJoinClubApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredClubCreationApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredClubDisbandApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredChiefChangeApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredOfficialChangeApply();
 }

@@ -55,6 +55,8 @@ role:
 
 zhishe:
   base_url: http://101.200.193.180:9520
+  apply:
+    expire_day: 7 # days
   default:
     nickname: anonymous_user
     avatar_url: http://b-ssl.duitang.com/uploads/item/201810/28/20181028170516_hnpsx.thumb.700_0.jpeg

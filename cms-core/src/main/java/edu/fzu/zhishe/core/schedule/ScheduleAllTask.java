@@ -25,6 +25,7 @@ public class ScheduleAllTask {
     private static final String LIKE_TASK_IDENTITY = "LikeTaskQuartz";
     private static final String ACTIVITY_TASK_IDENTITY = "ActivityTaskQuartz";
     private static final String CREDIT_TASK_IDENTITY = "CreditTaskQuartz";
+    private static final String EXPIRE_APPLY_TASK_IDENTITY = "ExpireApplyTaskQuartz";
 
     @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
@@ -41,6 +42,7 @@ public class ScheduleAllTask {
         likeTask(scheduler);
         creditTask(scheduler);
         activityTask(scheduler);
+        expireApplyTaskIdentity(scheduler);
     }
 
     private void likeTask(Scheduler scheduler) throws SchedulerException {
@@ -86,6 +88,20 @@ public class ScheduleAllTask {
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(CREDIT_TASK_IDENTITY)
+            .withSchedule(scheduleBuilder)
+            .build();
+        scheduler.scheduleJob(jobDetail, cronTrigger);
+    }
+
+    private void expireApplyTaskIdentity(Scheduler scheduler) throws SchedulerException {
+
+        JobDetail jobDetail = JobBuilder.newJob(CreditTodayTask.class).withIdentity("job4")
+            .storeDurably().build();
+        // start every 12 hours
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */12 ? * *");
+
+        CronTrigger cronTrigger = TriggerBuilder.newTrigger()
+            .withIdentity(EXPIRE_APPLY_TASK_IDENTITY)
             .withSchedule(scheduleBuilder)
             .build();
         scheduler.scheduleJob(jobDetail, cronTrigger);

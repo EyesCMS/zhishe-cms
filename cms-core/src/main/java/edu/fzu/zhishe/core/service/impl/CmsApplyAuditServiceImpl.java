@@ -1,5 +1,7 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import edu.fzu.zhishe.cms.mapper.*;
 import edu.fzu.zhishe.cms.model.*;
@@ -20,8 +22,6 @@ import edu.fzu.zhishe.core.dto.CmsClubsDisbandDTO;
 import edu.fzu.zhishe.core.dto.CmsClubsJoinDTO;
 import edu.fzu.zhishe.core.dto.CmsClubsQuitDTO;
 import edu.fzu.zhishe.core.error.ApplyAuditErrorEnum;
-import edu.fzu.zhishe.core.error.ApplyAuditErrorEnum;
-import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
@@ -42,9 +42,9 @@ import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -54,6 +54,9 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
+
+    @Value("${zhishe.apply.expire_day}")
+    private int applyExpireDay;
 
     @Autowired
     private CmsClubCreationDAO cmsClubCreationDAO;
@@ -835,5 +838,74 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         example.setOrderByClause("state ASC ,create_at DESC ");
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return clubDisbandApplyMapper.selectByExample(example);
+    }
+
+    @Override
+    public void updateExpiredApply() {
+        updateExpiredJoinClubApply();
+        updateExpiredClubCreationApply();
+        updateExpiredClubDisbandApply();
+        updateExpiredChiefChangeApply();
+        updateExpiredOfficialChangeApply();
+    }
+
+    @Override
+    public int updateExpiredJoinClubApply() {
+        CmsClubJoinApply record = new CmsClubJoinApply();
+        record.setState(ApplyStateEnum.REJECTED.getValue());
+        DateTime deadline = DateUtil.offsetDay(new Date(), -applyExpireDay);
+        CmsClubJoinApplyExample example = new CmsClubJoinApplyExample();
+        example.createCriteria()
+            .andStateEqualTo(ApplyStateEnum.PENDING.getValue())
+            .andCreateAtLessThan(deadline);
+        return clubJoinApplyMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public int updateExpiredClubCreationApply() {
+        CmsClubCreateApply record = new CmsClubCreateApply();
+        record.setState(ApplyStateEnum.REJECTED.getValue());
+        DateTime deadline = DateUtil.offsetDay(new Date(), -applyExpireDay);
+        CmsClubCreateApplyExample example = new CmsClubCreateApplyExample();
+        example.createCriteria()
+            .andStateEqualTo(ApplyStateEnum.PENDING.getValue())
+            .andCreateAtLessThan(deadline);
+        return clubCreateApplyMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public int updateExpiredClubDisbandApply() {
+        CmsClubDisbandApply record = new CmsClubDisbandApply();
+        record.setState(ApplyStateEnum.REJECTED.getValue());
+        DateTime deadline = DateUtil.offsetDay(new Date(), -applyExpireDay);
+        CmsClubDisbandApplyExample example = new CmsClubDisbandApplyExample();
+        example.createCriteria()
+            .andStateEqualTo(ApplyStateEnum.PENDING.getValue())
+            .andCreateAtLessThan(deadline);
+        return clubDisbandApplyMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public int updateExpiredChiefChangeApply() {
+        CmsChiefChangeApply record = new CmsChiefChangeApply();
+        record.setState(ApplyStateEnum.REJECTED.getValue());
+        DateTime deadline = DateUtil.offsetDay(new Date(), -applyExpireDay);
+        CmsChiefChangeApplyExample example = new CmsChiefChangeApplyExample();
+        example.createCriteria()
+            .andStateEqualTo(ApplyStateEnum.PENDING.getValue())
+            .andCreateAtLessThan(deadline);
+        return chiefChangeApplyMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public int updateExpiredOfficialChangeApply() {
+        CmsOfficialChangeApply record = new CmsOfficialChangeApply();
+        record.setState(ApplyStateEnum.REJECTED.getValue());
+        DateTime deadline = DateUtil.offsetDay(new Date(), -applyExpireDay);
+        CmsOfficialChangeApplyExample example = new CmsOfficialChangeApplyExample();
+        example.createCriteria()
+            .andStateEqualTo(ApplyStateEnum.PENDING.getValue())
+            .andCreateAtLessThan(deadline);
+        return officialChangeApplyMapper.updateByExampleSelective(record, example);
     }
 }
