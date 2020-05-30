@@ -4,13 +4,12 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
-import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
+import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
 import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.param.FmsPostQuery;
@@ -26,7 +25,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/30/2020.
@@ -104,7 +101,7 @@ public class FmsForumController {
     public ResponseEntity<Object> deletePost(@PathVariable Long id) {
 
         if (forumService.deletePost(id) == 0) {
-            Asserts.fail();
+            Asserts.fail(DatabaseErrorEnum.DELETE_ERROR);
         }
         return ResponseEntity.noContent().build();
     }
@@ -114,7 +111,7 @@ public class FmsForumController {
     public ResponseEntity<Object> savePost(@Validated FmsPostParam postParam) {
 
         if (forumService.savePost(postParam) == 0) {
-            Asserts.fail();
+            Asserts.fail(DatabaseErrorEnum.CREATE_ERROR);
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -124,7 +121,7 @@ public class FmsForumController {
     public ResponseEntity<Object> updatePost(@PathVariable("id") Long id, @Validated @RequestBody FmsPostParam postParam) {
 
         if (forumService.updatePost(id, postParam) == 0) {
-            Asserts.fail();
+            Asserts.fail(DatabaseErrorEnum.UPDATE_ERROR);
         }
         return ResponseEntity.noContent().build();
     }
@@ -196,7 +193,7 @@ public class FmsForumController {
     public ResponseEntity<Object> createRemark(@Validated @RequestBody FmsRemarkParam remarkParam) {
 
         if (forumService.saveRemark(remarkParam) == 0) {
-            Asserts.fail();
+            Asserts.fail(DatabaseErrorEnum.CREATE_ERROR);
         }
         creditService.getCreditByComment(remarkParam.getPostId().intValue());
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -216,7 +213,7 @@ public class FmsForumController {
     public ResponseEntity<Object> createRemark(@PathVariable("id") Long id) {
 
         if (forumService.deleteRemark(id) == 0) {
-            Asserts.fail();
+            Asserts.fail(DatabaseErrorEnum.DELETE_ERROR);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

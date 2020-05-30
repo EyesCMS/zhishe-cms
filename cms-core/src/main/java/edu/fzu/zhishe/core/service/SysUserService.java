@@ -37,12 +37,6 @@ public interface SysUserService {
     int register(SysRegisterParam registerParam);
 
     /**
-     * 用户注册
-     */
-    @Transactional
-    SysUser register(SysUserRegisterParam umsAdminParam);
-
-    /**
      * 生成验证码
      */
     void generateAuthCode(String email);

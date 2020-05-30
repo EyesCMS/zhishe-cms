@@ -4,7 +4,7 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.common.api.AjaxResponse;
+import edu.fzu.zhishe.common.api.ErrorResponse;
 import edu.fzu.zhishe.common.api.ErrorResponseBody;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
@@ -134,7 +134,7 @@ public class AuthController {
         UpdatePasswordResultEnum result = userService.updatePassword(updateUserPasswordParam);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {
-            AjaxResponse response = new AjaxResponse();
+            ErrorResponse response = new ErrorResponse();
             response.setMessage(result.getMessage());
             return ResponseEntity.badRequest().body(response);
         }

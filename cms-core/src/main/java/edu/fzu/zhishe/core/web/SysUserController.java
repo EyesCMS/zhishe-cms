@@ -4,9 +4,11 @@ import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import cn.hutool.json.JSONObject;
-import edu.fzu.zhishe.common.api.AjaxResponse;
+import edu.fzu.zhishe.common.api.ErrorResponse;
+import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.error.UserErrorEnum;
 import edu.fzu.zhishe.core.param.SysUserAnswerParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.service.SysUserService;
@@ -44,7 +46,7 @@ public class SysUserController {
     public ResponseEntity<Object> question(String username) {
 
         if (username == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            Asserts.notFound(UserErrorEnum.USERNAME_NOT_FOUND);
         }
         SysUser user = userService.getByUsername(username);
         if (user == null || user.getLoginQuestion() == null) {
@@ -60,7 +62,7 @@ public class SysUserController {
     public ResponseEntity<Object> answer(@Validated @RequestBody SysUserAnswerParam param) {
 
         if (param.getUsername() == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            Asserts.notFound(UserErrorEnum.USERNAME_NOT_FOUND);
         }
         SysUser user = userService.getByUsername(param.getUsername());
         if (user != null && user.getLoginAnswer() != null && user.getLoginAnswer().equals(param.getAnswer())) {
@@ -95,9 +97,7 @@ public class SysUserController {
         UpdatePasswordResultEnum result = userService.updateUserPasswordAfterAnswer(param);
 
         if (result != UpdatePasswordResultEnum.SUCCESS) {
-            AjaxResponse response = new AjaxResponse();
-            response.setMessage(result.getMessage());
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.badRequest().body(ErrorResponse.message(result.getMessage()));
         }
         return noContent().build();
     }
