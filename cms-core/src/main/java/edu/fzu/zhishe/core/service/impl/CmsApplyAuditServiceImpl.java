@@ -21,6 +21,7 @@ import edu.fzu.zhishe.core.dto.CmsClubsJoinDTO;
 import edu.fzu.zhishe.core.dto.CmsClubsQuitDTO;
 import edu.fzu.zhishe.core.error.ApplyAuditErrorEnum;
 import edu.fzu.zhishe.core.error.ApplyAuditErrorEnum;
+import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
 import edu.fzu.zhishe.core.param.CmsClubsAuditParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsParam;
 import edu.fzu.zhishe.core.param.CmsClubsCertificationsQuery;
@@ -40,6 +41,8 @@ import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
+
+import lombok.extern.log4j.Log4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +104,22 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     private CmsUserClubRelMapper userClubRelMapper;
 
     @Autowired
-    CmsClubPictureMapper pictureMapper;
+    private CmsClubPictureMapper pictureMapper;
+
+    @Autowired
+    private CmsActivityMapper activityMapper;
+
+    @Autowired
+    private CmsBulletinMapper bulletinMapper;
+
+    @Autowired
+    private FmsPostMapper postMapper;
+
+    @Autowired
+    private FmsPostRemarkMapper postRemarkMapper;
+
+    @Autowired
+    private FmsUserLikePostMapper userLikePostMapper;
 
     public void checkNotExistOrAudited(Object auditObject) {
 
@@ -341,29 +359,58 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             //删除相关joinApply表记录
             CmsClubJoinApplyExample example1 = new CmsClubJoinApplyExample();
             example1.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            if (clubJoinApplyMapper.deleteByExample(example1) == 0) {
-                Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
-            }
+            clubJoinApplyMapper.deleteByExample(example1);
+
 
             //删除相关quitNotice记录
             CmsQuitNoticeExample example2 = new CmsQuitNoticeExample();
             example2.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            if (quitNoticeMapper.deleteByExample(example2) == 0) {
-                Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
-            }
+            quitNoticeMapper.deleteByExample(example2);
 
             //删除相关社团换届记录
             CmsChiefChangeApplyExample example3 = new CmsChiefChangeApplyExample();
             example3.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            if (chiefChangeApplyMapper.deleteByExample(example3) == 0) {
-                Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
-            }
+            chiefChangeApplyMapper.deleteByExample(example3);
 
             //删除相关社团认证记录
             CmsOfficialChangeApplyExample example4 = new CmsOfficialChangeApplyExample();
             example4.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
-            if (officialChangeApplyMapper.deleteByExample(example4) == 0) {
-                Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
+            officialChangeApplyMapper.deleteByExample(example4);
+
+            //删除活动
+            CmsActivityExample example5 = new CmsActivityExample();
+            example5.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            activityMapper.deleteByExample(example5);
+
+            //删除公告
+            CmsBulletinExample example6 = new CmsBulletinExample();
+            example6.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            bulletinMapper.deleteByExample(example6);
+
+            //删除走马灯
+            CmsClubPictureExample example7 = new CmsClubPictureExample();
+            example7.createCriteria().andClubIdEqualTo(cmsClubDisbandApply.getClubId());
+            pictureMapper.deleteByExample(example7);
+
+            //删除活动帖子
+            //获得帖子列表
+            FmsPostExample example8 = new FmsPostExample();
+            example8.createCriteria().andPosterIdEqualTo(cmsClubDisbandApply.getClubId())
+                    .andTypeEqualTo(PostTypeEnum.ACTIVITY.getValue());
+            List<FmsPost> postList = postMapper.selectByExample(example8);
+            for(FmsPost p : postList){
+                Long postId = p.getId();
+                //删除评论
+                FmsPostRemarkExample example9 = new FmsPostRemarkExample();
+                example9.createCriteria().andPostIdEqualTo(postId.intValue());
+                postRemarkMapper.deleteByExample(example9);
+                //删除点赞
+                FmsUserLikePostExample example10 = new FmsUserLikePostExample();
+                example10.createCriteria().andPostIdEqualTo(postId);
+                userLikePostMapper.deleteByExample(example10);
+                //逻辑删除帖子
+                p.setDeleteState(DeleteStateEnum.Deleted.getValue());
+                postMapper.updateByPrimaryKeySelective(p);
             }
 
             //更新相关disbandApply表记录
