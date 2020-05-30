@@ -2,19 +2,19 @@ package edu.fzu.zhishe.core.constant;
 
 public enum CreditEnum {
     /**
-     * 签到（暂定一分）
+     * 签到（暂定8分）
      */
-    CHECKIN(1),
+    CHECKIN(8),
 
     /**
-     * 评论（暂定两分）
+     * 评论（暂定5分）
      */
-    COMMENT(2),
+    COMMENT(5),
 
     /**
-     * 社团发布活动（暂定三分）
+     * 社团发布活动（暂定20分）
      */
-    ACTIVITY(3);
+    ACTIVITY(20);
 
     private int value;
     CreditEnum(int value) {
