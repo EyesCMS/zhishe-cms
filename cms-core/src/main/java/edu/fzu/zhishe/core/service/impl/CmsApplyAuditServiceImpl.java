@@ -156,13 +156,13 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         }
         //验证社团类型
         boolean flag = false;
-        for(ClubTypeEnum c:ClubTypeEnum.values()){
-            if(c.getMessage().equals(clubsCreationsParam.getType())){
+        for (ClubTypeEnum c : ClubTypeEnum.values()) {
+            if (c.getMessage().equals(clubsCreationsParam.getType())) {
                 flag = true;
                 break;
             }
         }
-        if(!flag){
+        if (!flag) {
             Asserts.notFound(ApplyAuditErrorEnum.CLUB_TYPE_NOT_EXIST);
         }
 
@@ -196,8 +196,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     @Transactional
     public CmsClubCreateApply clubCreationsAudit(CmsClubsAuditParam cmsClubsAuditParam) {
         // 查询是否已有该社团申请
-        CmsClubCreateApply cmsClubCreateApply = clubCreateApplyMapper
-            .selectByPrimaryKey(cmsClubsAuditParam.getId());
+        CmsClubCreateApply cmsClubCreateApply = clubCreateApplyMapper.selectByPrimaryKey(cmsClubsAuditParam.getId());
         checkNotExistOrAudited(cmsClubCreateApply);
 
         if (cmsClubsAuditParam.getState() == ApplyStateEnum.PENDING.getValue()) {
@@ -536,7 +535,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
         }
         //更新club表相关记录人数
 
-        cmsClub.setMemberCount(cmsClub.getMemberCount()-1);
+        cmsClub.setMemberCount(cmsClub.getMemberCount() - 1);
         if (clubMapper.updateByPrimaryKeySelective(cmsClub) == 0) {
             Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
         }
@@ -558,7 +557,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
     public CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam) {
         //虽然感觉多余但是还是验证一下社团是否存在
         CmsClub cmsClub = clubMapper.selectByPrimaryKey(cmsClubsChiefChangeParam.getClubId());
-        if (cmsClub == null||cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
+        if (cmsClub == null || cmsClub.getDeleteStatus() == DeleteStateEnum.Deleted.getValue()) {
             Asserts.notFound(ApplyAuditErrorEnum.CLUB_NOT_EXIST);
         }
         //验证是否是社长提出的解散

@@ -7,6 +7,7 @@ import edu.fzu.zhishe.cms.mapper.CmsClubMapper;
 import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
 import edu.fzu.zhishe.cms.model.*;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsAdmin;
 import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.ActivityStateEnum;
@@ -67,6 +68,7 @@ public class CmsActivityServiceImpl implements CmsActivityService {
 
     @IsLogin
     @Override
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public void activityApply(CmsClubActivityParam param, MultipartFile imgUrl) {
 
         if (param.getStartDate().after(param.getEndDate())) {
@@ -77,11 +79,10 @@ public class CmsActivityServiceImpl implements CmsActivityService {
         if (NotExistUtil.check(club)) {
             Asserts.notFound("clubId 错误，找不到社团");
         }
-
-        if (!club.getChiefId().equals(userService.getCurrentUser().getId())) {
+ /*       if (!club.getChiefId().equals(userService.getCurrentUser().getId())) {
             Asserts.forbidden("非社长无法申请社团活动");
         }
-
+ */
         CmsActivityExample example = new CmsActivityExample();
         example.createCriteria().andStateEqualTo(ActivityStateEnum.PENDING.getValue())
                 .andClubIdEqualTo(param.getClubId()).andNameEqualTo(param.getName());
