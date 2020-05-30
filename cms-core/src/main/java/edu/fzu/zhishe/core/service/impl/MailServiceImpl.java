@@ -2,12 +2,16 @@ package edu.fzu.zhishe.core.service.impl;
 
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.service.MailService;
+import java.util.Collection;
+import java.util.Map;
 import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -58,6 +62,15 @@ public class MailServiceImpl implements MailService {
 
             mailSender.send(message);
             logger.info("send html email successfully");
+        } catch (MailSendException e) {
+            Exception[] messageExceptions = e.getMessageExceptions();
+            if (messageExceptions.length != 0) {
+                logger.error(messageExceptions[0].getMessage() + " " + to);
+                Asserts.fail(messageExceptions[0].getMessage());
+            } else {
+                logger.error("Exception occurred while sending email", e);
+                Asserts.fail("Exception occurred while sending email");
+            }
         } catch (MessagingException e) {
             logger.error("Exception occurred while sending email", e);
         }
