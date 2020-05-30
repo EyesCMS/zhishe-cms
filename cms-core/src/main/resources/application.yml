@@ -53,6 +53,12 @@ role:
   admin: admin
   student: student
 
+zhishe:
+  base_url: http://101.200.193.180:9520
+  default:
+    nickname: anonymous_user
+    avatar_url: http://b-ssl.duitang.com/uploads/item/201810/28/20181028170516_hnpsx.thumb.700_0.jpeg
+
 secure:
   ignored:
     urls: # 安全路径白名单
@@ -85,7 +91,7 @@ secure:
 logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERROR
-    com.macro.mall: debug
+    edu.fzu.zhishe.cms.core: debug
 #  file: demo_log.log #配置日志生成路径
 #  path: /var/logs #配置日志文件名称
 

@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -60,6 +61,13 @@ public class SysUserServiceImpl implements SysUserService {
     private SysUserMapper userMapper;
     @Autowired
     private SysUserCacheService userCacheService;
+
+    @Value("${zhishe.base_url}")
+    private String baseUrl;
+    @Value("${zhishe.default.nickname}")
+    private String defaultNickname;
+    @Value("${zhishe.default.avatar_url}")
+    private String defaultAvatarUrl;
 
     @Autowired
     StorageService storageService;
@@ -124,9 +132,11 @@ public class SysUserServiceImpl implements SysUserService {
         }
         // 添加操作
         SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(registerParam, sysUser);
         sysUser.setUsername(registerParam.getUsername());
         sysUser.setPassword(passwordEncoder.encode(registerParam.getPassword()));
+        sysUser.setEmail(registerParam.getEmail());
+        sysUser.setNickname(defaultNickname);
+        sysUser.setAvatarUrl(defaultAvatarUrl);
         sysUser.setIsAdmin(0);
         sysUser.setRegisterDate(new Date());
         return userMapper.insertSelective(sysUser);
@@ -262,8 +272,7 @@ public class SysUserServiceImpl implements SysUserService {
 
         SysUser currentUser = this.getCurrentUser();
         String avatarUrl = currentUser.getAvatarUrl();
-        // FIXME: hard code here
-        String rootLocation = "http://101.200.193.180:9520/files/images";
+        String rootLocation = baseUrl + "/files/images";
         if (avatarUrl != null) {
             // delete if avatar is uploaded to server before
             int index = avatarUrl.lastIndexOf(StrUtil.SLASH);
