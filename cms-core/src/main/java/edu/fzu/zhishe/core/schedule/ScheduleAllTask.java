@@ -51,9 +51,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(LikeTask.class).withIdentity("job1")
             .storeDurably().build();
         // start at 12:00 am
-//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 * * ?");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 * * ?");
         // start every 5 min (used for test)
-         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */3 * ? * *");
+//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */3 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(LIKE_TASK_IDENTITY)
@@ -67,9 +67,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(ExpireActivityTask.class).withIdentity("job2")
             .storeDurably().build();
         // start at 1:00 am
-//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 1 * * ?");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 1 * * ?");
         // start every 2 min (used for test)
-         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
+//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(ACTIVITY_TASK_IDENTITY)
@@ -83,9 +83,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(CreditTodayTask.class).withIdentity("job3")
             .storeDurably().build();
         // start at 12:05 am
-//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 5 0 * * ?");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 5 0 * * ?");
         // start every 1 min (used for test)
-         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
+//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(CREDIT_TASK_IDENTITY)
@@ -99,9 +99,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(ExpireApplyTask.class).withIdentity("job4")
             .storeDurably().build();
         // start every 12 hours
-//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */12 ? * *");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */12 ? * *");
 
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */2 * ? * *");
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */2 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(EXPIRE_APPLY_TASK_IDENTITY)
