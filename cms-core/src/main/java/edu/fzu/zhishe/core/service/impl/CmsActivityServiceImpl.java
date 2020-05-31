@@ -288,11 +288,11 @@ public class CmsActivityServiceImpl implements CmsActivityService {
     }
 
     /**
-     * update activity state: published -> finished
+     * update activity state: active -> deleted
      */
     @Override
-    public int finishExpiredActivity() {
+    public int deleteExpiredActivity() {
 
-        return activityDAO.finishActivityBatch(new Date());
+        return activityDAO.deleteActivityBatch(new Date());
     }
 }

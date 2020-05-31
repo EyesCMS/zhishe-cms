@@ -38,5 +38,5 @@ public interface CmsActivityService {
 
     List<CmsActivityRecommendDTO> listRecomend(Integer number);
 
-    int finishExpiredActivity();
+    int deleteExpiredActivity();
 }

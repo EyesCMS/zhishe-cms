@@ -42,6 +42,8 @@ import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +56,8 @@ import org.springframework.util.CollectionUtils;
  */
 @Service
 public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CmsApplyAuditServiceImpl.class);
 
     @Value("${zhishe.apply.expire_day}")
     private int applyExpireDay;
@@ -842,11 +846,11 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
 
     @Override
     public void updateExpiredApply() {
-        updateExpiredJoinClubApply();
-        updateExpiredClubCreationApply();
-        updateExpiredClubDisbandApply();
-        updateExpiredChiefChangeApply();
-        updateExpiredOfficialChangeApply();
+        LOGGER.info("close {} expired join club apply", updateExpiredJoinClubApply());
+        LOGGER.info("close {} expired create club apply", updateExpiredClubCreationApply());
+        LOGGER.info("close {} expired disband club apply", updateExpiredClubDisbandApply());
+        LOGGER.info("close {} expired chief change apply", updateExpiredChiefChangeApply());
+        LOGGER.info("close {} expired official change apply", updateExpiredOfficialChangeApply());
     }
 
     @Override

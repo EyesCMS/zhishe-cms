@@ -1,7 +1,8 @@
 package edu.fzu.zhishe.core.schedule;
 
-import edu.fzu.zhishe.core.schedule.task.ActivityTask;
+import edu.fzu.zhishe.core.schedule.task.ExpireActivityTask;
 import edu.fzu.zhishe.core.schedule.task.CreditTodayTask;
+import edu.fzu.zhishe.core.schedule.task.ExpireApplyTask;
 import edu.fzu.zhishe.core.schedule.task.LikeTask;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -40,8 +41,8 @@ public class ScheduleAllTask {
 
         Scheduler scheduler = schedulerFactoryBean.getScheduler();
         likeTask(scheduler);
+        expireActivityTask(scheduler);
         creditTask(scheduler);
-        activityTask(scheduler);
         expireApplyTaskIdentity(scheduler);
     }
 
@@ -50,9 +51,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(LikeTask.class).withIdentity("job1")
             .storeDurably().build();
         // start at 12:00 am
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 * * ?");
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 0 * * ?");
         // start every 5 min (used for test)
-//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */5 * ? * *");
+         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */3 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(LIKE_TASK_IDENTITY)
@@ -61,14 +62,14 @@ public class ScheduleAllTask {
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }
 
-    private void activityTask(Scheduler scheduler) throws SchedulerException {
+    private void expireActivityTask(Scheduler scheduler) throws SchedulerException {
 
-        JobDetail jobDetail = JobBuilder.newJob(ActivityTask.class).withIdentity("job2")
+        JobDetail jobDetail = JobBuilder.newJob(ExpireActivityTask.class).withIdentity("job2")
             .storeDurably().build();
         // start at 1:00 am
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 1 * * ?");
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 1 * * ?");
         // start every 2 min (used for test)
-//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
+         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(ACTIVITY_TASK_IDENTITY)
@@ -82,9 +83,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(CreditTodayTask.class).withIdentity("job3")
             .storeDurably().build();
         // start at 12:05 am
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 5 0 * * ?");
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 5 0 * * ?");
         // start every 1 min (used for test)
-//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
+         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */1 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(CREDIT_TASK_IDENTITY)
@@ -95,10 +96,12 @@ public class ScheduleAllTask {
 
     private void expireApplyTaskIdentity(Scheduler scheduler) throws SchedulerException {
 
-        JobDetail jobDetail = JobBuilder.newJob(CreditTodayTask.class).withIdentity("job4")
+        JobDetail jobDetail = JobBuilder.newJob(ExpireApplyTask.class).withIdentity("job4")
             .storeDurably().build();
         // start every 12 hours
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */12 ? * *");
+//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */12 ? * *");
+
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */2 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(EXPIRE_APPLY_TASK_IDENTITY)

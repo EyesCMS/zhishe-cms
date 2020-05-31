@@ -92,12 +92,12 @@
         a.id DESC
     </select>
 
-    <update id="finishActivityBatch">
+    <update id="deleteActivityBatch">
         UPDATE cms_activity
-        SET state = 4
+        SET state = 5
         WHERE
-            state = 2
-            AND end_date &lt; #{nowDate}
+            state = 1
+            AND start_date &lt; #{nowDate}
     </update>
 
 </mapper>

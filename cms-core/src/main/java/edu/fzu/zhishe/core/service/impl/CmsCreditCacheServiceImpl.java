@@ -11,6 +11,8 @@ import edu.fzu.zhishe.security.service.RedisService;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
+
+    public static final Logger LOGGER = LoggerFactory.getLogger(CmsCreditCacheServiceImpl.class);
 
     @Autowired
     RedisService redisService;
@@ -61,7 +65,7 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
             .stream()
             .map(CmsClubGrade::getLowerLimit)
             .collect(Collectors.toList());
-
+        final int[] count = {0};
         String redisKey = redisDatabase + ":" + redisKeyCreditToday;
         Map<Object, Object> creditTodayMap = redisService.hGetAll(redisKey);
         creditTodayMap.forEach((k, v) -> {
@@ -78,12 +82,14 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
                 int newCredit = oldClub.getCredit() + creditDelta;
                 newRecord.setCredit(newCredit);
                 newRecord.setGradeId(CreditUtil.getGradeByCredit(lowerBounds, newCredit));
-                clubMapper.updateByPrimaryKeySelective(newRecord);
+                count[0] += clubMapper.updateByPrimaryKeySelective(newRecord);
             }
             // 鸵鸟策略：忽略对错误的处理
 
             // delete processed entry
             redisService.hDel(redisKey, key);
         });
+
+        LOGGER.info("write {} records from redis to database", count[0]);
     }
 }

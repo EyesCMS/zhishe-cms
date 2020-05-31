@@ -18,5 +18,5 @@ public interface CmsClubActivityDAO {
 
     List<CmsActivityApplyListDTO> listActivityApplyForAdmin(Integer state, String clubName);
 
-    int finishActivityBatch(@Param("nowDate") Date finishDate);
+    int deleteActivityBatch(@Param("nowDate") Date finishDate);
 }

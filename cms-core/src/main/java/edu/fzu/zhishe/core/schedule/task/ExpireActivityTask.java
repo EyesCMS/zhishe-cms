@@ -5,15 +5,13 @@ import edu.fzu.zhishe.security.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
-import org.springframework.stereotype.Component;
 
 /**
  * @author liang
  */
 @Slf4j
-public class ActivityTask extends QuartzJobBean {
+public class ExpireActivityTask extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -22,8 +20,8 @@ public class ActivityTask extends QuartzJobBean {
         CmsActivityService activityService = SpringUtil.getBean(CmsActivityService.class);
 
         log.info("<<< Start task");
-        int count = activityService.finishExpiredActivity();
-        log.info("Finished {} activities", count);
+        int count = activityService.deleteExpiredActivity();
+        log.info("close {} activities", count);
         log.info(">>> End tasK");
     }
 }
