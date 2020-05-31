@@ -256,7 +256,8 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
             CmsUserClubRel cmsUserClubRel = new CmsUserClubRel();
             //查询刚刚插入的社团id
             CmsClubExample example = new CmsClubExample();
-            example.createCriteria().andNameEqualTo(cmsClubCreateApply.getClubName());
+            example.createCriteria().andNameEqualTo(cmsClubCreateApply.getClubName())
+                    .andDeleteStatusEqualTo(DeleteStateEnum.Existence.getValue());
             List<CmsClub> cmsClubs = clubMapper.selectByExample(example);
             if (CollectionUtils.isEmpty(cmsClubs)) {
                 Asserts.fail(ApplyAuditErrorEnum.MAPPER_OPERATION_FAILED);
