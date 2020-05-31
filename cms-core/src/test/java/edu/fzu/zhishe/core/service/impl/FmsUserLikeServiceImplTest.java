@@ -1,14 +1,8 @@
 package edu.fzu.zhishe.core.service.impl;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import edu.fzu.zhishe.cms.mapper.FmsPostMapper;
-import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.common.exception.ApiException;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
-import edu.fzu.zhishe.core.constant.LikedStatusEnum;
-import edu.fzu.zhishe.core.service.FmsForumService;
-import edu.fzu.zhishe.core.service.FmsUserLikeService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.util.MockUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,42 +24,44 @@ class FmsUserLikeServiceImplTest {
     Logger log = LoggerFactory.getLogger(FmsForumServiceImplTest.class);
 
     @Autowired
-    FmsUserLikeService userLikeService;
+    FmsLikeCacheService likeCacheService;
 
     @BeforeEach
     void mockLoginUser() {
-        MockUtil.mockLoginUser("test");
+        MockUtil.mockLoginUser("xjliang");
     }
 
     @Test
     @Transactional
     @Rollback
     public void TestForbiddenOperation() {
+        Integer uid = 7;
+        Long postIdNotExist = 54L;
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            userLikeService.like(54L);
+            likeCacheService.like(uid, postIdNotExist);
         }, " 帖子不存在，却可以对其点赞 ");
 
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            userLikeService.unlike(54L);
+            likeCacheService.unlike(uid, postIdNotExist);
         }, " 帖子不存在，却可以对其取消点赞 ");
 
         Assertions.assertThrows(ApiException.class, () -> {
-            Long postId = 57L;
-            if (userLikeService.getLikeStatus(postId).equals(LikedStatusEnum.LIKE.getCode())) {
-                userLikeService.like(postId);
+            Long postId = 4L;
+            if (likeCacheService.hasLiked(uid, postId)) {
+                likeCacheService.like(uid, postId);
             } else {
-                userLikeService.like(postId);
-                userLikeService.like(postId);
+                likeCacheService.like(uid, postId);
+                likeCacheService.like(uid, postId);
             }
         }, " 已经对某一帖子点过赞，却可以再次点赞 ");
 
         Assertions.assertThrows(ApiException.class, () -> {
-            Long postId = 57L;
-            if (userLikeService.getLikeStatus(postId).equals(LikedStatusEnum.UNLIKE.getCode())) {
-                userLikeService.unlike(postId);
+            Long postId = 4L;
+            if (!likeCacheService.hasLiked(uid, postId)) {
+                likeCacheService.unlike(uid, postId);
             } else {
-                userLikeService.unlike(postId);
-                userLikeService.unlike(postId);
+                likeCacheService.unlike(uid, postId);
+                likeCacheService.unlike(uid, postId);
             }
         }, " 还没对某一帖子点过赞，却可以取消点赞 ");
     }
@@ -75,15 +71,16 @@ class FmsUserLikeServiceImplTest {
     @Rollback
     public void TestAcceptedOperation() {
 
+        Integer uid = 7;
         // user test 未点赞的帖子 id
-        long postId = 57L;
+        long postId = 4L;
 
         Assertions.assertDoesNotThrow(() -> {
-            userLikeService.like(postId);
+            likeCacheService.like(uid, postId);
         }, "点赞异常");
 
         Assertions.assertDoesNotThrow(() -> {
-            userLikeService.unlike(postId);
+            likeCacheService.unlike(uid, postId);
         }, "取消点赞异常");
     }
 }

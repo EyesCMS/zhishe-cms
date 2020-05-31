@@ -20,7 +20,7 @@ import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
-import edu.fzu.zhishe.core.service.FmsUserLikeService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.NotExistUtil;
@@ -39,36 +39,30 @@ import org.springframework.transaction.annotation.Transactional;
 public class FmsForumServiceImpl implements FmsForumService {
 
     @Autowired
-    private FmsPostDAO postDAO;
-
+    FmsPostDAO postDAO;
     @Autowired
-    private FmsPostMapper postMapper;
-
+    FmsPostMapper postMapper;
     @Autowired
     StorageService storageService;
-
     @Autowired
-    private FmsRemarkDAO remarkDAO;
-
+    FmsRemarkDAO remarkDAO;
     @Autowired
-    private FmsPostRemarkMapper remarkMapper;
-
+    FmsPostRemarkMapper remarkMapper;
+    @Autowired
+    FmsLikeCacheService likeCacheService;
     @Autowired
     private SysUserService userService;
 
-    @Autowired
-    FmsUserLikeService userLikeService;
-
     private FmsPostDTO queryLikeCount(FmsPostDTO post) {
         if (post != null) {
-            post.setLikeCount(userLikeService.getPostLikeCount(post.getId()));
+            post.setLikeCount(likeCacheService.getLikeCount(post.getId()));
         }
         return post;
     }
 
     private List<FmsPostDTO> queryLikeCount(List<FmsPostDTO> postList) {
         postList.forEach(p -> {
-            p.setLikeCount(userLikeService.getPostLikeCount(p.getId()));
+            p.setLikeCount(likeCacheService.getLikeCount(p.getId()));
         });
         return postList;
     }

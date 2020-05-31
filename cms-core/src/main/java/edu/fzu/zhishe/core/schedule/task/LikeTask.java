@@ -1,6 +1,6 @@
 package edu.fzu.zhishe.core.schedule.task;
 
-import edu.fzu.zhishe.core.service.FmsUserLikeService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.security.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobExecutionContext;
@@ -17,12 +17,11 @@ public class LikeTask extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 
         // 无法使用自动依赖注入
-        FmsUserLikeService likeService = SpringUtil.getBean(FmsUserLikeService.class);
+        FmsLikeCacheService likeService = SpringUtil.getBean(FmsLikeCacheService.class);
 
         log.info("<<< Start task");
         // 将 Redis 里的点赞信息同步到数据库里
-        likeService.transLikedFromRedis2DB();
-        likeService.transLikedCountFromRedis2DB();
+        likeService.syncLikeDataToDatabase();
         log.info(">>> End task");
     }
 }

@@ -70,7 +70,7 @@ public class CmsCreditCacheServiceImpl implements CmsCreditCacheService {
         Map<Object, Object> creditTodayMap = redisService.hGetAll(redisKey);
         creditTodayMap.forEach((k, v) -> {
             String key = (String) k;
-            String[] tokens = key.split(RedisKeyUtil.KEY_SEPARATOR);
+            String[] tokens = key.split(RedisKeyUtil.SEPARATOR);
             Integer clubId = Integer.valueOf(tokens[0]);
             // Integer userId = Integer.valueOf(tokens[1]);
             Integer creditDelta = (Integer) v;

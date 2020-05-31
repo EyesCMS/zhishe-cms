@@ -37,6 +37,7 @@ import edu.fzu.zhishe.core.param.CmsClubsQuitParam;
 import edu.fzu.zhishe.core.param.CmsClubsQuitQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CmsApplyAuditService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
@@ -127,6 +128,9 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
 
     @Autowired
     private FmsUserLikePostMapper userLikePostMapper;
+
+    @Autowired
+    FmsLikeCacheService likeCacheService;
 
     public void checkNotExistOrAudited(Object auditObject) {
 
@@ -416,6 +420,7 @@ public class CmsApplyAuditServiceImpl implements CmsApplyAuditService {
                 FmsUserLikePostExample example10 = new FmsUserLikePostExample();
                 example10.createCriteria().andPostIdEqualTo(postId);
                 userLikePostMapper.deleteByExample(example10);
+                likeCacheService.deletePostLikeSet(postId);
                 //逻辑删除帖子
                 p.setDeleteState(DeleteStateEnum.Deleted.getValue());
                 postMapper.updateByPrimaryKeySelective(p);

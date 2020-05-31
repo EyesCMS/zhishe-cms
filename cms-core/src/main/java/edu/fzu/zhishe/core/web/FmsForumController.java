@@ -7,6 +7,8 @@ import cn.hutool.json.JSONObject;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.EntityNotFoundException;
+import edu.fzu.zhishe.core.annotation.IsLogin;
+import edu.fzu.zhishe.core.constant.LikedStatusEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
 import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
@@ -17,7 +19,7 @@ import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.CreditService;
 import edu.fzu.zhishe.core.service.FmsForumService;
-import edu.fzu.zhishe.core.service.FmsUserLikeService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -52,7 +54,7 @@ public class FmsForumController {
     private SysUserService userService;
 
     @Autowired
-    FmsUserLikeService userLikeService;
+    FmsLikeCacheService likeCacheService;
 
     @Autowired
     CreditService creditService;
@@ -154,25 +156,27 @@ public class FmsForumController {
         return ResponseEntity.ok().body(CommonPage.restPage(forumService.listMyPost(paginationParam, postQuery)));
     }
 
+    @IsLogin
     @ApiOperation(value = " 7.8 点赞 ")
     @RequestMapping(value = "/like", method = RequestMethod.POST)
     @ApiImplicitParams({
         @ApiImplicitParam(name = "likedPostId", value = " 被点赞的帖子 id"),
     })
-    public ResponseEntity<Object> like(@RequestParam("likedPostId") Long likedPostId) {
+    public ResponseEntity<Object> like(@RequestParam("likedPostId") Long pid) {
 
-        userLikeService.like(likedPostId);
+        likeCacheService.like(userService.getCurrentUser().getId(), pid);
         return noContent().build();
     }
 
+    @IsLogin
     @ApiOperation(value = " 7.9 取消点赞 ")
     @RequestMapping(value = "/unlike", method = RequestMethod.POST)
     @ApiImplicitParams({
         @ApiImplicitParam(name = "likedPostId", value = " 被取消点赞的帖子 id"),
     })
-    public ResponseEntity<Object> unlike(@RequestParam("likedPostId") Long likedPostId) {
+    public ResponseEntity<Object> unlike(@RequestParam("likedPostId") Long pid) {
 
-        userLikeService.unlike(likedPostId);
+        likeCacheService.unlike(userService.getCurrentUser().getId(), pid);
         return noContent().build();
     }
 
@@ -183,8 +187,11 @@ public class FmsForumController {
     })
     public ResponseEntity<Object> getLikeStatus(@RequestParam("postId") Long postId) {
 
+        boolean hasLiked = likeCacheService.hasLiked(userService.getCurrentUser().getId(), postId);
+        int status = hasLiked ? LikedStatusEnum.LIKE.getCode() : LikedStatusEnum.UNLIKE.getCode();
+
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("status", userLikeService.getLikeStatus(postId));
+        jsonObject.put("status", status);
         return ok().body(jsonObject);
     }
 
