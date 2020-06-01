@@ -51,9 +51,9 @@ public class ScheduleAllTask {
         JobDetail jobDetail = JobBuilder.newJob(LikeTask.class).withIdentity("job1")
             .storeDurably().build();
         // every 2 hours
-//        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */2 ? * *");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 */2 ? * *");
         // start every 5 min (used for test)
-         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */2 * ? * *");
+//         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 */2 * ? * *");
 
         CronTrigger cronTrigger = TriggerBuilder.newTrigger()
             .withIdentity(LIKE_TASK_IDENTITY)
