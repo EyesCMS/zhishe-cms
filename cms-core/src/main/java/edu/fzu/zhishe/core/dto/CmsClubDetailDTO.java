@@ -36,4 +36,5 @@ public class CmsClubDetailDTO extends CmsClubBriefDTO {
     public void setSlogan(String slogan) {
         this.slogan = slogan;
     }
+
 }

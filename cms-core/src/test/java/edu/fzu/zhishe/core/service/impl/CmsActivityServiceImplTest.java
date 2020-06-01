@@ -21,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 /**
  * @author PSF(52260506 @ qq.com)
  * @
@@ -45,12 +47,12 @@ public class CmsActivityServiceImplTest {
         Integer activityIdNotExist = 999999;
         // 已删除的活动 id
         Integer deletedActivityId = 1;
-        // 社团帖子id
+        // 存在活动id
         Integer activityId = 2;
 
         // 创建活动申请
-        Assertions.assertThrows(NullPointerException.class, () -> {
-            activityService.activityApply(new CmsClubActivityParam());
+        Assertions.assertThrows(AccessDeniedException.class, () -> {
+            activityService.activityApply(new CmsClubActivityParam(), null);
         }, " 非社长，却可以创建活动 ");
 
 
@@ -63,7 +65,7 @@ public class CmsActivityServiceImplTest {
         }, " 非社长，却可以修改活动申请状态 ");
 
 
-        Assertions.assertThrows(NullPointerException.class, () -> {
+        Assertions.assertThrows(EntityNotFoundException.class, () -> {
             activityService.delActivity(activityIdNotExist);
         }, " 不存在的活动，却可以删除 ");
 
@@ -85,6 +87,34 @@ public class CmsActivityServiceImplTest {
     @Transactional
     @Rollback
     public void TestAcceptedOperation() {
+        // 存在的活动id，且社长为test
+        Integer activityIdExist = 5;
 
+        CmsActivityUpdateParam updateParam = new CmsActivityUpdateParam();
+        updateParam.setName("测试使用");
+        updateParam.setContent("测试使用");
+        updateParam.setTitle("测试使用");
+        updateParam.setEndDate(new Date());
+        updateParam.setStartDate(new Date());
+
+        // 更新活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.updateActivity(activityIdExist, updateParam);
+        }, " 活动更新异常 ");
+
+        // 获取活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.getActivityApplyItem(activityIdExist);
+        }, " 获取活动项异常 ");
+
+        // 获取活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.activityStateChange(activityIdExist, 2, UserRoleEnum.CHIEF);
+        }, " 改变活动状态异常 ");
+
+        // 删除活动
+        Assertions.assertDoesNotThrow(() -> {
+            activityService.delActivity(activityIdExist);
+        }, " 删除活动异常 ");
     }
 }

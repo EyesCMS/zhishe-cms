@@ -7,12 +7,36 @@ package edu.fzu.zhishe.core.param;
 public class CmsActivityQuery {
     private String clubName;
     private Integer state;
-    private String name; //	活动名称
-    private String title;//	活动标题
-    private String content;//	活动内容
-    private String location;//	活动地点
-    private String startDate;//	活动开始时间 例如2020-05-01
-    private String endDate;//	活动结束时间 例如2020-05-01
+
+    /**
+     * 活动名称
+     */
+    private String name;
+
+    /**
+     * 活动标题
+     */
+    private String title;
+
+    /**
+     * 活动内容
+     */
+    private String content;
+
+    /**
+     * 活动地点
+     */
+    private String location;
+
+    /**
+     * 活动开始时间 例如2020-05-01
+     */
+    private String startDate;
+
+    /**
+     * 活动结束时间 例如2020-05-01
+     */
+    private String endDate;
 
     public String getClubName() {
         return clubName;

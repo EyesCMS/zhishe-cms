@@ -7,12 +7,15 @@ import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/25/2020.
  * @version 1.0
  */
 public interface FmsForumService {
+
+    List<FmsPostDTO> listMyPost(PaginationParam paginationParam, FmsPostQuery postQuery);
 
     List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery);
 

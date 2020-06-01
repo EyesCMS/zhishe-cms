@@ -13,21 +13,25 @@ public class FmsPostDTO {
      * createAt : 2018-04-19 18:14:12
      * imgUrl : 131231241241.jpg
      * avatarUrl : e312312312312.jpg
+     * likeCount: 4
+     * commentCount: 5
      */
 
-    private Integer id;
+    private Long id;
     private String title;
     private String content;
     private String posterName;
     private String createAt;
     private String imgUrl;
     private String avatarUrl;
+    private Integer likeCount;
+    private Integer commentCount;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -79,9 +83,25 @@ public class FmsPostDTO {
         this.avatarUrl = avatarUrl;
     }
 
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
     @Override
     public String toString() {
-        return "CmsActivityDTO{" +
+        return "FmsPostDTO{" +
             "id=" + id +
             ", title='" + title + '\'' +
             ", content='" + content + '\'' +
@@ -89,6 +109,8 @@ public class FmsPostDTO {
             ", createAt='" + createAt + '\'' +
             ", imgUrl='" + imgUrl + '\'' +
             ", avatarUrl='" + avatarUrl + '\'' +
+            ", likeCount=" + likeCount +
+            ", commentCount=" + commentCount +
             '}';
     }
 }

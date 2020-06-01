@@ -19,6 +19,7 @@ public class CmsClubsChiefChangeDTO {
     private String clubName;
     private String oldChiefName;
     private String newChiefName;
+    private String reason;
     private Date createAt;
     private int state;
 
@@ -52,6 +53,14 @@ public class CmsClubsChiefChangeDTO {
 
     public void setNewChiefName(String newChiefName) {
         this.newChiefName = newChiefName;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     public Date getCreateAt() {

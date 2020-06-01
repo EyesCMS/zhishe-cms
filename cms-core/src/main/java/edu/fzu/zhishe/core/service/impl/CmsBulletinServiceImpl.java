@@ -8,10 +8,13 @@ import edu.fzu.zhishe.cms.model.CmsBulletinExample;
 import edu.fzu.zhishe.cms.model.CmsClub;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.annotation.CheckClubAuth;
+import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.constant.ClubStatueEnum;
+import edu.fzu.zhishe.core.constant.UserRoleEnum;
 import edu.fzu.zhishe.core.dao.CmsBulletinDAO;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
 import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
+import edu.fzu.zhishe.core.error.BulletinErrorEnum;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
 import edu.fzu.zhishe.core.param.CmsBulletinQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
@@ -46,18 +49,12 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
 
     @Override
     public CmsBulletin getBulletin(Integer clubId, Integer bulletinId) {
-//        if (!clubService.isClubMember(clubId)) {
-//            Asserts.fail(" 您没有访问的权限！ ");
-//        }
         return bulletinMapper.selectByPrimaryKey(bulletinId);
     }
 
     @Override
-    public List<CmsBulletinsDTO> listClubBulletin(int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
-        //CmsBulletinExample bulletinExample = new CmsBulletinExample();
-        //bulletinExample.createCriteria().andClubIdEqualTo(clubId);
-
-
+    public List<CmsBulletinsDTO> listClubBulletin(
+        int clubId, PaginationParam paginationParam, CmsBulletinQuery bulletinQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
         return bulletinDAO.listBulletin(clubId,bulletinQuery);
     }
@@ -68,45 +65,42 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int creatBulletin(Integer clubId, CmsBulletinParam cmsBulletinParam) {
-        CmsBulletin bulletin = new CmsBulletin(){{
-            setClubId(clubId);//获取当前club_id 未实现，目前直接通过前端传递
-            setTitle(cmsBulletinParam.getTitle());
-            setBody(cmsBulletinParam.getBody());
-            setCreateAt(new Date());
-            setUpdateAt(new Date());
-        }
-        };
+        CmsBulletin bulletin = new CmsBulletin();
+        bulletin.setClubId(clubId);
+        bulletin.setTitle(cmsBulletinParam.getTitle());
+        bulletin.setBody(cmsBulletinParam.getBody());
+        bulletin.setCreateAt(new Date());
+        bulletin.setUpdateAt(new Date());
         return bulletinMapper.insert(bulletin);
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int updateBulletin(Integer bulletinId, CmsBulletinParam cmsBulletinParam) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
         Asserts.notNull(bulletin);
 
         Integer clubId = bulletin.getClubId();
-        //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
-            Asserts.notFound(" 找不到该社团 ");
+            Asserts.notFound(BulletinErrorEnum.CLUB_NOT_EXIST);
         }
 
         if (clubService.getClubStatue(clubId) != ClubStatueEnum.CHIEF) {
-            Asserts.forbidden( " 权限不足 " );
+            Asserts.forbidden(BulletinErrorEnum.CAN_NOT_UPDATE_BULLETIN);
         }
 
         BeanUtils.copyProperties(cmsBulletinParam, bulletin);
         bulletin.setBody(cmsBulletinParam.getBody());
         bulletin.setUpdateAt(new Date());
-       return bulletinMapper.updateByPrimaryKey(bulletin);
+        return bulletinMapper.updateByPrimaryKey(bulletin);
     }
 
     @Override
-    @CheckClubAuth("3")
+    @CheckClubAuth(UserRoleEnum.CHIEF)
     public int deleteBulletin(Integer bulletinId) {
 
         CmsBulletin bulletin = bulletinMapper.selectByPrimaryKey(bulletinId);
@@ -115,14 +109,13 @@ public class CmsBulletinServiceImpl implements CmsBulletinService {
         }
 
         Integer clubId = bulletin.getClubId();
-        //CmsClub club = clubService.getClubById(clubId);
         CmsClub club = clubMapper.selectByPrimaryKey(clubId);
         if (club.getDeleteStatus() == 1) {
-            Asserts.notFound(" 找不到该社团 ");
+            Asserts.notFound(BulletinErrorEnum.CLUB_NOT_EXIST);
         }
 
         if (clubService.getClubStatue(clubId) != ClubStatueEnum.CHIEF) {
-            Asserts.forbidden( " 权限不足 " );
+            Asserts.forbidden(BulletinErrorEnum.NOT_PRESIDENT);
         }
         return bulletinMapper.deleteByPrimaryKey(bulletinId);
     }

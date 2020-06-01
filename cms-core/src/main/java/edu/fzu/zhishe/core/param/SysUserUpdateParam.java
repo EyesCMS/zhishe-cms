@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.param;
 
+import edu.fzu.zhishe.core.validator.PhoneValidator;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.Email;
@@ -21,6 +22,7 @@ public class SysUserUpdateParam {
     private String address;
 
     @ApiModelProperty(value = " 联系方式 ")
+    @PhoneValidator
     private String phone;
 
     @ApiModelProperty(value = " 个人标语 ")

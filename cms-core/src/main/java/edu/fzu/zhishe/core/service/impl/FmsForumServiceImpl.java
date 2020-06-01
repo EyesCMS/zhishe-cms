@@ -7,18 +7,23 @@ import edu.fzu.zhishe.cms.model.FmsPost;
 import edu.fzu.zhishe.cms.model.FmsPostRemark;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.common.exception.Asserts;
+import edu.fzu.zhishe.core.annotation.IsLogin;
 import edu.fzu.zhishe.core.constant.DeleteStateEnum;
 import edu.fzu.zhishe.core.constant.PostTypeEnum;
 import edu.fzu.zhishe.core.dao.FmsPostDAO;
 import edu.fzu.zhishe.core.dao.FmsRemarkDAO;
 import edu.fzu.zhishe.core.dto.FmsPostDTO;
+import edu.fzu.zhishe.core.error.PostErrorEnum;
 import edu.fzu.zhishe.core.param.FmsPostParam;
 import edu.fzu.zhishe.core.dto.FmsRemarkDTO;
 import edu.fzu.zhishe.core.param.FmsPostQuery;
 import edu.fzu.zhishe.core.param.FmsRemarkParam;
 import edu.fzu.zhishe.core.param.PaginationParam;
 import edu.fzu.zhishe.core.service.FmsForumService;
+import edu.fzu.zhishe.core.service.FmsLikeCacheService;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserService;
+import edu.fzu.zhishe.core.util.NotExistUtil;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,135 +39,155 @@ import org.springframework.transaction.annotation.Transactional;
 public class FmsForumServiceImpl implements FmsForumService {
 
     @Autowired
-    private FmsPostDAO postDAO;
-
+    FmsPostDAO postDAO;
     @Autowired
-    private FmsPostMapper postMapper;
-
+    FmsPostMapper postMapper;
     @Autowired
-    private FmsRemarkDAO remarkDAO;
-
+    StorageService storageService;
     @Autowired
-    private FmsPostRemarkMapper remarkMapper;
-
+    FmsRemarkDAO remarkDAO;
+    @Autowired
+    FmsPostRemarkMapper remarkMapper;
+    @Autowired
+    FmsLikeCacheService likeCacheService;
     @Autowired
     private SysUserService userService;
+
+    private FmsPostDTO queryLikeCount(FmsPostDTO post) {
+        if (post != null) {
+            post.setLikeCount(likeCacheService.getLikeCount(post.getId()));
+        }
+        return post;
+    }
+
+    private List<FmsPostDTO> queryLikeCount(List<FmsPostDTO> postList) {
+        postList.forEach(p -> {
+            p.setLikeCount(likeCacheService.getLikeCount(p.getId()));
+        });
+        return postList;
+    }
+
+    @IsLogin
+    @Override
+    public List<FmsPostDTO> listMyPost(PaginationParam paginationParam, FmsPostQuery postQuery) {
+
+        PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
+        return queryLikeCount(postDAO.listMyPost(userService.getCurrentUser().getId(), postQuery));
+    }
 
     @Override
     public List<FmsPostDTO> listPersonalPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return postDAO.listPersonalPost(clubId, postQuery);
+        return queryLikeCount(postDAO.listPersonalPost(clubId, postQuery));
     }
 
     @Override
     public FmsPostDTO getPersonalPostById(Integer id) {
-        return postDAO.getPersonalPostById(id);
+        return queryLikeCount(postDAO.getPersonalPostById(id));
     }
 
     @Override
     public List<FmsPostDTO> listActivityPost(Integer clubId, PaginationParam paginationParam, FmsPostQuery postQuery) {
         PageHelper.startPage(paginationParam.getPage(), paginationParam.getLimit());
-        return postDAO.listActivityPost(clubId, postQuery);
+        return queryLikeCount(postDAO.listActivityPost(clubId, postQuery));
     }
 
     @Override
     public FmsPostDTO getActivityPostById(Integer id) {
-        return postDAO.getActivityPostById(id);
+        return queryLikeCount(postDAO.getActivityPostById(id));
     }
 
+    @IsLogin
     @Override
     public int savePost(FmsPostParam postParam) {
-        SysUser currentUser = userService.getCurrentUser();
-        FmsPost post = new FmsPost() {{
-            setPosterId(currentUser.getId());
-            setType(PostTypeEnum.PERSONAL.getValue());
-            setTitle(postParam.getTitle());
-            setContent(postParam.getContent());
-            setImgUrl(postParam.getImgUrl());
-            setCreateAt(new Date());
-            setDeleteState(DeleteStateEnum.Existence.getValue());
-        }};
+
+        String imgUrl = storageService.storeImage(postParam.getImage());
+        FmsPost post = new FmsPost();
+        post.setPosterId(userService.getCurrentUser().getId());
+        post.setType(PostTypeEnum.PERSONAL.getValue());
+        post.setTitle(postParam.getTitle());
+        post.setContent(postParam.getContent());
+        post.setImgUrl(imgUrl);
+        post.setCreateAt(new Date());
+        post.setDeleteState(DeleteStateEnum.Existence.getValue());
         return postMapper.insertSelective(post);
     }
 
+    @IsLogin
     @Override
     public int updatePost(Long id, FmsPostParam postParam) {
         FmsPost oldPost = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(oldPost == null || oldPost.getDeleteState() == 1);
+        if (oldPost == null || oldPost.getDeleteState() == DeleteStateEnum.Deleted.getValue()) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         if (oldPost.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
-            Asserts.fail("can't update activity post");
+            Asserts.fail(PostErrorEnum.CAN_NOT_UPDATE_ACTIVITY_POST);
         }
         SysUser currentUser = userService.getCurrentUser();
         if (!oldPost.getPosterId().equals(currentUser.getId())) {
-            Asserts.forbidden();
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
 
-        FmsPost post = new FmsPost() {{
-            setId(id);
-            setTitle(postParam.getTitle());
-            setContent(postParam.getContent());
-            setImgUrl(postParam.getImgUrl());
-        }};
+        FmsPost post = new FmsPost();
+        post.setId(id);
+        post.setTitle(postParam.getTitle());
+        post.setContent(postParam.getContent());
         return postMapper.updateByPrimaryKeySelective(post);
     }
 
+    @IsLogin
     @Override
     public int deletePost(Long id) {
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
 
         FmsPost post = postMapper.selectByPrimaryKey(id);
-        Asserts.notFound(post == null || post.getDeleteState() == 1);
+        if (NotExistUtil.check(post)) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
+        }
 
         if (post.getType().equals(PostTypeEnum.ACTIVITY.getValue())) {
-            Asserts.fail("can't delete activity post");
+            Asserts.fail(PostErrorEnum.CAN_NOT_DELETE_ACTIVITY_POST);
         }
-        if (!currentUser.getId().equals(post.getPosterId())) {
-            Asserts.forbidden();
+        if (!userService.getCurrentUser().getId().equals(post.getPosterId())) {
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
 
-        FmsPost newPost = new FmsPost() {{
-            setId(id);
-            setDeleteState(1);
-        }};
+        FmsPost newPost = new FmsPost();
+        newPost.setId(id);
+        newPost.setDeleteState(DeleteStateEnum.Deleted.getValue());
         return postMapper.updateByPrimaryKeySelective(newPost);
     }
 
+    @IsLogin
     @Override
     public int saveRemark(FmsRemarkParam remarkParam) {
-        SysUser currentUser = userService.getCurrentUser();
-        if (currentUser == null) {
-            Asserts.unAuthorized();
-        }
 
         Long postId = remarkParam.getPostId();
         FmsPost post = postMapper.selectByPrimaryKey(postId);
-        if (post == null || post.getDeleteState() == 1) {
-            Asserts.notFound();
+        if (NotExistUtil.check(post)) {
+            Asserts.notFound(PostErrorEnum.POST_NOT_EXIST);
         }
 
-        SysUser user = userService.getCurrentUser();
-        FmsPostRemark remark = new FmsPostRemark() {{
-            setUserId(user.getId());
-            setPostId(remarkParam.getPostId().intValue());
-            setContent(remarkParam.getContent());
-            setCreateAt(new Date());
-            setUpdateAt(null);
-        }};
+        FmsPostRemark remark = new FmsPostRemark();
+        remark.setUserId(userService.getCurrentUser().getId());
+        remark.setPostId(remarkParam.getPostId().intValue());
+        remark.setContent(remarkParam.getContent());
+        remark.setCreateAt(new Date());
+        remark.setUpdateAt(null);
         return remarkMapper.insertSelective(remark);
     }
 
+    @IsLogin
     @Override
     public int deleteRemark(Long id) {
         FmsPostRemark remark = remarkMapper.selectByPrimaryKey(id);
-        Asserts.notNull(remark);
+        if (remark == null) {
+            Asserts.notFound(PostErrorEnum.REMARK_NOT_EXIST);
+        }
 
         Integer userId = userService.getCurrentUser().getId();
         if (!remark.getUserId().equals(userId)) {
-            Asserts.unAuthorized();
+            Asserts.forbidden(PostErrorEnum.NOT_POSTER);
         }
         return remarkMapper.deleteByPrimaryKey(id);
     }

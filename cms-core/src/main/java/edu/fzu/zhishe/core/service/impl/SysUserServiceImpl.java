@@ -1,30 +1,40 @@
 package edu.fzu.zhishe.core.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import edu.fzu.zhishe.cms.model.SysPermission;
+import cn.hutool.core.util.StrUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.common.util.FieldUtil;
+import edu.fzu.zhishe.core.annotation.IsLogin;
+import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
-import edu.fzu.zhishe.core.dao.SysRolePermissionDAO;
 import edu.fzu.zhishe.core.domain.SysUserDetails;
 import edu.fzu.zhishe.core.dto.*;
+import edu.fzu.zhishe.core.error.DatabaseErrorEnum;
+import edu.fzu.zhishe.core.error.UserErrorEnum;
+import edu.fzu.zhishe.core.param.SysRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
+import edu.fzu.zhishe.core.service.MailService;
+import edu.fzu.zhishe.core.service.StorageService;
 import edu.fzu.zhishe.core.service.SysUserCacheService;
 import edu.fzu.zhishe.core.service.SysUserService;
 import edu.fzu.zhishe.cms.mapper.SysUserMapper;
 import edu.fzu.zhishe.cms.model.SysUser;
 import edu.fzu.zhishe.cms.model.SysUserExample;
 import edu.fzu.zhishe.security.util.JwtTokenUtil;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,12 +42,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author liang on 4/19/2020.
  * @version 1.0
  */
+@Slf4j
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
@@ -49,28 +60,51 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper userMapper;
     @Autowired
-    private SysRolePermissionDAO rolePermissionDAO;
-    @Autowired
     private SysUserCacheService userCacheService;
-//    @Value("${redis.key.authCode}")
-//    private String REDIS_KEY_PREFIX_AUTH_CODE;
-//    @Value("${redis.expire.authCode}")
-//    private Long AUTH_CODE_EXPIRE_SECONDS;
 
-    public static final String ANON_USER = "anonymousUser";
+    @Value("${zhishe.base_url}")
+    private String baseUrl;
+    @Value("${zhishe.default.nickname}")
+    private String defaultNickname;
+    @Value("${zhishe.default.avatar_url}")
+    private String defaultAvatarUrl;
+
+    @Autowired
+    StorageService storageService;
+
+    private final Path imageRootLocation;
+
+    @Autowired
+    public SysUserServiceImpl(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
+    }
+
+    @Autowired
+    MailService mailService;
+
+    /**
+     * 验证码长度
+     */
+    private static final int CODE_SIZE = 6;
+
+    /**
+     * 验证码范围
+     */
+    private static final int CODE_BOUND = 10;
+
+
+    public static final String EMAIL_SUBJECT = "Zhishe 注册";
 
     @Override
     public SysUser getByUsername(String username) {
         SysUser user = userCacheService.getUser(username);
         if (user != null) {
-            //LOGGER.info("from redis get user");
             return user;
         }
-        //SysUser user;
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(username);
         List<SysUser> userList = userMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(userList)) {
+        if (CollUtil.isNotEmpty(userList)) {
             user = userList.get(0);
             userCacheService.setUser(user);
             return user;
@@ -84,38 +118,76 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUser register(SysUserRegisterParam userRegisterParam) {
-        // 查询是否已有该用户
-        SysUserExample example = new SysUserExample();
-        example.createCriteria().andUsernameEqualTo(userRegisterParam.getUsername());
-        List<SysUser> sysUsers = userMapper.selectByExample(example);
-        if (!CollectionUtils.isEmpty(sysUsers)) {
-            Asserts.fail(" 该用户名已经存在 ");
+    public int register(SysRegisterParam registerParam) {
+        if (!verifyAuthCode(registerParam.getEmail(), registerParam.getAuthCode())) {
+            Asserts.fail(UserErrorEnum.AUTH_CODE_MISMATCH);
         }
+
+        // 验证是否存在相同用户名(邮箱已通过验证码验证）
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andUsernameEqualTo(registerParam.getUsername());
+        List<SysUser> sysUsers = userMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(sysUsers)) {
+            Asserts.fail(UserErrorEnum.DUPLICATE_USERNAME);
+        }
+        // 添加操作
         SysUser sysUser = new SysUser();
-        BeanUtils.copyProperties(userRegisterParam, sysUser);
-        sysUser.setPassword(passwordEncoder.encode(userRegisterParam.getPassword()));
+        sysUser.setUsername(registerParam.getUsername());
+        sysUser.setPassword(passwordEncoder.encode(registerParam.getPassword()));
+        sysUser.setEmail(registerParam.getEmail());
+        sysUser.setNickname(defaultNickname);
+        sysUser.setAvatarUrl(defaultAvatarUrl);
         sysUser.setIsAdmin(0);
-        userMapper.insert(sysUser);
-        return sysUser;
+        sysUser.setRegisterDate(new Date());
+        return userMapper.insertSelective(sysUser);
+    }
+
+    /**
+     * 校验注册验证码
+     * @param email 邮箱
+     * @param authCode 验证码
+     * @return
+     */
+    private boolean verifyAuthCode(String email, String authCode) {
+        if (StrUtil.isEmpty(authCode)) {
+            return false;
+        }
+        String realAuthCode = userCacheService.getAuthCode(email);
+        return authCode.equals(realAuthCode);
     }
 
     @Override
-    public String generateAuthCode(String telephone) {
-        return null;
-    }
+    public void generateAuthCode(String email) {
+        SysUserExample example = new SysUserExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<SysUser> sysUsers = userMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(sysUsers)) {
+            Asserts.fail(UserErrorEnum.DUPLICATE_EMAIL);
+        }
 
-    @Override
-    public List<SysPermission> listPermissionByRoleId(Integer roleId) {
-        return rolePermissionDAO.listPermissionByRoleId(roleId);
+        StringBuilder stringBuilder = new StringBuilder();
+        Random random = new Random();
+
+        for (int i = 0; i < CODE_SIZE; i++) {
+            stringBuilder.append(random.nextInt(CODE_BOUND));
+        }
+        String code = stringBuilder.toString();
+        userCacheService.setAuthCode(email, code);
+        String content = "<html>\n" +
+            "<body>\n" +
+            "<div style=\"border: black;width: 400px;height: 400px;\">\n" +
+            "<p> 尊敬的先生/女生，您好！</p>\n" +
+            "<p>     您的注册验证码为：<b>" + code + "</b></p>\n" +
+            "<p>     验证码有效时间为 10 分钟</p><br/>\n" +
+            "<p> <a href=\"https://github.com/eyescms\">The Zhishe Team</a></p>\n" +
+            "</div>\n" +
+            "</body>\n" +
+            "</html>";
+        mailService.sendHtmlMail(email, EMAIL_SUBJECT, content);
     }
 
     @Override
     public UpdatePasswordResultEnum updatePassword(UpdateUserPasswordParam param) {
-        // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
-        if (param.getNewPassword().length() < 6 || param.getNewPassword().length() > 20) {
-            return UpdatePasswordResultEnum.UPDATE_ERROR;
-        }
 
         SysUserExample example = new SysUserExample();
         example.createCriteria().andUsernameEqualTo(param.getUsername());
@@ -138,7 +210,6 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public SysUser getCurrentUser() {
-
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication().getPrincipal();
         if (principal.getClass().equals(SysUserDetails.class)) {
@@ -147,19 +218,13 @@ public class SysUserServiceImpl implements SysUserService {
         return null;
     }
 
-//    @Override
-//    public void updateIntegration(Integer id, Integer integration) {
-//
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String username) {
         SysUser sysUser = getByUsername(username);
         if (sysUser != null) {
-            List<SysPermission> permissionList = this.listPermissionByRoleId(sysUser.getCurrentRole());
-            return new SysUserDetails(sysUser, permissionList);
+            return new SysUserDetails(sysUser);
         }
-        throw new UsernameNotFoundException(" 用户名或密码错误 ");
+        throw new UsernameNotFoundException(UserErrorEnum.BAD_USERNAME_OR_PASSWORD.getMessage());
     }
 
     @Override
@@ -169,7 +234,7 @@ public class SysUserServiceImpl implements SysUserService {
         try {
             UserDetails userDetails = loadUserByUsername(username);
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                throw new BadCredentialsException(" 密码不正确 ");
+                throw new BadCredentialsException(UserErrorEnum.BAD_PASSWORD.getMessage());
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
@@ -182,33 +247,55 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public String refreshToken(String token) {
-        return jwtTokenUtil.refreshHeadToken(token);
-    }
-
-    @Override
     public List<SysUser> users() {
         return userMapper.selectByExample(null);
     }
 
+    @IsLogin
     @Override
     public void updateUserByParam(SysUserUpdateParam updateParam) {
-        SysUser user = getCurrentUser();
-        if (user == null) {
-            Asserts.unAuthorized("请登录后修改信息");
-        }
 
         Asserts.hasFiled(updateParam);
 
-        SysUser updatedUser = new SysUser() {{
-            setId(user.getId());
-        }};
+        SysUser updatedUser = new SysUser();
+        updatedUser.setId(getCurrentUser().getId());
         BeanUtils.copyProperties(updateParam, updatedUser);
 
         if (userMapper.updateByPrimaryKeySelective(updatedUser) == 0) {
-            Asserts.fail("修改信息更新数据库出现错误");
+            Asserts.fail(DatabaseErrorEnum.UPDATE_ERROR);
         }
         userCacheService.delUser(updatedUser.getId());
+    }
+
+    @Override
+    public String updateAvatar(MultipartFile avatarImg) {
+
+        SysUser currentUser = this.getCurrentUser();
+        String avatarUrl = currentUser.getAvatarUrl();
+        String rootLocation = baseUrl + "/files/images";
+        if (avatarUrl != null) {
+            // delete if avatar is uploaded to server before
+            int index = avatarUrl.lastIndexOf(StrUtil.SLASH);
+            if (rootLocation.equals(avatarUrl.substring(0, index))) {
+                String filename = avatarUrl.substring(index);
+                Path oldAvatarPath = Paths.get(imageRootLocation.toAbsolutePath() + filename);
+                storageService.deleteFile(oldAvatarPath);
+            }
+        }
+
+        // 1. upload avatar
+        String url = storageService.store(avatarImg, imageRootLocation);
+        log.info("You successfully uploaded " + avatarImg.getOriginalFilename() + "!");
+
+        // 2. update user info
+        SysUser user = new SysUser();
+        user.setId(currentUser.getId());
+        user.setAvatarUrl(url);
+        if (userMapper.updateByPrimaryKeySelective(user) == 0) {
+            Asserts.fail("update avatar failed");
+        }
+        userCacheService.delUser(user.getId());
+        return url;
     }
 
     @Override
@@ -224,22 +311,17 @@ public class SysUserServiceImpl implements SysUserService {
         userExample.createCriteria().andUsernameEqualTo(param.getUsername());
 
         List<SysUser> users = userMapper.selectByExample(userExample);
-        if (users.isEmpty()) {
-            Asserts.fail("没有该用户，更新失败");
+        if (CollUtil.isEmpty(users)) {
+            Asserts.fail(UserErrorEnum.USERNAME_NOT_FOUND);
         }
         SysUser user = users.get(0);
-        if (user == null || user.getLoginAnswer() == null) {
-            Asserts.fail("没有该用户或未设置密保答案, 更新失败");
+        if (user.getLoginAnswer() == null) {
+            Asserts.fail(UserErrorEnum.NO_LOGIN_ANSWER);
         }
         if (user.getLoginAnswer().equals(param.getAnswer())) {
-            // 判断更新的密码长度，密码长度为6-20，不符合为不更新密码
-            if (param.getPassword().length() < 6 || param.getPassword().length() > 20) {
-                Asserts.fail("新密码长度大于等于6，小于等于20，更新失败");
-            }
             user.setPassword(passwordEncoder.encode(param.getPassword()));
 
             if (userMapper.updateByPrimaryKeySelective(user) != 0) {
-                System.out.println(user.getPassword());
                 userCacheService.delUser(user.getId());
                 return UpdatePasswordResultEnum.SUCCESS;
             }

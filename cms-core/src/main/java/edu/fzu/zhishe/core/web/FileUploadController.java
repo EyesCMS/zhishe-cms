@@ -1,6 +1,5 @@
 package edu.fzu.zhishe.core.web;
 
-import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.core.config.StorageProperties;
 import edu.fzu.zhishe.core.service.StorageService;
 import java.nio.file.Path;

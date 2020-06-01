@@ -75,9 +75,8 @@ public class FmsForumServiceImplTest {
 
         // 发表评论
         Assertions.assertThrows(EntityNotFoundException.class, () -> {
-            FmsRemarkParam remarkParam = new FmsRemarkParam() {{
-                setPostId(postIdNotExist);
-            }};
+            FmsRemarkParam remarkParam = new FmsRemarkParam();
+            remarkParam.setPostId(postIdNotExist);
             forumService.saveRemark(remarkParam);
         }, " 帖子不存在，却可以对其发表评论 ");
 
@@ -98,10 +97,9 @@ public class FmsForumServiceImplTest {
         // test 发表的评论
         Long remarkId = 48L;
 
-        FmsPostParam postParam = new FmsPostParam() {{
-            setTitle("new title");
-            setContent("new content");
-        }};
+        FmsPostParam postParam = new FmsPostParam();
+        postParam.setTitle("new title");
+        postParam.setContent("new content");
 
         // 更新帖子
         Assertions.assertDoesNotThrow(() -> {
@@ -116,9 +114,8 @@ public class FmsForumServiceImplTest {
 
         // 发表评论
         Assertions.assertDoesNotThrow(() -> {
-            FmsRemarkParam remarkParam = new FmsRemarkParam() {{
-                setPostId(personalPostId2);
-            }};
+            FmsRemarkParam remarkParam = new FmsRemarkParam();
+            remarkParam.setPostId(personalPostId2);
             forumService.saveRemark(remarkParam);
         }, " 发表评论异常 ");
 

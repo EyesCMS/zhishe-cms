@@ -83,10 +83,9 @@ public class CmsBulletinServiceImplTest{
         //存在的公告id，且是 test 发的
         int bulletinId = 51;
 
-        CmsBulletinParam bulletinParam = new CmsBulletinParam () {{
-            setTitle("new title");
-            setBody("new content");
-        }};
+        CmsBulletinParam bulletinParam = new CmsBulletinParam ();
+        bulletinParam.setTitle("new title");
+        bulletinParam.setBody("new content");
 
         //更新公告
         Assertions.assertDoesNotThrow(() -> {

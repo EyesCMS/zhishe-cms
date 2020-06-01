@@ -34,7 +34,7 @@ import java.util.List;
  */
 public interface CmsApplyAuditService {
 
-    CmsClubCreateApply createClub(CmsClubsCreationsParam clubsCreationsParam);
+    int createClub(CmsClubsCreationsParam clubsCreationsParam);
 
     List<CmsClubsCreationsDTO> listClubCreationApply(
         CmsClubsCreationsQuery cmsClubsCreationsQuery, PaginationParam queryParam);
@@ -43,19 +43,22 @@ public interface CmsApplyAuditService {
 
     CmsClubDisbandApply clubDisband(CmsClubsDisbandParam clubsDisbandParam);
 
-    List<CmsClubsDisbandDTO> listClubDisbandApply(CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
+    List<CmsClubsDisbandDTO> listClubDisbandApply(
+        CmsClubsDisbandQuery cmsClubsDisbandQuery, PaginationParam queryParam);
 
     CmsClubDisbandApply clubDissolutionAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsClubJoinApply clubJoin(CmsClubsJoinParam cmsClubsJoinParam);
 
-    List<CmsClubsJoinDTO> listJoinClubApply(Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
+    List<CmsClubsJoinDTO> listJoinClubApply(
+        Integer clubId, CmsClubsJoinQuery cmsClubsJoinQuery, PaginationParam paginationParam);
 
     CmsClubJoinApply clubJoinsAudit(CmsClubsAuditParam cmsClubsAuditParam);
 
     CmsQuitNotice clubQuit(CmsClubsQuitParam cmsClubsQuitParam);
 
-    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery, PaginationParam paginationParam);
+    List<CmsClubsQuitDTO> listClubQuit(Integer clubId, CmsClubsQuitQuery cmsClubsQuitQuery,
+        PaginationParam paginationParam);
 
     CmsChiefChangeApply clubChiefChange(CmsClubsChiefChangeParam cmsClubsChiefChangeParam);
 
@@ -76,4 +79,31 @@ public interface CmsApplyAuditService {
     List<CmsChiefChangeApply> listMyClubChiefChange(Integer clubId, PaginationParam queryParam);
 
     List<CmsClubDisbandApply> listMyClubDissolution(Integer clubId, PaginationParam queryParam);
+
+    void updateExpiredApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredJoinClubApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredClubCreationApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredClubDisbandApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredChiefChangeApply();
+
+    /**
+     * pending -> rejected
+     */
+    int updateExpiredOfficialChangeApply();
 }

@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import edu.fzu.zhishe.common.exception.Asserts;
 import edu.fzu.zhishe.common.exception.StorageException;
 import edu.fzu.zhishe.common.exception.StorageFileNotFoundException;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -34,10 +36,22 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 @Slf4j
 public class StorageServiceImpl implements StorageService {
 
+    @Value("${storage.path.str.image}")
+    String imgPathStr = "images";
+    @Value("${storage.path.str.file}")
+    String filePathStr = "files";
+
+    private final Path imageRootLocation;
+
+    @Autowired
+    public StorageServiceImpl(StorageProperties storageProperties) {
+        this.imageRootLocation = Paths.get(storageProperties.getImageLocation());
+    }
+
     @Override
     public String store(MultipartFile file, Path location) {
         if (file == null) {
-            Asserts.notFound("file is null");
+            return null;
         }
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String newFilename = FileNameUtils.getFileName(filename);
@@ -45,7 +59,7 @@ public class StorageServiceImpl implements StorageService {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
             }
-            if (filename.contains("..")) {
+            if (filename.contains(StrUtil.DOUBLE_DOT)) {
                 // This is a security check
                 throw new StorageException(
                     "Cannot store file with relative path outside current directory "
@@ -64,21 +78,30 @@ public class StorageServiceImpl implements StorageService {
         // generate URL
         Resource resource = loadAsResource(newFilename, location);
         String methodName;
-        if (location.toString().contains("images")) {
+
+        if (location.toString().contains(imgPathStr)) {
             methodName = "serveImageFile";
-        } else if (location.toString().contains("files")) {
-            methodName = "serveFile";
         } else {
-            methodName = "";
-            Asserts.fail("error file type");
+
+            if (location.toString().contains(filePathStr)) {
+                methodName = "serveFile";
+            } else {
+                methodName = "";
+                Asserts.fail("error file type");
+            }
         }
-//        String filename1 = resource.getFilename();
         String serveFile = MvcUriComponentsBuilder
             .fromMethodName(FileUploadController.class, methodName, resource.getFilename())
             .build()
             .toUri()
             .toString();
         return serveFile;
+    }
+
+    @Override
+    public String storeImage(MultipartFile file) {
+
+        return this.store(file, imageRootLocation);
     }
 
     @Override
@@ -107,8 +130,7 @@ public class StorageServiceImpl implements StorageService {
                 return resource;
             }
             else {
-                throw new StorageFileNotFoundException(
-                    "Could not read file: " + filename);
+                throw new StorageFileNotFoundException("Could not read file: " + filename);
             }
         }
         catch (MalformedURLException e) {

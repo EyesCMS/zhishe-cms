@@ -2,6 +2,7 @@ package edu.fzu.zhishe.cms.model;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
+import java.util.Date;
 
 public class SysUser implements Serializable {
     private Integer id;
@@ -42,8 +43,8 @@ public class SysUser implements Serializable {
     @ApiModelProperty(value = "管理状态：0 -> 普通用户；1 -> 管理员；")
     private Integer isAdmin;
 
-    @ApiModelProperty(value = "当前用户角色，可能随着前端路由改变而切换")
-    private Integer currentRole;
+    @ApiModelProperty(value = "注册时间")
+    private Date registerDate;
 
     private static final long serialVersionUID = 1L;
 
@@ -151,12 +152,12 @@ public class SysUser implements Serializable {
         this.isAdmin = isAdmin;
     }
 
-    public Integer getCurrentRole() {
-        return currentRole;
+    public Date getRegisterDate() {
+        return registerDate;
     }
 
-    public void setCurrentRole(Integer currentRole) {
-        this.currentRole = currentRole;
+    public void setRegisterDate(Date registerDate) {
+        this.registerDate = registerDate;
     }
 
     @Override
@@ -178,7 +179,7 @@ public class SysUser implements Serializable {
         sb.append(", loginQuestion=").append(loginQuestion);
         sb.append(", loginAnswer=").append(loginAnswer);
         sb.append(", isAdmin=").append(isAdmin);
-        sb.append(", currentRole=").append(currentRole);
+        sb.append(", registerDate=").append(registerDate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

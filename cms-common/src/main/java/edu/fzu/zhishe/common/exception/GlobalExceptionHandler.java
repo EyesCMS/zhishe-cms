@@ -1,6 +1,8 @@
 package edu.fzu.zhishe.common.exception;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import edu.fzu.zhishe.common.api.ErrorResponse;
 import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -10,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -27,40 +32,55 @@ public class GlobalExceptionHandler {
         JSONObject jsonObject = new JSONObject();
         if (e.getErrorCode() != null) {
             jsonObject.put("message", e.getErrorCode());
-            return ResponseEntity.badRequest().body(e.getErrorCode());
+            return ResponseEntity.badRequest().body(jsonObject);
         }
         jsonObject.put("message", e.getMessage());
         return ResponseEntity.badRequest().body(jsonObject);
     }
 
     @ExceptionHandler(value = AuthException.class)
-    public ResponseEntity<Object> handle(AuthException e) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(jsonObject);
+    public ResponseEntity<ErrorResponse> handle(AuthException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorResponse.message(e.getMessage()));
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
-    public ResponseEntity<Object> handle(AccessDeniedException e) {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", e.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(jsonObject);
+    public ResponseEntity<ErrorResponse> handle(AccessDeniedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ErrorResponse.message(e.getMessage()));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<JSONObject> handleException(EntityNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleException(EntityNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.message(e.getMessage()));
+    }
+
+    @ExceptionHandler(StorageFileNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(StorageFileNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.message(e.getMessage()));
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<JSONObject> requestExceptionHandler(MissingServletRequestParameterException exception) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(jsonObject);
+        jsonObject.put("message", "required parameter '" + exception.getParameterName() + "' is not exist");
+        return ResponseEntity.badRequest().body(jsonObject);
     }
 
     @ExceptionHandler({BindException.class, ConstraintViolationException.class})
-    public ResponseEntity<JSONObject> validatorExceptionHandler(Exception e) {
+    public ResponseEntity<ErrorResponse> validatorExceptionHandler(Exception e) {
         String msg = e instanceof BindException ? msgConverter(((BindException) e).getBindingResult())
             : msgConverter(((ConstraintViolationException) e).getConstraintViolations());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("message", msg);
-        return ResponseEntity.badRequest().body(jsonObject);
+        return ResponseEntity.badRequest().body(ErrorResponse.message(msg));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> methodArgumentNotValidHandler(MethodArgumentNotValidException e) {
+        List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
+        String message = "method argument does not valid";
+        if (CollUtil.isNotEmpty(allErrors)) {
+            ObjectError objectError = allErrors.get(0);
+            message = objectError.getDefaultMessage();
+        }
+        return ResponseEntity.badRequest().body(ErrorResponse.message(message));
     }
 
     /**

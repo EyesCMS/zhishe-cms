@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.cms.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SysUserExample {
@@ -994,63 +995,63 @@ public class SysUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleIsNull() {
-            addCriterion("current_role is null");
+        public Criteria andRegisterDateIsNull() {
+            addCriterion("register_date is null");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleIsNotNull() {
-            addCriterion("current_role is not null");
+        public Criteria andRegisterDateIsNotNull() {
+            addCriterion("register_date is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleEqualTo(Integer value) {
-            addCriterion("current_role =", value, "currentRole");
+        public Criteria andRegisterDateEqualTo(Date value) {
+            addCriterion("register_date =", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleNotEqualTo(Integer value) {
-            addCriterion("current_role <>", value, "currentRole");
+        public Criteria andRegisterDateNotEqualTo(Date value) {
+            addCriterion("register_date <>", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleGreaterThan(Integer value) {
-            addCriterion("current_role >", value, "currentRole");
+        public Criteria andRegisterDateGreaterThan(Date value) {
+            addCriterion("register_date >", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleGreaterThanOrEqualTo(Integer value) {
-            addCriterion("current_role >=", value, "currentRole");
+        public Criteria andRegisterDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("register_date >=", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleLessThan(Integer value) {
-            addCriterion("current_role <", value, "currentRole");
+        public Criteria andRegisterDateLessThan(Date value) {
+            addCriterion("register_date <", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleLessThanOrEqualTo(Integer value) {
-            addCriterion("current_role <=", value, "currentRole");
+        public Criteria andRegisterDateLessThanOrEqualTo(Date value) {
+            addCriterion("register_date <=", value, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleIn(List<Integer> values) {
-            addCriterion("current_role in", values, "currentRole");
+        public Criteria andRegisterDateIn(List<Date> values) {
+            addCriterion("register_date in", values, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleNotIn(List<Integer> values) {
-            addCriterion("current_role not in", values, "currentRole");
+        public Criteria andRegisterDateNotIn(List<Date> values) {
+            addCriterion("register_date not in", values, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleBetween(Integer value1, Integer value2) {
-            addCriterion("current_role between", value1, value2, "currentRole");
+        public Criteria andRegisterDateBetween(Date value1, Date value2) {
+            addCriterion("register_date between", value1, value2, "registerDate");
             return (Criteria) this;
         }
 
-        public Criteria andCurrentRoleNotBetween(Integer value1, Integer value2) {
-            addCriterion("current_role not between", value1, value2, "currentRole");
+        public Criteria andRegisterDateNotBetween(Date value1, Date value2) {
+            addCriterion("register_date not between", value1, value2, "registerDate");
             return (Criteria) this;
         }
     }

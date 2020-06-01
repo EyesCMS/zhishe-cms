@@ -8,6 +8,7 @@
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="credit" jdbcType="INTEGER" property="credit" />
     <result column="honor_id" jdbcType="INTEGER" property="honorId" />
+    <result column="check_in_date" jdbcType="TIMESTAMP" property="checkInDate" />
     <result column="join_date" jdbcType="TIMESTAMP" property="joinDate" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,7 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, user_id, club_id, role_id, credit, honor_id, join_date
+    id, user_id, club_id, role_id, credit, honor_id, check_in_date, join_date
   </sql>
   <select id="selectByExample" parameterType="edu.fzu.zhishe.cms.model.CmsUserClubRelExample" resultMap="BaseResultMap">
     select
@@ -106,11 +107,11 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into cms_user_club_rel (user_id, club_id, role_id, 
-      credit, honor_id, join_date
-      )
+      credit, honor_id, check_in_date, 
+      join_date)
     values (#{userId,jdbcType=INTEGER}, #{clubId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, 
-      #{credit,jdbcType=INTEGER}, #{honorId,jdbcType=INTEGER}, #{joinDate,jdbcType=TIMESTAMP}
-      )
+      #{credit,jdbcType=INTEGER}, #{honorId,jdbcType=INTEGER}, #{checkInDate,jdbcType=TIMESTAMP}, 
+      #{joinDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="edu.fzu.zhishe.cms.model.CmsUserClubRel">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -133,6 +134,9 @@
       <if test="honorId != null">
         honor_id,
       </if>
+      <if test="checkInDate != null">
+        check_in_date,
+      </if>
       <if test="joinDate != null">
         join_date,
       </if>
@@ -152,6 +156,9 @@
       </if>
       <if test="honorId != null">
         #{honorId,jdbcType=INTEGER},
+      </if>
+      <if test="checkInDate != null">
+        #{checkInDate,jdbcType=TIMESTAMP},
       </if>
       <if test="joinDate != null">
         #{joinDate,jdbcType=TIMESTAMP},
@@ -185,6 +192,9 @@
       <if test="record.honorId != null">
         honor_id = #{record.honorId,jdbcType=INTEGER},
       </if>
+      <if test="record.checkInDate != null">
+        check_in_date = #{record.checkInDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="record.joinDate != null">
         join_date = #{record.joinDate,jdbcType=TIMESTAMP},
       </if>
@@ -201,6 +211,7 @@
       role_id = #{record.roleId,jdbcType=INTEGER},
       credit = #{record.credit,jdbcType=INTEGER},
       honor_id = #{record.honorId,jdbcType=INTEGER},
+      check_in_date = #{record.checkInDate,jdbcType=TIMESTAMP},
       join_date = #{record.joinDate,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -224,6 +235,9 @@
       <if test="honorId != null">
         honor_id = #{honorId,jdbcType=INTEGER},
       </if>
+      <if test="checkInDate != null">
+        check_in_date = #{checkInDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="joinDate != null">
         join_date = #{joinDate,jdbcType=TIMESTAMP},
       </if>
@@ -237,6 +251,7 @@
       role_id = #{roleId,jdbcType=INTEGER},
       credit = #{credit,jdbcType=INTEGER},
       honor_id = #{honorId,jdbcType=INTEGER},
+      check_in_date = #{checkInDate,jdbcType=TIMESTAMP},
       join_date = #{joinDate,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>

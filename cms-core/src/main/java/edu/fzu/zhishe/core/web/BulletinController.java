@@ -5,10 +5,10 @@ import static org.springframework.http.ResponseEntity.ok;
 import edu.fzu.zhishe.cms.model.CmsBulletin;
 import edu.fzu.zhishe.common.api.CommonPage;
 import edu.fzu.zhishe.common.exception.Asserts;
-import edu.fzu.zhishe.core.annotation.CheckClubAuth;
 import edu.fzu.zhishe.core.annotation.IsClubMember;
 import edu.fzu.zhishe.core.dto.CmsBulletinDTO;
 import edu.fzu.zhishe.core.dto.CmsBulletinsDTO;
+import edu.fzu.zhishe.core.error.BulletinErrorEnum;
 import edu.fzu.zhishe.core.param.CmsBulletinParam;
 import edu.fzu.zhishe.core.param.CmsBulletinQuery;
 import edu.fzu.zhishe.core.param.PaginationParam;
@@ -29,9 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import edu.fzu.zhishe.core.annotation.CheckClubAuth;
-import edu.fzu.zhishe.core.annotation.IsAdmin;
-import edu.fzu.zhishe.core.annotation.IsClubMember;
 
 import java.util.List;
 
@@ -48,20 +45,18 @@ public class BulletinController {
     private CmsBulletinService bulletinService;
 
     @ApiOperation(" 5.1发布公告 ")
-    //@PreAuthorize("hasAuthority('cms:bulletin:create')")
     @PostMapping("/{club}/bulletins")
     public ResponseEntity<Object> createBulletin(
         @Validated @RequestBody CmsBulletinParam bulletinParam,
         @PathVariable("club") Integer clubId) {
 
         if (bulletinService.creatBulletin(clubId, bulletinParam) == 0) {
-            Asserts.fail("操作失败！");
+            Asserts.fail(BulletinErrorEnum.CLUB_NOT_EXIST);
         }
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation(" 5.2查看某个社团所有公告 ")
-    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins")
     @IsClubMember
     public ResponseEntity<Object> listClubBulletin(
@@ -69,21 +64,17 @@ public class BulletinController {
         CmsBulletinQuery bulletinQuery,
         @PathVariable("club") Integer clubId) {
 
-        /**return ok()
-            .body(CommonPage.restPage(bulletinService.listClubBulletin(clubId, paginationParam)));*/
         List<CmsBulletinsDTO> bulletinList = null;
         bulletinList = bulletinService.listClubBulletin(clubId,paginationParam,bulletinQuery);
         return ResponseEntity.ok().body(CommonPage.restPage(bulletinList));
     }
 
-
     @ApiOperation("5.3查看公告详情")
-    //@PreAuthorize("hasAuthority('cms:bulletin:read')")
     @GetMapping("/{club}/bulletins/{bulletinId}")
     @IsClubMember
     public ResponseEntity<CmsBulletinDTO> getBulletin(
-            @PathVariable("club") Integer clubId,
-            @PathVariable("bulletinId") Integer bulletinId) {
+        @PathVariable("club") Integer clubId,
+        @PathVariable("bulletinId") Integer bulletinId) {
 
         CmsBulletin bulletin = bulletinService.getBulletin(clubId, bulletinId);
         if (bulletin == null) {
@@ -96,7 +87,6 @@ public class BulletinController {
     }
 
     @ApiOperation("5.4修改公告内容")
-    //@PreAuthorize("hasAuthority('cms:bulletin:update')")
     @PutMapping("/{club}/bulletins/{bulletinId}")
 
     public ResponseEntity<Object> updateBulletin(
@@ -104,18 +94,22 @@ public class BulletinController {
         @PathVariable("club") Integer clubId,
         @PathVariable("bulletinId") Integer bulletinId) {
 
+        if (bulletinService.getBulletin(clubId,bulletinId) == null) {
+            Asserts.fail(BulletinErrorEnum.BULLETIN_NOT_EXIST);
+        }
+
         if (bulletinService.updateBulletin(bulletinId, bulletinParam) == 0) {
-            Asserts.fail("操作失败！");
+            Asserts.fail(BulletinErrorEnum.CAN_NOT_UPDATE_BULLETIN);
         }
         return ResponseEntity.noContent().build();
     }
 
     @ApiOperation("5.5删除公告")
-    //@PreAuthorize("hasAuthority('cms:bulletin:delete')")
     @DeleteMapping("/bulletins/{bulletinId}")
     public ResponseEntity<Object> deleteBulletin(@PathVariable("bulletinId") Integer bulletinId) {
+
         if (bulletinService.deleteBulletin(bulletinId) == 0) {
-            Asserts.fail("操作失败！");
+            Asserts.fail(BulletinErrorEnum.CAN_NOT_DELETE_BULLETIN);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

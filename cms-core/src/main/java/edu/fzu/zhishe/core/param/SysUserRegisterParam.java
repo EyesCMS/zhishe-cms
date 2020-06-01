@@ -1,5 +1,6 @@
 package edu.fzu.zhishe.core.param;
 
+import edu.fzu.zhishe.core.validator.PhoneValidator;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -34,8 +35,7 @@ public class SysUserRegisterParam {
     private String major;
 
     @ApiModelProperty(value = " 电话 ")
-    // FIXME: this does not work!
-    //@Pattern(regexp = "^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\\\d{8}$", message = " 电话格式不合法 ")
+    @PhoneValidator(message = "手机号码不合法")
     private String phone;
 
     @ApiModelProperty(value = " 密保问题 ")

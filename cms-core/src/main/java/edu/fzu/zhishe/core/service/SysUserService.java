@@ -1,10 +1,10 @@
 package edu.fzu.zhishe.core.service;
 
-import edu.fzu.zhishe.cms.model.SysPermission;
 import edu.fzu.zhishe.core.constant.UpdatePasswordResultEnum;
 import edu.fzu.zhishe.core.dto.*;
 import edu.fzu.zhishe.cms.model.SysUser;
 //import org.springframework.security.core.userdetails.UserDetails;
+import edu.fzu.zhishe.core.param.SysRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserRegisterParam;
 import edu.fzu.zhishe.core.param.SysUserUpdateParam;
 import edu.fzu.zhishe.core.param.UpdateUserPasswordParam;
@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 用户管理
@@ -32,15 +33,13 @@ public interface SysUserService {
     /**
      * 用户注册
      */
-    @Transactional
-    SysUser register(SysUserRegisterParam umsAdminParam);
+    @Transactional(rollbackFor = Throwable.class)
+    int register(SysRegisterParam registerParam);
 
     /**
      * 生成验证码
      */
-    String generateAuthCode(String telephone);
-
-    List<SysPermission> listPermissionByRoleId(Integer roleId);
+    void generateAuthCode(String email);
 
     /**
      * 修改密码
@@ -70,11 +69,6 @@ public interface SysUserService {
     String login(String username, String password);
 
     /**
-     * 刷新 token
-     */
-    String refreshToken(String token);
-
-    /**
      * 获取所有用户
      */
     List<SysUser> users();
@@ -84,6 +78,8 @@ public interface SysUserService {
      */
     @Transactional
     void updateUserByParam(SysUserUpdateParam updateParam);
+
+    String updateAvatar(MultipartFile avatarImg);
 
     /**
      * 选择性更新非空字段

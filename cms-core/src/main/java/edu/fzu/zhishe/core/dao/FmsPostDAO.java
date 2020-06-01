@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface FmsPostDAO {
 
+    List<FmsPostDTO> listMyPost(@Param("userId") Integer userId, @Param("queryParam") FmsPostQuery queryParam);
+
     List<FmsPostDTO> listActivityPost(@Param("clubId") Integer clubId, @Param("queryParam") FmsPostQuery queryParam);
 
     FmsPostDTO getActivityPostById(@Param("id") Integer id);

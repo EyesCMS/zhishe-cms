@@ -1,6 +1,7 @@
 package edu.fzu.zhishe.core.param;
 
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -19,11 +20,11 @@ public class CmsBulletinParam {
     */
 
     @ApiModelProperty(value = "公告标题")
-    @NotNull(message = "标题不能为空")
+    @NotEmpty(message = "标题不能为空")
     private String title;
 
     @ApiModelProperty(value = "公告内容")
-    @NotNull(message = "内容不能为空")
+    @NotEmpty(message = "内容不能为空")
     private String body;
 
     public String getTitle() {
